@@ -69,7 +69,7 @@
       <Name>FoodDelivery.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\FoodDelivery.Data\FoodDelivery.Data.csproj">
-      <Project>{b694d8c3-9e0c-4661-9faa-698f960298e1}</Project>
+      <Project>{720c1c11-9f87-42b9-b323-7773d0f2e596}</Project>
       <Name>FoodDelivery.Data</Name>
     </ProjectReference>
   </ItemGroup>
