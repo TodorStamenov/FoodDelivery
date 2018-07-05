@@ -79,8 +79,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FoodDelivery.Common\FoodDelivery.Common.csproj">
@@ -94,10 +98,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Files\CategoryImage1.jpg" />
-    <Content Include="Files\CategoryImage2.jpg" />
-    <Content Include="Files\CategoryImage3.jpg" />
-    <Content Include="Files\Lorem.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
