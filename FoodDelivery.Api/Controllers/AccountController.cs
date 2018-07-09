@@ -8,13 +8,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace FoodDelivery.Api.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]
-    [EnableCors("*", "*", "*")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -87,7 +85,7 @@ namespace FoodDelivery.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new User()
+            User user = new User()
             {
                 UserName = model.Email,
                 Email = model.Email
@@ -100,7 +98,7 @@ namespace FoodDelivery.Api.Controllers
                 return GetErrorResult(result);
             }
 
-            return Ok();
+            return Ok(user.Id);
         }
 
         protected override void Dispose(bool disposing)

@@ -2,11 +2,9 @@
 using FoodDelivery.Services.Models.ViewModels.Feedbacks;
 using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace FoodDelivery.Api.Controllers
 {
-    [EnableCors("*", "*", "*")]
     public class FeedbacksController : ApiController
     {
         private readonly IFeedbackService feedbacks;
