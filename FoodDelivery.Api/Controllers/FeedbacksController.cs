@@ -15,7 +15,7 @@ namespace FoodDelivery.Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ListFeedbacksServiceModel> Get()
+        public IEnumerable<ListFeedbacksViewModel> Get()
         {
             return this.feedbacks.All();
         }

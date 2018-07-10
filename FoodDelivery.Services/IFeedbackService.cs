@@ -5,6 +5,6 @@ namespace FoodDelivery.Services
 {
     public interface IFeedbackService
     {
-        IEnumerable<ListFeedbacksServiceModel> All();
+        IEnumerable<ListFeedbacksViewModel> All();
     }
 }

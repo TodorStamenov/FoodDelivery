@@ -3,7 +3,7 @@ using FoodDelivery.Data.Models;
 
 namespace FoodDelivery.Services.Models.ViewModels.Feedbacks
 {
-    public class ListFeedbacksServiceModel : IMapFrom<Feedback>
+    public class ListFeedbacksViewModel : IMapFrom<Feedback>
     {
         public int Id { get; set; }
 

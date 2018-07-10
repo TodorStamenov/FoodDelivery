@@ -13,10 +13,10 @@ namespace FoodDelivery.Services.Implementations
         {
         }
 
-        public IEnumerable<ListFeedbacksServiceModel> All()
+        public IEnumerable<ListFeedbacksViewModel> All()
         {
             return this.db.Feedbacks
-                .ProjectTo<ListFeedbacksServiceModel>()
+                .ProjectTo<ListFeedbacksViewModel>()
                 .ToList();
         }
     }

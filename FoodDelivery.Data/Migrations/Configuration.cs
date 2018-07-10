@@ -16,6 +16,7 @@ namespace FoodDelivery.Data.Migrations
     internal sealed class Configuration : DbMigrationsConfiguration<FoodDeliveryDbContext>
     {
         private const int AdminsCount = 1;
+        private const int ModeratorsCount = 3;
         private const int EmployeesCount = 5;
         private const int UsersCount = 50;
         private const int CategoriesCount = 3;
@@ -58,6 +59,7 @@ namespace FoodDelivery.Data.Migrations
                 await this.SeedRolesAsync(roleManager, context);
                 await this.SeedUsersAsync(userManager, UsersCount, context);
                 await this.SeedUsersAsync(userManager, roleManager, AdminsCount, CommonConstants.AdminRole, context);
+                await this.SeedUsersAsync(userManager, roleManager, ModeratorsCount, CommonConstants.ModeratorRole, context);
                 await this.SeedUsersAsync(userManager, roleManager, EmployeesCount, CommonConstants.EmployeeRole, context);
                 await this.SeedCategoriesAsync(CategoriesCount, context);
                 await this.SeedProductsAsync(ProductsCount, context);
@@ -77,6 +79,7 @@ namespace FoodDelivery.Data.Migrations
             }
 
             await roleManager.CreateAsync(new Role { Name = CommonConstants.AdminRole });
+            await roleManager.CreateAsync(new Role { Name = CommonConstants.ModeratorRole });
             await roleManager.CreateAsync(new Role { Name = CommonConstants.EmployeeRole });
 
             await context.SaveChangesAsync();

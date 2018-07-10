@@ -33,6 +33,15 @@ function logout () {
   })
 }
 
-const auth = { register, login, logout }
+function getRoles () {
+  return fetch(host + 'api/account/roles', {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
+    }
+  }).then(res => res.json())
+}
+
+const auth = { register, login, logout, getRoles }
 
 export default auth

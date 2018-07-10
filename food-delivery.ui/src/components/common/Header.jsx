@@ -32,6 +32,15 @@ export default class Header extends Component {
             {this.state.loggedIn && <li><Link className='nav-link' to='/orders/my'>My Orders</Link></li>}
           </ul>
           <ul className='nav navbar-nav navbar-right'>
+            {
+              this.props.isAdmin &&
+              <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                <DropdownToggle nav caret>Admin</DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem><Link className='dropdown-item' to='/admin/users'>Users</Link></DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            }
             {!this.props.loggedIn && <li><Link className='nav-link' to='/users/register'>Register</Link></li>}
             {!this.props.loggedIn && <li><Link className='nav-link' to='/users/login'>Login</Link></li>}
             {this.props.loggedIn && <li className='nav-link'>Hello {this.props.username}!</li>}

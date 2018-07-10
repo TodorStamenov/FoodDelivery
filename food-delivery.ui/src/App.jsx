@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import Header from './components/common/Header'
 import RegisterForm from './components/Auth/RegisterForm'
 import LoginForm from './components/Auth/LoginForm'
 import HomePage from './components/Home/HomePage'
 import Footer from './components/common/Footer'
 import auth from './api/auth'
+import UsersPage from './components/Admin/UsersPage'
 
 class App extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      username: '',
-      authtoken: '',
-      isAuthed: '',
-      roles: []
+      username: sessionStorage.getItem('username'),
+      authtoken: sessionStorage.getItem('authtoken'),
+      isAuthed: sessionStorage.getItem('authtoken') !== null,
+      roles: sessionStorage.getItem('roles') || []
     }
 
     this.onRegister = this.onRegister.bind(this)
@@ -45,17 +46,18 @@ class App extends Component {
           return
         }
 
-        this.props.history.push('/')
-
         sessionStorage.setItem('username', res.userName)
         sessionStorage.setItem('authtoken', res['access_token'])
-        sessionStorage.setItem('roles', [])
 
-        this.setState({
-          username: sessionStorage.getItem('username'),
-          authtoken: sessionStorage.getItem('authtoken'),
-          isAuthed: sessionStorage.getItem('authtoken') !== null,
-          roles: []
+        auth.getRoles().then(roles => {
+          sessionStorage.setItem('roles', JSON.stringify(roles))
+
+          this.setState({
+            username: sessionStorage.getItem('username'),
+            authtoken: sessionStorage.getItem('authtoken'),
+            isAuthed: sessionStorage.getItem('authtoken') !== null,
+            roles
+          })
         })
       })
   }
@@ -63,6 +65,7 @@ class App extends Component {
   onLogout () {
     auth.logout().then(() => {
       sessionStorage.clear()
+      this.props.history.push('/')
 
       this.setState({
         username: '',
@@ -70,22 +73,33 @@ class App extends Component {
         isAuthed: false,
         roles: []
       })
-
-      this.props.history.push('/')
     })
   }
 
   render () {
     return (
       <div>
-        <Header loggedIn={this.state.isAuthed} username={this.state.username} onLogout={this.onLogout} />
+        <Header
+          isAdmin={this.state.roles.includes('Admin')}
+          loggedIn={this.state.isAuthed}
+          username={this.state.username}
+          onLogout={this.onLogout}
+        />
         <hr />
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route exact path='/users/login' component={() =>
-            this.state.isAuthed ? this.props.history.push('/') : <LoginForm onSubmit={this.onLogin} />} />
+            this.state.isAuthed
+              ? <Redirect to='/' />
+              : <LoginForm onSubmit={this.onLogin} />} />
           <Route exact path='/users/register' component={() =>
-            this.state.isAuthed ? this.props.history.push('/') : <RegisterForm onSubmit={this.onRegister} />} />
+            this.state.isAuthed
+              ? <Redirect to='/' />
+              : <RegisterForm onSubmit={this.onRegister} />} />
+          <Route exact path='/admin/users' component={() =>
+            this.state.roles.includes('Admin')
+              ? <UsersPage />
+              : <Redirect to='/users/login' />} />
         </Switch>
         <hr />
         <Footer />

@@ -4,6 +4,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -19,8 +21,7 @@ namespace FoodDelivery.Api.Controllers
         private ApplicationUserManager userManager;
 
         public AccountController()
-        {
-        }
+        { }
 
         public AccountController(
             ApplicationUserManager userManager,
@@ -28,6 +29,13 @@ namespace FoodDelivery.Api.Controllers
         {
             this.userManager = userManager;
             this.AccessTokenFormat = accessTokenFormat;
+        }
+
+        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+
+        private IAuthenticationManager Authentication
+        {
+            get { return Request.GetOwinContext().Authentication; }
         }
 
         public ApplicationUserManager UserManager
@@ -43,7 +51,31 @@ namespace FoodDelivery.Api.Controllers
             }
         }
 
-        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+        // POST api/Account/Register
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            User user = new User()
+            {
+                UserName = model.Email,
+                Email = model.Email
+            };
+
+            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok(user.Id);
+        }
 
         // POST api/Account/Logout
         [Route("Logout")]
@@ -75,30 +107,19 @@ namespace FoodDelivery.Api.Controllers
             return Ok();
         }
 
-        // POST api/Account/Register
-        [AllowAnonymous]
-        [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        // GET api/Account/Roles
+        [HttpGet]
+        [Route("Roles")]
+        public IEnumerable<string> Roles()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            string username = User.Identity.Name;
 
-            User user = new User()
-            {
-                UserName = model.Email,
-                Email = model.Email
-            };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
-
-            return Ok(user.Id);
+            return this.UserManager
+                .Users
+                .FirstOrDefault(u => u.UserName == username)
+                .Roles
+                .Select(r => r.Role.Name)
+                .ToArray();
         }
 
         protected override void Dispose(bool disposing)
@@ -110,13 +131,6 @@ namespace FoodDelivery.Api.Controllers
             }
 
             base.Dispose(disposing);
-        }
-
-        #region Helpers
-
-        private IAuthenticationManager Authentication
-        {
-            get { return Request.GetOwinContext().Authentication; }
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
@@ -147,7 +161,5 @@ namespace FoodDelivery.Api.Controllers
 
             return null;
         }
-
-        #endregion Helpers
     }
 }
