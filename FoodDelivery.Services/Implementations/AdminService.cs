@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using FoodDelivery.Data;
+﻿using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Models.ViewModels.Users;
 using System.Collections.Generic;
@@ -27,14 +26,26 @@ namespace FoodDelivery.Services.Implementations
             {
                 return query
                     .Take(UsersInPage)
-                    .ProjectTo<ListUsersViewModel>()
+                    .Select(u => new ListUsersViewModel
+                    {
+                        Id = u.Id,
+                        Username = u.UserName,
+                        IsLocked = u.LockoutEnabled,
+                        Roles = u.Roles.Select(r => r.Role.Name)
+                    })
                     .ToList();
             }
 
             return query
                 .Where(u => u.UserName.Contains(userQuery))
                 .Take(UsersInPage)
-                .ProjectTo<ListUsersViewModel>()
+                .Select(u => new ListUsersViewModel
+                {
+                    Id = u.Id,
+                    Username = u.UserName,
+                    IsLocked = u.LockoutEnabled,
+                    Roles = u.Roles.Select(r => r.Role.Name)
+                })
                 .ToList();
         }
     }

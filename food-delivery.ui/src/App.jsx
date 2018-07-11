@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import Header from './components/common/Header'
 import RegisterForm from './components/Auth/RegisterForm'
 import LoginForm from './components/Auth/LoginForm'
@@ -59,6 +59,8 @@ class App extends Component {
             roles
           })
         })
+
+        this.props.history.push('/')
       })
   }
 
@@ -86,21 +88,15 @@ class App extends Component {
           onLogout={this.onLogout}
         />
         <hr />
-        <Switch>
-          <Route exact path='/' component={HomePage} />
-          <Route exact path='/users/login' component={() =>
-            this.state.isAuthed
-              ? <Redirect to='/' />
-              : <LoginForm onSubmit={this.onLogin} />} />
-          <Route exact path='/users/register' component={() =>
-            this.state.isAuthed
-              ? <Redirect to='/' />
-              : <RegisterForm onSubmit={this.onRegister} />} />
-          <Route exact path='/admin/users' component={() =>
-            this.state.roles.includes('Admin')
-              ? <UsersPage />
-              : <Redirect to='/users/login' />} />
-        </Switch>
+        <div className='container body-content'>
+          <Switch>
+            <Route exact path='/' component={HomePage} />
+            <Route exact path='/users/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
+            <Route exact path='/users/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
+            <Route exact path='/admin/users' component={UsersPage} />
+            <Route component={HomePage} />
+          </Switch>
+        </div>
         <hr />
         <Footer />
       </div>

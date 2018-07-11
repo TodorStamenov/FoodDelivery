@@ -4,7 +4,8 @@ function users () {
   return fetch(host + 'api/admin/users', {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
     }
   }).then(res => res.json())
 }
