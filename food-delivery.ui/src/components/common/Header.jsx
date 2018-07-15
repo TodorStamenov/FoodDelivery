@@ -8,15 +8,23 @@ export default class Header extends Component {
 
     this.state = {
       isAuthed: this.props.loggedIn,
-      dropdownOpen: false
+      adminDropdownOpen: false,
+      moderatorDropdownOpen: false
     }
 
-    this.toggle = this.toggle.bind(this)
+    this.toggleAdmin = this.toggleAdmin.bind(this)
+    this.toggleModerator = this.toggleModerator.bind(this)
   }
 
-  toggle () {
+  toggleAdmin () {
     this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
+      adminDropdownOpen: !prevState.adminDropdownOpen
+    }))
+  }
+
+  toggleModerator () {
+    this.setState(prevState => ({
+      moderatorDropdownOpen: !prevState.moderatorDropdownOpen
     }))
   }
 
@@ -34,10 +42,22 @@ export default class Header extends Component {
           <ul className='nav navbar-nav navbar-right'>
             {
               this.props.isAdmin &&
-              <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+              <Dropdown isOpen={this.state.adminDropdownOpen} toggle={this.toggleAdmin}>
                 <DropdownToggle nav caret>Admin</DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem><Link className='dropdown-item' to='/admin/users'>Users</Link></DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            }
+            {
+              this.props.isModerator &&
+              <Dropdown isOpen={this.state.moderatorDropdownOpen} toggle={this.toggleModerator}>
+                <DropdownToggle nav caret>Moderator</DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/categories'>Categories</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/products'>Products</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/employees'>Employees</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/orders'>Orders</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             }

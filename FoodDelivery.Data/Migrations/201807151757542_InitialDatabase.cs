@@ -14,7 +14,8 @@ namespace FoodDelivery.Data.Migrations
                     Name = c.String(nullable: false, maxLength: 50),
                     Image = c.Binary(),
                 })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.Name, unique: true);
 
             CreateTable(
                 "dbo.Products",
@@ -29,6 +30,7 @@ namespace FoodDelivery.Data.Migrations
                 })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
+                .Index(t => t.Name, unique: true)
                 .Index(t => t.CategoryId);
 
             CreateTable(
@@ -199,6 +201,8 @@ namespace FoodDelivery.Data.Migrations
             DropIndex("dbo.Feedbacks", new[] { "UserId" });
             DropIndex("dbo.Feedbacks", new[] { "ProductId" });
             DropIndex("dbo.Products", new[] { "CategoryId" });
+            DropIndex("dbo.Products", new[] { "Name" });
+            DropIndex("dbo.Categories", new[] { "Name" });
             DropTable("dbo.Ingredients");
             DropTable("dbo.ProductsIngredients");
             DropTable("dbo.AspNetRoles");

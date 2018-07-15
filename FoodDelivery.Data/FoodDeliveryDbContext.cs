@@ -24,6 +24,8 @@ namespace FoodDelivery.Data
 
         public DbSet<Ingredient> Ingredients { get; set; }
 
+        public DbSet<UserRole> UserRoles { get; set; }
+
         public static FoodDeliveryDbContext Create()
         {
             return new FoodDeliveryDbContext();
@@ -40,10 +42,20 @@ namespace FoodDelivery.Data
                 .HasForeignKey(p => p.CategoryId);
 
             builder
+                .Entity<Category>()
+                .HasIndex(c => c.Name)
+                .IsUnique(true);
+
+            builder
                 .Entity<Product>()
                 .HasMany(p => p.Feedbacks)
                 .WithRequired(f => f.Product)
                 .HasForeignKey(f => f.ProductId);
+
+            builder
+               .Entity<Product>()
+               .HasIndex(c => c.Name)
+               .IsUnique(true);
 
             builder
                  .Entity<User>()
@@ -67,6 +79,26 @@ namespace FoodDelivery.Data
                 .WillCascadeOnDelete(false);
 
             builder
+               .Entity<UserRole>()
+               .HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            builder
+                .Entity<UserRole>()
+                .HasRequired(ur => ur.User)
+                .WithMany(u => u.Roles)
+                .HasForeignKey(ur => ur.UserId);
+
+            builder
+                .Entity<UserRole>()
+                .HasRequired(ur => ur.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(ur => ur.RoleId);
+
+            builder
+               .Entity<ProductsOrders>()
+               .HasKey(po => new { po.ProductId, po.OrderId });
+
+            builder
                 .Entity<ProductsOrders>()
                 .HasRequired(po => po.Product)
                 .WithMany(p => p.Orders)
@@ -81,10 +113,6 @@ namespace FoodDelivery.Data
             builder
                 .Entity<ProductsIngredients>()
                 .HasKey(pi => new { pi.ProductId, pi.IngredientId });
-
-            builder
-                .Entity<ProductsOrders>()
-                .HasKey(po => new { po.ProductId, po.OrderId });
 
             builder
                 .Entity<ProductsIngredients>()

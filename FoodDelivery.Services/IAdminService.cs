@@ -5,6 +5,10 @@ namespace FoodDelivery.Services
 {
     public interface IAdminService
     {
-        IEnumerable<ListUsersViewModel> AllUsers(string userQuery);
+        void AddRole(string username, string roleName);
+
+        void RemoveRole(string username, string roleName);
+
+        IEnumerable<ListUsersViewModel> Users(string userQuery);
     }
 }

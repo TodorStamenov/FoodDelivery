@@ -1,5 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using FoodDelivery.Data;
+﻿using FoodDelivery.Data;
 using FoodDelivery.Services.Models.ViewModels.Feedbacks;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,12 @@ namespace FoodDelivery.Services.Implementations
         public IEnumerable<ListFeedbacksViewModel> All()
         {
             return this.db.Feedbacks
-                .ProjectTo<ListFeedbacksViewModel>()
+                .Select(f => new ListFeedbacksViewModel
+                {
+                    Id = f.Id,
+                    Content = f.Content,
+                    Rate = f.Rate
+                })
                 .ToList();
         }
     }

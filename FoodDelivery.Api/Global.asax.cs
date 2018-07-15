@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using FoodDelivery.Api.Infrastructure.Mapping;
-using System.Web;
+﻿using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -12,7 +10,6 @@ namespace FoodDelivery.Api
     {
         protected void Application_Start()
         {
-            Mapper.Initialize(options => options.AddProfile<AutoMapperProfile>());
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

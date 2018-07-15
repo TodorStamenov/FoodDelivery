@@ -21,13 +21,19 @@ namespace FoodDelivery.Api.Providers
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
+            ApplicationUserManager userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
             User user = await userManager.FindAsync(context.UserName, context.Password);
 
             if (user == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
+            }
+
+            if (user.LockoutEnabled)
+            {
+                context.SetError("user_locked", "The user is locked.");
                 return;
             }
 

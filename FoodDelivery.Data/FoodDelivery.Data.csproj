@@ -79,9 +79,9 @@
     <Compile Include="IdentityModels\UserClaim.cs" />
     <Compile Include="IdentityModels\UserLogin.cs" />
     <Compile Include="IdentityModels\UserStore.cs" />
-    <Compile Include="Migrations\201806252052307_InitialDatabase.cs" />
-    <Compile Include="Migrations\201806252052307_InitialDatabase.Designer.cs">
-      <DependentUpon>201806252052307_InitialDatabase.cs</DependentUpon>
+    <Compile Include="Migrations\201807151757542_InitialDatabase.cs" />
+    <Compile Include="Migrations\201807151757542_InitialDatabase.Designer.cs">
+      <DependentUpon>201807151757542_InitialDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
@@ -100,11 +100,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201806252052307_InitialDatabase.resx">
-      <DependentUpon>201806252052307_InitialDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -119,6 +114,11 @@
     <Content Include="Files\CategoryImage2.jpg" />
     <Content Include="Files\CategoryImage3.jpg" />
     <Content Include="Files\Lorem.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201807151757542_InitialDatabase.resx">
+      <DependentUpon>201807151757542_InitialDatabase.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

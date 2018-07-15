@@ -1,4 +1,4 @@
-const host = 'http://localhost:22011/'
+import host from './constants'
 
 function register (email, password, confirmPassword) {
   return fetch(host + 'api/account/register', {

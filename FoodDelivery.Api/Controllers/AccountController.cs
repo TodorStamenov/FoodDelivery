@@ -1,7 +1,6 @@
 ﻿using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Models.BindingModels.Users;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using System.Collections.Generic;
@@ -15,40 +14,17 @@ namespace FoodDelivery.Api.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]
-    public class AccountController : ApiController
+    public class AccountController : BaseApiController
     {
         private const string LocalLoginProvider = "Local";
-        private ApplicationUserManager userManager;
 
         public AccountController()
-        { }
-
-        public AccountController(
-            ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
-            this.userManager = userManager;
-            this.AccessTokenFormat = accessTokenFormat;
         }
-
-        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         private IAuthenticationManager Authentication
         {
             get { return Request.GetOwinContext().Authentication; }
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return this.userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-
-            private set
-            {
-                this.userManager = value;
-            }
         }
 
         // POST api/Account/Register
@@ -74,7 +50,7 @@ namespace FoodDelivery.Api.Controllers
                 return GetErrorResult(result);
             }
 
-            return Ok(user.Id);
+            return Ok($"User {user.UserName} registered successfully!");
         }
 
         // POST api/Account/Logout
@@ -124,10 +100,10 @@ namespace FoodDelivery.Api.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && userManager != null)
+            if (disposing && UserManager != null)
             {
-                userManager.Dispose();
-                userManager = null;
+                UserManager.Dispose();
+                UserManager = null;
             }
 
             base.Dispose(disposing);

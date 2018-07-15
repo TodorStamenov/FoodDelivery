@@ -7,6 +7,7 @@ import HomePage from './components/Home/HomePage'
 import Footer from './components/common/Footer'
 import auth from './api/auth'
 import UsersPage from './components/Admin/UsersPage'
+import CategoriesPage from './components/Moderator/CategoriesPage'
 
 class App extends Component {
   constructor (props) {
@@ -83,6 +84,7 @@ class App extends Component {
       <div>
         <Header
           isAdmin={this.state.roles.includes('Admin')}
+          isModerator={this.state.roles.includes('Moderator')}
           loggedIn={this.state.isAuthed}
           username={this.state.username}
           onLogout={this.onLogout}
@@ -94,6 +96,7 @@ class App extends Component {
             <Route exact path='/users/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
             <Route exact path='/users/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
             <Route exact path='/admin/users' component={UsersPage} />
+            <Route exact path='/moderator/categories' component={CategoriesPage} />
             <Route component={HomePage} />
           </Switch>
         </div>
