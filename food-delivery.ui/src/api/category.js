@@ -1,5 +1,4 @@
 import { host, getHeaders } from './common'
-import axios from 'axios'
 
 const categoryRoute = 'api/categories/'
 
@@ -11,12 +10,13 @@ function all () {
 }
 
 function addCategory (formData) {
-  return axios.post(host + categoryRoute, formData, {
+  return fetch(host + categoryRoute, {
+    method: 'POST',
+    body: formData,
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
     }
-  })
+  }).then(res => res.json())
 }
 
 const moderator = { all, addCategory }

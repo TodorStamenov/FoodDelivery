@@ -8,6 +8,7 @@ using FoodDelivery.Services.Models.ViewModels.Products;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Http;
+using System.Web.ModelBinding;
 
 namespace FoodDelivery.Api.Controllers
 {
@@ -67,7 +68,9 @@ namespace FoodDelivery.Api.Controllers
                 string.IsNullOrWhiteSpace(name) ||
                 images.Count == 0)
             {
-                return BadRequest("Category name and image are required");
+                ModelState.AddModelError("errorMessage", "Category name and image are required");
+
+                return BadRequest(ModelState);
             }
 
             HttpPostedFile image = images[0];

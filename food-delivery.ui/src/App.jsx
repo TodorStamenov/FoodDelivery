@@ -43,10 +43,7 @@ class App extends Component {
     auth.register(data.email, data.password, data.confirmPassword)
       .then(res => {
         if (res.ModelState) {
-          for (const key in res.ModelState) {
-            console.log(res.ModelState[key])
-          }
-
+          console.log(Object.values(res.ModelState).join('\n'))
           return
         }
 

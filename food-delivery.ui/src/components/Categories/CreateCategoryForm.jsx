@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import protectedRoute from '../../utils/protectedRoute'
 
 import category from '../../api/category'
-import axios from 'axios'
 
 class CreateCategoryFormBase extends Component {
   constructor (props) {
@@ -31,9 +30,13 @@ class CreateCategoryFormBase extends Component {
     fd.append('image', this.state.image)
 
     category.addCategory(fd).then(res => {
-      console.log(res)
+      if (res.ModelState) {
+        console.log(Object.values(res.ModelState).join('\n'))
+        return
+      }
+
       this.props.history.push('/moderator/categories')
-    }).catch(err => console.log(err))
+    })
 
     this.clearForm()
   }
