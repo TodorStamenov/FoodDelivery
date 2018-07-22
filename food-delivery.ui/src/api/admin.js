@@ -1,8 +1,8 @@
 import host from './constants'
-const adminRoute = 'api/admin/'
+const adminRoute = 'api/users/'
 
-function users (username) {
-  return fetch(host + adminRoute + 'users?username=' + (username || ''), {
+function all (username) {
+  return fetch(host + adminRoute + 'all?username=' + (username || ''), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -51,6 +51,6 @@ function removeRole (username, roleName) {
   }).then(res => res.json())
 }
 
-const admin = { users, lock, unlock, addRole, removeRole }
+const admin = { all, lock, unlock, addRole, removeRole }
 
 export default admin

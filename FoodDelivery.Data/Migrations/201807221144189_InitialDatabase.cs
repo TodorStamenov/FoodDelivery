@@ -45,17 +45,17 @@ namespace FoodDelivery.Data.Migrations
                     UserId = c.Int(nullable: false),
                 })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId)
+                .ForeignKey("dbo.Users", t => t.UserId)
                 .ForeignKey("dbo.Products", t => t.ProductId, cascadeDelete: true)
                 .Index(t => t.ProductId)
                 .Index(t => t.UserId);
 
             CreateTable(
-                "dbo.AspNetUsers",
+                "dbo.Users",
                 c => new
                 {
                     Id = c.Int(nullable: false, identity: true),
-                    Email = c.String(maxLength: 256),
+                    Email = c.String(),
                     EmailConfirmed = c.Boolean(nullable: false),
                     PasswordHash = c.String(),
                     SecurityStamp = c.String(),
@@ -65,10 +65,9 @@ namespace FoodDelivery.Data.Migrations
                     LockoutEndDateUtc = c.DateTime(),
                     LockoutEnabled = c.Boolean(nullable: false),
                     AccessFailedCount = c.Int(nullable: false),
-                    UserName = c.String(nullable: false, maxLength: 256),
+                    UserName = c.String(),
                 })
-                .PrimaryKey(t => t.Id)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
+                .PrimaryKey(t => t.Id);
 
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -80,7 +79,7 @@ namespace FoodDelivery.Data.Migrations
                     ClaimValue = c.String(),
                 })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
 
             CreateTable(
@@ -92,7 +91,7 @@ namespace FoodDelivery.Data.Migrations
                     UserId = c.Int(nullable: false),
                 })
                 .PrimaryKey(t => new { t.LoginProvider, t.ProviderKey, t.UserId })
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
 
             CreateTable(
@@ -107,8 +106,8 @@ namespace FoodDelivery.Data.Migrations
                     ExecutorId = c.Int(nullable: false),
                 })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId)
-                .ForeignKey("dbo.AspNetUsers", t => t.ExecutorId)
+                .ForeignKey("dbo.Users", t => t.UserId)
+                .ForeignKey("dbo.Users", t => t.ExecutorId)
                 .Index(t => t.UserId)
                 .Index(t => t.ExecutorId);
 
@@ -126,7 +125,7 @@ namespace FoodDelivery.Data.Migrations
                 .Index(t => t.OrderId);
 
             CreateTable(
-                "dbo.AspNetUserRoles",
+                "dbo.UserRoles",
                 c => new
                 {
                     UserId = c.Int(nullable: false),
@@ -134,7 +133,7 @@ namespace FoodDelivery.Data.Migrations
                 })
                 .PrimaryKey(t => new { t.UserId, t.RoleId })
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.Users", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
 
@@ -177,27 +176,26 @@ namespace FoodDelivery.Data.Migrations
             DropForeignKey("dbo.ProductsIngredients", "ProductId", "dbo.Products");
             DropForeignKey("dbo.ProductsIngredients", "IngredientId", "dbo.Ingredients");
             DropForeignKey("dbo.Feedbacks", "ProductId", "dbo.Products");
-            DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Orders", "ExecutorId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Orders", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.UserRoles", "UserId", "dbo.Users");
+            DropForeignKey("dbo.UserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.Orders", "ExecutorId", "dbo.Users");
+            DropForeignKey("dbo.Orders", "UserId", "dbo.Users");
             DropForeignKey("dbo.ProductsOrders", "ProductId", "dbo.Products");
             DropForeignKey("dbo.ProductsOrders", "OrderId", "dbo.Orders");
-            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Feedbacks", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.Users");
+            DropForeignKey("dbo.Feedbacks", "UserId", "dbo.Users");
+            DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.Users");
             DropIndex("dbo.ProductsIngredients", new[] { "IngredientId" });
             DropIndex("dbo.ProductsIngredients", new[] { "ProductId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
+            DropIndex("dbo.UserRoles", new[] { "RoleId" });
+            DropIndex("dbo.UserRoles", new[] { "UserId" });
             DropIndex("dbo.ProductsOrders", new[] { "OrderId" });
             DropIndex("dbo.ProductsOrders", new[] { "ProductId" });
             DropIndex("dbo.Orders", new[] { "ExecutorId" });
             DropIndex("dbo.Orders", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.Feedbacks", new[] { "UserId" });
             DropIndex("dbo.Feedbacks", new[] { "ProductId" });
             DropIndex("dbo.Products", new[] { "CategoryId" });
@@ -206,12 +204,12 @@ namespace FoodDelivery.Data.Migrations
             DropTable("dbo.Ingredients");
             DropTable("dbo.ProductsIngredients");
             DropTable("dbo.AspNetRoles");
-            DropTable("dbo.AspNetUserRoles");
+            DropTable("dbo.UserRoles");
             DropTable("dbo.ProductsOrders");
             DropTable("dbo.Orders");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
-            DropTable("dbo.AspNetUsers");
+            DropTable("dbo.Users");
             DropTable("dbo.Feedbacks");
             DropTable("dbo.Products");
             DropTable("dbo.Categories");

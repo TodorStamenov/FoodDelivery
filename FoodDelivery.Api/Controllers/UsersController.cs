@@ -11,21 +11,23 @@ using System.Web.Http;
 namespace FoodDelivery.Api.Controllers
 {
     [Authorize(Roles = CommonConstants.AdminRole)]
-    [RoutePrefix("api/Admin")]
-    public class AdminController : BaseApiController
+    [RoutePrefix("api/Users")]
+    public class UsersController : BaseApiController
     {
-        private readonly IAdminService users;
+        private const string UsernameNotNull = "Username cannot be null";
 
-        public AdminController(IAdminService users)
+        private readonly IUserService users;
+
+        public UsersController(IUserService users)
         {
             this.users = users;
         }
 
         [HttpGet]
-        [Route("Users")]
-        public IEnumerable<ListUsersViewModel> Users([FromUri]string username)
+        [Route("All")]
+        public IEnumerable<ListUsersViewModel> All([FromUri]string username)
         {
-            return this.users.Users(username);
+            return this.users.All(username);
         }
 
         [HttpGet]
@@ -34,7 +36,7 @@ namespace FoodDelivery.Api.Controllers
         {
             if (username == null)
             {
-                return BadRequest("Username cannot be null!");
+                return BadRequest(UsernameNotNull);
             }
 
             User user = await UserManager.FindByNameAsync(username);
@@ -61,7 +63,7 @@ namespace FoodDelivery.Api.Controllers
         {
             if (username == null)
             {
-                return BadRequest("Username cannot be null!");
+                return BadRequest(UsernameNotNull);
             }
 
             User user = await UserManager.FindByNameAsync(username);

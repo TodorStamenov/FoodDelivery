@@ -1,7 +1,8 @@
 import host from './constants'
+const accountRoute = 'api/account/'
 
 function register (email, password, confirmPassword) {
-  return fetch(host + 'api/account/register', {
+  return fetch(host + accountRoute + 'register', {
     method: 'POST',
     body: JSON.stringify({
       email,
@@ -14,10 +15,13 @@ function register (email, password, confirmPassword) {
   }).then(res => res.json())
 }
 
-function login (username, password) {
-  return fetch(host + 'token', {
+function login (email, password) {
+  return fetch(host + accountRoute + 'login', {
     method: 'POST',
-    body: `grant_type=password&username=${username}&password=${password}`,
+    body: JSON.stringify({
+      email,
+      password
+    }),
     headers: {
       'Content-Type': 'application/json'
     }
@@ -25,7 +29,7 @@ function login (username, password) {
 }
 
 function logout () {
-  return fetch(host + 'api/account/logout', {
+  return fetch(host + accountRoute + 'logout', {
     method: 'POST',
     headers: {
       'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
@@ -33,15 +37,6 @@ function logout () {
   })
 }
 
-function getRoles () {
-  return fetch(host + 'api/account/roles', {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
-    }
-  }).then(res => res.json())
-}
-
-const auth = { register, login, logout, getRoles }
+const auth = { register, login, logout }
 
 export default auth

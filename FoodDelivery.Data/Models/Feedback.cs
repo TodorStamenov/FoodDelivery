@@ -7,7 +7,7 @@ namespace FoodDelivery.Data.Models
     {
         public int Id { get; set; }
 
-        [MaxLength(5000)]
+        [MaxLength(DataConstants.FeedbackConstants.MaxContentLength)]
         public string Content { get; set; }
 
         public Rate Rate { get; set; }

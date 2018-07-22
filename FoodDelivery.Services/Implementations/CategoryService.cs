@@ -1,5 +1,6 @@
-﻿using FoodDelivery.Data;
-using FoodDelivery.Services.Models.BindingModels.Categories;
+﻿using FoodDelivery.Common;
+using FoodDelivery.Data;
+using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
 using FoodDelivery.Services.Models.ViewModels.Products;
 using System.Collections.Generic;
@@ -9,32 +10,41 @@ namespace FoodDelivery.Services.Implementations
 {
     public class CategoryService : Service, ICategoryService
     {
+        private const string Category = "Category";
+
         public CategoryService(FoodDeliveryDbContext db)
             : base(db)
         {
         }
 
-        public void Create(CreateCategoryBindingModel model)
+        public void Create(string name, byte[] image)
         {
             throw new System.NotImplementedException();
         }
 
-        public void Edit(int id, EditCategoryBindingModel model)
+        public void Edit(int id, string name, byte[] image)
         {
             throw new System.NotImplementedException();
         }
 
-        public EditCategoryViewModel Category(int id)
+        public CategoryViewModel GetCategory(int id)
         {
-            return this.db
+            CategoryViewModel model = this.db
                 .Categories
                 .Where(c => c.Id == id)
-                .Select(c => new EditCategoryViewModel
+                .Select(c => new CategoryViewModel
                 {
                     Id = c.Id,
                     Name = c.Name
                 })
                 .FirstOrDefault();
+
+            if (model == null)
+            {
+                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, Category));
+            }
+
+            return model;
         }
 
         public IEnumerable<ListCategoriesViewModel> Categories()
@@ -52,13 +62,20 @@ namespace FoodDelivery.Services.Implementations
 
         public IEnumerable<ListProductsViewModel> Products(int categoryId)
         {
-            return this.db
+            IEnumerable<ListProductsViewModel> model = this.db
                 .Products
                 .Where(p => p.CategoryId == categoryId)
                 .Select(p => new ListProductsViewModel
                 {
                 })
                 .ToList();
+
+            if (!model.Any())
+            {
+                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, Category));
+            }
+
+            return model;
         }
     }
 }

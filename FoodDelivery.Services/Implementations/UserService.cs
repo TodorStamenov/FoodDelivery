@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class AdminService : Service, IAdminService
+    public class UserService : Service, IUserService
     {
         private const int UsersInPage = 20;
 
-        public AdminService(FoodDeliveryDbContext db)
+        public UserService(FoodDeliveryDbContext db)
             : base(db)
         {
         }
@@ -50,7 +50,7 @@ namespace FoodDelivery.Services.Implementations
 
             if (userId == null || roleId == null)
             {
-                throw new NotExistingEntryExeption($"{username} username or ${roleName} role not existing in database");
+                throw new NotExistingEntryException($"{username} username or ${roleName} role not existing in database");
             }
 
             UserRole userRole = new UserRole
@@ -80,7 +80,7 @@ namespace FoodDelivery.Services.Implementations
             this.db.SaveChanges();
         }
 
-        public IEnumerable<ListUsersViewModel> Users(string userQuery)
+        public IEnumerable<ListUsersViewModel> All(string userQuery)
         {
             IQueryable<User> query = this.db.Users;
 

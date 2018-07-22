@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Data.IdentityModels;
 using FoodDelivery.Data.Migrations;
+using FoodDelivery.Data.ModelConfigurations;
 using FoodDelivery.Data.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
@@ -35,96 +36,12 @@ namespace FoodDelivery.Data
         {
             base.OnModelCreating(builder);
 
-            builder
-                .Entity<Category>()
-                .HasMany(c => c.Products)
-                .WithRequired(p => p.Category)
-                .HasForeignKey(p => p.CategoryId);
-
-            builder
-                .Entity<Category>()
-                .HasIndex(c => c.Name)
-                .IsUnique(true);
-
-            builder
-                .Entity<Product>()
-                .HasMany(p => p.Feedbacks)
-                .WithRequired(f => f.Product)
-                .HasForeignKey(f => f.ProductId);
-
-            builder
-               .Entity<Product>()
-               .HasIndex(c => c.Name)
-               .IsUnique(true);
-
-            builder
-                 .Entity<User>()
-                 .HasMany(u => u.Feedbacks)
-                 .WithRequired(f => f.User)
-                 .HasForeignKey(f => f.UserId)
-                 .WillCascadeOnDelete(false);
-
-            builder
-                .Entity<User>()
-                .HasMany(u => u.Orders)
-                .WithRequired(o => o.User)
-                .HasForeignKey(o => o.UserId)
-                .WillCascadeOnDelete(false);
-
-            builder
-                .Entity<User>()
-                .HasMany(u => u.ReceivedOrders)
-                .WithRequired(o => o.Executor)
-                .HasForeignKey(o => o.ExecutorId)
-                .WillCascadeOnDelete(false);
-
-            builder
-               .Entity<UserRole>()
-               .HasKey(ur => new { ur.UserId, ur.RoleId });
-
-            builder
-                .Entity<UserRole>()
-                .HasRequired(ur => ur.User)
-                .WithMany(u => u.Roles)
-                .HasForeignKey(ur => ur.UserId);
-
-            builder
-                .Entity<UserRole>()
-                .HasRequired(ur => ur.Role)
-                .WithMany(r => r.Users)
-                .HasForeignKey(ur => ur.RoleId);
-
-            builder
-               .Entity<ProductsOrders>()
-               .HasKey(po => new { po.ProductId, po.OrderId });
-
-            builder
-                .Entity<ProductsOrders>()
-                .HasRequired(po => po.Product)
-                .WithMany(p => p.Orders)
-                .HasForeignKey(po => po.ProductId);
-
-            builder
-                .Entity<ProductsOrders>()
-                .HasRequired(po => po.Order)
-                .WithMany(p => p.Products)
-                .HasForeignKey(po => po.OrderId);
-
-            builder
-                .Entity<ProductsIngredients>()
-                .HasKey(pi => new { pi.ProductId, pi.IngredientId });
-
-            builder
-                .Entity<ProductsIngredients>()
-                .HasRequired(pi => pi.Product)
-                .WithMany(p => p.Ingredients)
-                .HasForeignKey(pi => pi.ProductId);
-
-            builder
-                .Entity<ProductsIngredients>()
-                .HasRequired(pi => pi.Ingredient)
-                .WithMany(p => p.Products)
-                .HasForeignKey(pi => pi.IngredientId);
+            builder.Configurations.Add(new CategoryConfiguration());
+            builder.Configurations.Add(new ProductConfiguration());
+            builder.Configurations.Add(new UserConfiguration());
+            builder.Configurations.Add(new UserRoleConfiguration());
+            builder.Configurations.Add(new ProductsOrdersConfiguration());
+            builder.Configurations.Add(new ProductsIngredientsConfiguration());
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace FoodDelivery.Services.Models.ViewModels.Categories
 {
-    public class EditCategoryViewModel
+    public class CategoryViewModel
     {
         public int Id { get; set; }
 

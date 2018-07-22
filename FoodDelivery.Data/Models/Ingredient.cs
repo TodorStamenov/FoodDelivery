@@ -8,8 +8,8 @@ namespace FoodDelivery.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(50)]
+        [MinLength(DataConstants.IngredientConstants.MinNameLength)]
+        [MaxLength(DataConstants.IngredientConstants.MaxNameLength)]
         public string Name { get; set; }
 
         public virtual List<ProductsIngredients> Products { get; set; } = new List<ProductsIngredients>();

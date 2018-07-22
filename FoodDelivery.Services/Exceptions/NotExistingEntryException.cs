@@ -1,13 +1,13 @@
 ﻿namespace FoodDelivery.Services.Exceptions
 {
-    public class NotExistingEntryExeption : BadRequestException
+    public class NotExistingEntryException : BadRequestException
     {
-        public NotExistingEntryExeption()
+        public NotExistingEntryException()
             : this("Entry not found in database")
         {
         }
 
-        public NotExistingEntryExeption(string message)
+        public NotExistingEntryException(string message)
             : base(message)
         {
         }

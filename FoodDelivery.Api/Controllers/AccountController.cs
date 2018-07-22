@@ -3,8 +3,8 @@ using FoodDelivery.Services.Models.BindingModels.Users;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Testing;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -50,7 +50,40 @@ namespace FoodDelivery.Api.Controllers
                 return GetErrorResult(result);
             }
 
-            return Ok($"User {user.UserName} registered successfully!");
+            // Auto login after registrаtion (successful user registration should return access_token)
+            IHttpActionResult loginResult = await this.Login(new LoginBindingModel()
+            {
+                Email = model.Email,
+                Password = model.Password
+            });
+
+            return loginResult;
+        }
+
+        // POST api/Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<IHttpActionResult> Login(LoginBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Invoke the "token" OWIN service to perform the login (POST /token)
+            TestServer testServer = TestServer.Create<Startup>();
+            IDictionary<string, string> requestParams = new Dictionary<string, string>
+            {
+                { "username", model.Email },
+                { "password", model.Password },
+                { "grant_type", "password" }
+            };
+
+            FormUrlEncodedContent requestParamsFormUrlEncoded = new FormUrlEncodedContent(requestParams);
+            HttpResponseMessage tokenServiceResponse = await testServer.HttpClient.PostAsync("/Token", requestParamsFormUrlEncoded);
+
+            return this.ResponseMessage(tokenServiceResponse);
         }
 
         // POST api/Account/Logout
@@ -58,7 +91,7 @@ namespace FoodDelivery.Api.Controllers
         public IHttpActionResult Logout()
         {
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
-            return Ok();
+            return Ok("Logout successful.");
         }
 
         // POST api/Account/ChangePassword
@@ -81,21 +114,6 @@ namespace FoodDelivery.Api.Controllers
             }
 
             return Ok();
-        }
-
-        // GET api/Account/Roles
-        [HttpGet]
-        [Route("Roles")]
-        public IEnumerable<string> Roles()
-        {
-            string username = User.Identity.Name;
-
-            return this.UserManager
-                .Users
-                .FirstOrDefault(u => u.UserName == username)
-                .Roles
-                .Select(r => r.Role.Name)
-                .ToArray();
         }
 
         protected override void Dispose(bool disposing)

@@ -8,11 +8,13 @@ namespace FoodDelivery.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(500)]
+        [MinLength(DataConstants.OrderConstants.MinAddressLength)]
+        [MaxLength(DataConstants.OrderConstants.MaxAddressLength)]
         public string Address { get; set; }
 
-        [Range(double.Epsilon, double.MaxValue)]
+        [Range(
+            DataConstants.OrderConstants.MinPrice,
+            DataConstants.OrderConstants.MaxPrice)]
         public decimal Price { get; set; }
 
         public Status Status { get; set; }

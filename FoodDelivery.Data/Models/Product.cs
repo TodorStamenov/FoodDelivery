@@ -8,18 +8,22 @@ namespace FoodDelivery.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(50)]
+        [MinLength(DataConstants.ProductConstants.MinNameLength)]
+        [MaxLength(DataConstants.ProductConstants.MaxNameLength)]
         public string Name { get; set; }
 
-        [Range(double.Epsilon, double.MaxValue)]
+        [Range(
+            DataConstants.ProductConstants.MinPrice,
+            DataConstants.ProductConstants.MaxPrice)]
         public decimal Price { get; set; }
 
-        [Range(double.Epsilon, double.MaxValue)]
+        [Range(
+            DataConstants.ProductConstants.MinMass,
+            DataConstants.ProductConstants.MaxMass)]
         public double Mass { get; set; }
 
         [Required]
-        [MaxLength(5000)]
+        [MaxLength(DataConstants.ProductConstants.MaxDescriptionLength)]
         public string Description { get; set; }
 
         public int CategoryId { get; set; }

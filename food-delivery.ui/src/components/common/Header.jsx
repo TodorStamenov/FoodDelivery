@@ -45,7 +45,7 @@ export default class Header extends Component {
               <Dropdown isOpen={this.state.adminDropdownOpen} toggle={this.toggleAdmin}>
                 <DropdownToggle nav caret>Admin</DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem><Link className='dropdown-item' to='/admin/users'>Users</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/users/all'>Users</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             }
@@ -56,13 +56,14 @@ export default class Header extends Component {
                 <DropdownMenu>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/categories'>Categories</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/products'>Products</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/ingredients'>Ingredients</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/employees'>Employees</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/orders'>Orders</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             }
-            {!this.props.loggedIn && <li><Link className='nav-link' to='/users/register'>Register</Link></li>}
-            {!this.props.loggedIn && <li><Link className='nav-link' to='/users/login'>Login</Link></li>}
+            {!this.props.loggedIn && <li><Link className='nav-link' to='/account/register'>Register</Link></li>}
+            {!this.props.loggedIn && <li><Link className='nav-link' to='/account/login'>Login</Link></li>}
             {this.props.loggedIn && <li className='nav-link'>Hello {this.props.username}!</li>}
             {this.props.loggedIn && <li><a className='nav-link' href='javascript:void(0)' onClick={this.props.onLogout}>Logout</a></li>}
           </ul>

@@ -1,4 +1,6 @@
-﻿using FoodDelivery.Common;
+﻿using FoodDelivery.Api.Infrastructure.Extensions;
+using FoodDelivery.Common;
+using FoodDelivery.Data;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.BindingModels.Categories;
@@ -10,9 +12,12 @@ using System.Web.Http;
 namespace FoodDelivery.Api.Controllers
 {
     [Authorize(Roles = CommonConstants.ModeratorRole)]
-    [RoutePrefix("api/Moderator")]
+    [RoutePrefix("api/Categories")]
     public class CategoriesController : ApiController
     {
+        private const string Category = "Category";
+        private const string ImageSizeMessage = "Uploaded file must be of type image with size less then 1 MB";
+
         private readonly ICategoryService category;
 
         public CategoriesController(ICategoryService category)
@@ -20,76 +25,87 @@ namespace FoodDelivery.Api.Controllers
             this.category = category;
         }
 
-        [HttpGet]
-        [Route("Category")]
         public IEnumerable<ListCategoriesViewModel> Get()
         {
             return this.category.Categories();
         }
 
-        [HttpGet]
-        [Route("Category/{id}")]
         public IHttpActionResult Get(int id)
-        {
-            EditCategoryViewModel model = this.category.Category(id);
-
-            if (model == null)
-            {
-                return BadRequest($"Category with {id} id is not existing in database");
-            }
-
-            return Ok(model);
-        }
-
-        [HttpGet]
-        [Route("Category/{id}/Products")]
-        public IHttpActionResult Products(int id)
-        {
-            IEnumerable<ListProductsViewModel> model = this.category.Products(id);
-
-            if (model == null)
-            {
-                return BadRequest($"Category with {id} id is not existing in database");
-            }
-
-            return Ok(model);
-        }
-
-        [HttpPost]
-        [Route("Category")]
-        public IHttpActionResult Post(CreateCategoryBindingModel model)
         {
             try
             {
-                this.category.Create(model);
+                CategoryViewModel model = this.category.GetCategory(id);
+                return Ok(model);
             }
             catch (BadRequestException bre)
             {
                 return BadRequest(bre.Message);
             }
-
-            return Ok("Category was successfully deleted.");
         }
 
-        [HttpPut]
-        [Route("Category/{id}")]
-        public IHttpActionResult Put(int id, [FromBody]EditCategoryBindingModel model)
+        [HttpGet]
+        [Route("{id}/Products")]
+        public IHttpActionResult Products(int id)
+        {
+            try
+            {
+                IEnumerable<ListProductsViewModel> model = this.category.Products(id);
+                return Ok(model);
+            }
+            catch (BadRequestException bre)
+            {
+                return BadRequest(bre.Message);
+            }
+        }
+
+        public IHttpActionResult Post(CategoryBindingModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (!model.Image.ContentType.Contains("image")
+                || model.Image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
+            {
+                return BadRequest(ImageSizeMessage);
+            }
+
             try
             {
-                this.category.Edit(id, model);
+                this.category.Create(model.Name, model.Image.ToByteArray());
             }
             catch (BadRequestException bre)
             {
                 return BadRequest(bre.Message);
             }
 
-            return Ok("Category was successfully edited");
+            return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Created));
+        }
+
+        public IHttpActionResult Put(int id, [FromBody]CategoryBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!model.Image.ContentType.Contains("image")
+                || model.Image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
+            {
+                return BadRequest(ImageSizeMessage);
+            }
+
+            try
+            {
+                this.category.Edit(id, model.Name, model.Image.ToByteArray());
+            }
+            catch (BadRequestException bre)
+            {
+                return BadRequest(bre.Message);
+            }
+
+            return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Edited));
         }
     }
 }

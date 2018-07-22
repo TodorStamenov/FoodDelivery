@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import moderator from '../../api/moderator'
+import category from '../../api/category'
 import TableHead from '../common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
@@ -11,20 +11,14 @@ class CategoriesPageBase extends Component {
     this.state = {
       categories: []
     }
-
-    this.destroy = this.destroy.bind(this)
   }
 
   componentDidMount () {
-    moderator.categories().then(cats => {
+    category.all().then(res => {
       this.setState({
-        categories: cats
+        categories: res
       })
     })
-  }
-
-  destroy (id) {
-    console.log('delete ' + id)
   }
 
   render () {

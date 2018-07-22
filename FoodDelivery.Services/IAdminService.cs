@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace FoodDelivery.Services
 {
-    public interface IAdminService
+    public interface IUserService
     {
         void AddRole(string username, string roleName);
 
         void RemoveRole(string username, string roleName);
 
-        IEnumerable<ListUsersViewModel> Users(string userQuery);
+        IEnumerable<ListUsersViewModel> All(string userQuery);
     }
 }

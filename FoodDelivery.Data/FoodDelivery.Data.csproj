@@ -74,16 +74,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataConstants.cs" />
     <Compile Include="FoodDeliveryDbContext.cs" />
     <Compile Include="IdentityModels\RoleStore.cs" />
     <Compile Include="IdentityModels\UserClaim.cs" />
     <Compile Include="IdentityModels\UserLogin.cs" />
     <Compile Include="IdentityModels\UserStore.cs" />
-    <Compile Include="Migrations\201807151757542_InitialDatabase.cs" />
-    <Compile Include="Migrations\201807151757542_InitialDatabase.Designer.cs">
-      <DependentUpon>201807151757542_InitialDatabase.cs</DependentUpon>
+    <Compile Include="Migrations\201807221144189_InitialDatabase.cs" />
+    <Compile Include="Migrations\201807221144189_InitialDatabase.Designer.cs">
+      <DependentUpon>201807221144189_InitialDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ModelConfigurations\CategoryConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProductConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProductsIngredientsConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProductsOrdersConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserRoleConfiguration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\Ingredient.cs" />
@@ -116,8 +123,8 @@
     <Content Include="Files\Lorem.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201807151757542_InitialDatabase.resx">
-      <DependentUpon>201807151757542_InitialDatabase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201807221144189_InitialDatabase.resx">
+      <DependentUpon>201807221144189_InitialDatabase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

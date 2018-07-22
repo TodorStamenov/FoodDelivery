@@ -17,50 +17,53 @@ class App extends Component {
       username: sessionStorage.getItem('username'),
       authtoken: sessionStorage.getItem('authtoken'),
       isAuthed: sessionStorage.getItem('authtoken') !== null,
-      roles: sessionStorage.getItem('roles') || []
+      roles: sessionStorage.getItem('roles') || ''
     }
 
     this.onRegister = this.onRegister.bind(this)
     this.onLogin = this.onLogin.bind(this)
     this.onLogout = this.onLogout.bind(this)
+    this.saveUserData = this.saveUserData.bind(this)
+  }
+
+  saveUserData (res) {
+    sessionStorage.setItem('username', res.username)
+    sessionStorage.setItem('roles', res.roles)
+    sessionStorage.setItem('authtoken', res['access_token'])
+
+    this.setState({
+      username: sessionStorage.getItem('username'),
+      authtoken: sessionStorage.getItem('authtoken'),
+      isAuthed: sessionStorage.getItem('authtoken') !== null,
+      roles: sessionStorage.getItem('roles')
+    })
   }
 
   onRegister (data) {
-    auth.register(data.username, data.password, data.confirmPassword)
+    auth.register(data.email, data.password, data.confirmPassword)
       .then(res => {
         if (res.ModelState) {
           for (const key in res.ModelState) {
             console.log(res.ModelState[key])
           }
+
           return
         }
 
-        this.onLogin(data)
+        this.saveUserData(res)
+        this.props.history.push('/')
       })
   }
 
   onLogin (data) {
-    auth.login(data.username, data.password)
+    auth.login(data.email, data.password)
       .then(res => {
         if (res.error) {
           console.log(res.error_description)
           return
         }
 
-        sessionStorage.setItem('username', res.userName)
-        sessionStorage.setItem('authtoken', res['access_token'])
-
-        auth.getRoles().then(roles => {
-          sessionStorage.setItem('roles', JSON.stringify(roles))
-
-          this.setState({
-            username: sessionStorage.getItem('username'),
-            authtoken: sessionStorage.getItem('authtoken'),
-            isAuthed: sessionStorage.getItem('authtoken') !== null,
-            roles
-          })
-        })
-
+        this.saveUserData(res)
         this.props.history.push('/')
       })
   }
@@ -74,7 +77,7 @@ class App extends Component {
         username: '',
         authtoken: '',
         isAuthed: false,
-        roles: []
+        roles: ''
       })
     })
   }
@@ -93,9 +96,9 @@ class App extends Component {
         <div className='container body-content'>
           <Switch>
             <Route exact path='/' component={HomePage} />
-            <Route exact path='/users/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
-            <Route exact path='/users/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
-            <Route exact path='/admin/users' component={UsersPage} />
+            <Route exact path='/account/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
+            <Route exact path='/account/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
+            <Route exact path='/users/all' component={UsersPage} />
             <Route exact path='/moderator/categories' component={CategoriesPage} />
             <Route component={HomePage} />
           </Switch>

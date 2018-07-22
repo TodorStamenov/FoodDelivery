@@ -44,6 +44,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,19 +55,19 @@
   <ItemGroup>
     <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="Exceptions\DuplicateEntryException.cs" />
-    <Compile Include="Exceptions\NotExistingEntryExeption.cs" />
+    <Compile Include="Exceptions\NotExistingEntryException.cs" />
     <Compile Include="IAdminService.cs" />
     <Compile Include="IFeedbackService.cs" />
     <Compile Include="ICategoryService.cs" />
-    <Compile Include="Implementations\AdminService.cs" />
+    <Compile Include="Implementations\UserService.cs" />
     <Compile Include="Implementations\FeedbackService.cs" />
     <Compile Include="Implementations\CategoryService.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="Models\BindingModels\Categories\CreateCategoryBindingModel.cs" />
-    <Compile Include="Models\BindingModels\Categories\EditCategoryBindingModel.cs" />
+    <Compile Include="Models\BindingModels\Categories\CategoryBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\ChangePasswordBindingModel.cs" />
+    <Compile Include="Models\BindingModels\Users\LoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\RegisterBindingModel.cs" />
-    <Compile Include="Models\ViewModels\Categories\EditCategoryViewModel.cs" />
+    <Compile Include="Models\ViewModels\Categories\CategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\Categories\ListCategoriesViewModel.cs" />
     <Compile Include="Models\ViewModels\Feedbacks\ListFeedbacksViewModel.cs" />
     <Compile Include="Models\ViewModels\Products\ListProductsViewModel.cs" />

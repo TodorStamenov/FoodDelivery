@@ -8,11 +8,11 @@ namespace FoodDelivery.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(50)]
+        [MinLength(DataConstants.CategoryConstants.MinNameLength)]
+        [MaxLength(DataConstants.CategoryConstants.MaxNameLength)]
         public string Name { get; set; }
 
-        [MaxLength(1024 * 1024)]
+        [MaxLength(DataConstants.CategoryConstants.MaxImageSize)]
         public byte[] Image { get; set; }
 
         public virtual List<Product> Products { get; set; } = new List<Product>();

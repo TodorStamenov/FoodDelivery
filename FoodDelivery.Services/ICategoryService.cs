@@ -1,5 +1,4 @@
-﻿using FoodDelivery.Services.Models.BindingModels.Categories;
-using FoodDelivery.Services.Models.ViewModels.Categories;
+﻿using FoodDelivery.Services.Models.ViewModels.Categories;
 using FoodDelivery.Services.Models.ViewModels.Products;
 using System.Collections.Generic;
 
@@ -7,11 +6,11 @@ namespace FoodDelivery.Services
 {
     public interface ICategoryService
     {
-        void Create(CreateCategoryBindingModel model);
+        void Create(string name, byte[] image);
 
-        void Edit(int id, EditCategoryBindingModel model);
+        void Edit(int id, string name, byte[] image);
 
-        EditCategoryViewModel Category(int id);
+        CategoryViewModel GetCategory(int id);
 
         IEnumerable<ListProductsViewModel> Products(int categoryId);
 

@@ -34,7 +34,7 @@ class UsersPageBase extends Component {
   }
 
   getUsers (username) {
-    admin.users(username).then(users => {
+    admin.all(username).then(users => {
       this.setState({
         users
       })
