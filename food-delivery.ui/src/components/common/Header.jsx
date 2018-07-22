@@ -7,13 +7,23 @@ export default class Header extends Component {
     super(props)
 
     this.state = {
-      isAuthed: this.props.loggedIn,
       adminDropdownOpen: false,
       moderatorDropdownOpen: false
     }
 
     this.toggleAdmin = this.toggleAdmin.bind(this)
     this.toggleModerator = this.toggleModerator.bind(this)
+  }
+
+  componentDidMount () {
+    this.setState({
+      isAuthed: sessionStorage.getItem('username') !== null,
+      username: sessionStorage.getItem('username'),
+      isAdmin: sessionStorage.getItem('roles') !== null && sessionStorage.getItem('roles').includes('Admin'),
+      isModerator: sessionStorage.getItem('roles') !== null && sessionStorage.getItem('roles').includes('Moderator'),
+      adminDropdownOpen: false,
+      moderatorDropdownOpen: false
+    })
   }
 
   toggleAdmin () {
@@ -37,7 +47,8 @@ export default class Header extends Component {
         </button>
         <div className='collapse navbar-collapse' id='navbarSupportedContent'>
           <ul className='navbar-nav mr-auto'>
-            {this.state.loggedIn && <li><Link className='nav-link' to='/orders/my'>My Orders</Link></li>}
+            {this.props.isAuthed && <li><Link className='nav-link' to='/orders/my'>My Orders</Link></li>}
+            {this.props.isAuthed && <li><Link className='nav-link' to='/feedback/create'>Add Feedback</Link></li>}
           </ul>
           <ul className='nav navbar-nav navbar-right'>
             {
@@ -57,15 +68,15 @@ export default class Header extends Component {
                   <DropdownItem><Link className='dropdown-item' to='/moderator/categories'>Categories</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/products'>Products</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/ingredients'>Ingredients</Link></DropdownItem>
-                  <DropdownItem><Link className='dropdown-item' to='/moderator/employees'>Employees</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/orders'>Orders</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/feedbacks'>Feedbacks</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             }
-            {!this.props.loggedIn && <li><Link className='nav-link' to='/account/register'>Register</Link></li>}
-            {!this.props.loggedIn && <li><Link className='nav-link' to='/account/login'>Login</Link></li>}
-            {this.props.loggedIn && <li className='nav-link'>Hello {this.props.username}!</li>}
-            {this.props.loggedIn && <li><a className='nav-link' href='javascript:void(0)' onClick={this.props.onLogout}>Logout</a></li>}
+            {!this.props.isAuthed && <li><Link className='nav-link' to='/account/register'>Register</Link></li>}
+            {!this.props.isAuthed && <li><Link className='nav-link' to='/account/login'>Login</Link></li>}
+            {this.props.isAuthed && <li><Link className='nav-link' to='/account/user'>Hello {this.props.username}!</Link></li>}
+            {this.props.isAuthed && <li><a className='nav-link' href='javascript:void(0)' onClick={this.props.onLogout}>Logout</a></li>}
           </ul>
         </div>
       </nav>

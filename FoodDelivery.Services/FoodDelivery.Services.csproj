@@ -63,7 +63,6 @@
     <Compile Include="Implementations\FeedbackService.cs" />
     <Compile Include="Implementations\CategoryService.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="Models\BindingModels\Categories\CategoryBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\LoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\RegisterBindingModel.cs" />
@@ -85,7 +84,9 @@
       <Name>FoodDelivery.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\BindingModels\Categories\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

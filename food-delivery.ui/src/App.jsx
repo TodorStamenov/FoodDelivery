@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
+
 import Header from './components/common/Header'
 import RegisterForm from './components/Auth/RegisterForm'
 import LoginForm from './components/Auth/LoginForm'
 import HomePage from './components/Home/HomePage'
 import Footer from './components/common/Footer'
+import UsersPage from './components/Users/UsersPage'
+import CategoriesPage from './components/Categories/CategoriesPage'
+import ChangePasswordForm from './components/Auth/ChangePasswordForm'
+
 import auth from './api/auth'
-import UsersPage from './components/Admin/UsersPage'
-import CategoriesPage from './components/Moderator/CategoriesPage'
+import CreateCategoryForm from './components/Categories/CreateCategoryForm'
 
 class App extends Component {
   constructor (props) {
@@ -15,9 +19,7 @@ class App extends Component {
 
     this.state = {
       username: sessionStorage.getItem('username'),
-      authtoken: sessionStorage.getItem('authtoken'),
-      isAuthed: sessionStorage.getItem('authtoken') !== null,
-      roles: sessionStorage.getItem('roles') || ''
+      isAuthed: sessionStorage.getItem('username') !== null
     }
 
     this.onRegister = this.onRegister.bind(this)
@@ -33,9 +35,7 @@ class App extends Component {
 
     this.setState({
       username: sessionStorage.getItem('username'),
-      authtoken: sessionStorage.getItem('authtoken'),
-      isAuthed: sessionStorage.getItem('authtoken') !== null,
-      roles: sessionStorage.getItem('roles')
+      isAuthed: sessionStorage.getItem('username') !== null
     })
   }
 
@@ -70,14 +70,13 @@ class App extends Component {
 
   onLogout () {
     auth.logout().then(() => {
-      sessionStorage.clear()
       this.props.history.push('/')
+      sessionStorage.clear()
 
       this.setState({
         username: '',
         authtoken: '',
-        isAuthed: false,
-        roles: ''
+        isAuthed: false
       })
     })
   }
@@ -86,9 +85,9 @@ class App extends Component {
     return (
       <div>
         <Header
-          isAdmin={this.state.roles.includes('Admin')}
-          isModerator={this.state.roles.includes('Moderator')}
-          loggedIn={this.state.isAuthed}
+          isAdmin={this.state.isAuthed && sessionStorage.getItem('roles').includes('Admin')}
+          isModerator={this.state.isAuthed && sessionStorage.getItem('roles').includes('Moderator')}
+          isAuthed={this.state.isAuthed}
           username={this.state.username}
           onLogout={this.onLogout}
         />
@@ -96,10 +95,12 @@ class App extends Component {
         <div className='container body-content'>
           <Switch>
             <Route exact path='/' component={HomePage} />
+            <Route exact path='/account/user' component={ChangePasswordForm} />
             <Route exact path='/account/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
             <Route exact path='/account/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
             <Route exact path='/users/all' component={UsersPage} />
             <Route exact path='/moderator/categories' component={CategoriesPage} />
+            <Route exact path='/moderator/categories/create' component={CreateCategoryForm} />
             <Route component={HomePage} />
           </Switch>
         </div>

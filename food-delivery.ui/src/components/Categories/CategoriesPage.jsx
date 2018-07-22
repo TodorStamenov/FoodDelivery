@@ -38,7 +38,7 @@ class CategoriesPageBase extends Component {
                   <td>{c.Name}</td>
                   <td>{c.Products}</td>
                   <td><Link className='btn btn-secondary btn-sm' to={'/moderator/categories/' + c.Id + '/products'}>Products</Link></td>
-                  <td><Link className='btn btn-secondary btn-sm' to={'/moderator/categories/' + c.Id}>Edit</Link></td>
+                  <td><Link className='btn btn-secondary btn-sm' to={'/moderator/categories/edit/' + c.Id}>Edit</Link></td>
                 </tr>
               )}
             </tbody>

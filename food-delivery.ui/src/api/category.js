@@ -1,16 +1,24 @@
-import host from './constants'
+import { host, getHeaders } from './common'
+import axios from 'axios'
+
 const categoryRoute = 'api/categories/'
 
 function all () {
   return fetch(host + categoryRoute, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
-    }
+    headers: getHeaders(true, true)
   }).then(res => res.json())
 }
 
-const moderator = { all }
+function addCategory (formData) {
+  return axios.post(host + categoryRoute, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
+    }
+  })
+}
+
+const moderator = { all, addCategory }
 
 export default moderator

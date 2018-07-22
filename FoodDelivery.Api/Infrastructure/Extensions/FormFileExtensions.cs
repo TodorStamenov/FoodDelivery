@@ -13,5 +13,14 @@ namespace FoodDelivery.Api.Infrastructure.Extensions
                 return memoryStream.ToArray();
             }
         }
+
+        public static byte[] ToByteArray(this HttpPostedFile formFile)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                formFile.InputStream.CopyTo(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

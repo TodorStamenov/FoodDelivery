@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Common;
 using FoodDelivery.Data;
+using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
 using FoodDelivery.Services.Models.ViewModels.Products;
@@ -19,7 +20,15 @@ namespace FoodDelivery.Services.Implementations
 
         public void Create(string name, byte[] image)
         {
-            throw new System.NotImplementedException();
+            this.db
+                .Categories
+                .Add(new Category
+                {
+                    Name = name,
+                    Image = image
+                });
+
+            this.db.SaveChanges();
         }
 
         public void Edit(int id, string name, byte[] image)

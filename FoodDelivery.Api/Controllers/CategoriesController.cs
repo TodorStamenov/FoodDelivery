@@ -3,10 +3,10 @@ using FoodDelivery.Common;
 using FoodDelivery.Data;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
-using FoodDelivery.Services.Models.BindingModels.Categories;
 using FoodDelivery.Services.Models.ViewModels.Categories;
 using FoodDelivery.Services.Models.ViewModels.Products;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
@@ -58,22 +58,29 @@ namespace FoodDelivery.Api.Controllers
             }
         }
 
-        public IHttpActionResult Post(CategoryBindingModel model)
+        public IHttpActionResult Post()
         {
-            if (!ModelState.IsValid)
+            string name = HttpContext.Current.Request.Form["name"];
+            HttpFileCollection images = HttpContext.Current.Request.Files;
+
+            if (string.IsNullOrEmpty(name) ||
+                string.IsNullOrWhiteSpace(name) ||
+                images.Count == 0)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Category name and image are required");
             }
 
-            if (!model.Image.ContentType.Contains("image")
-                || model.Image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
+            HttpPostedFile image = images[0];
+
+            if (!image.ContentType.Contains("image")
+                || image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
             {
                 return BadRequest(ImageSizeMessage);
             }
 
             try
             {
-                this.category.Create(model.Name, model.Image.ToByteArray());
+                this.category.Create(name, image.ToByteArray());
             }
             catch (BadRequestException bre)
             {
@@ -83,22 +90,20 @@ namespace FoodDelivery.Api.Controllers
             return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Created));
         }
 
-        public IHttpActionResult Put(int id, [FromBody]CategoryBindingModel model)
+        public IHttpActionResult Put(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            string name = HttpContext.Current.Request.Form["name"];
+            HttpPostedFile image = HttpContext.Current.Request.Files[0];
 
-            if (!model.Image.ContentType.Contains("image")
-                || model.Image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
+            if (!image.ContentType.Contains("image")
+                || image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
             {
                 return BadRequest(ImageSizeMessage);
             }
 
             try
             {
-                this.category.Edit(id, model.Name, model.Image.ToByteArray());
+                this.category.Edit(id, name, image.ToByteArray());
             }
             catch (BadRequestException bre)
             {

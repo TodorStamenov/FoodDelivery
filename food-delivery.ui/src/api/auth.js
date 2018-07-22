@@ -1,4 +1,4 @@
-import host from './constants'
+import { host, getHeaders } from './common'
 const accountRoute = 'api/account/'
 
 function register (email, password, confirmPassword) {
@@ -9,9 +9,7 @@ function register (email, password, confirmPassword) {
       password,
       confirmPassword
     }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers: getHeaders(false, true)
   }).then(res => res.json())
 }
 
@@ -22,21 +20,29 @@ function login (email, password) {
       email,
       password
     }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers: getHeaders(false, true)
   }).then(res => res.json())
 }
 
 function logout () {
   return fetch(host + accountRoute + 'logout', {
     method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + sessionStorage.getItem('authtoken')
-    }
+    headers: getHeaders(true, false)
   })
 }
 
-const auth = { register, login, logout }
+function changePassword (oldPassword, newPassword, confirmPassword) {
+  return fetch(host + accountRoute + 'changePassword', {
+    method: 'POST',
+    body: JSON.stringify({
+      oldPassword,
+      newPassword,
+      confirmPassword
+    }),
+    headers: getHeaders(true, true)
+  }).then(res => res.json())
+}
+
+const auth = { register, login, logout, changePassword }
 
 export default auth

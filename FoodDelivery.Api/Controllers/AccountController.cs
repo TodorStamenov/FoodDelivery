@@ -113,7 +113,7 @@ namespace FoodDelivery.Api.Controllers
                 return GetErrorResult(result);
             }
 
-            return Ok();
+            return Ok("Password changed successfully");
         }
 
         protected override void Dispose(bool disposing)
