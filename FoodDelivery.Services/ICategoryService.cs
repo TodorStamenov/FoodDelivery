@@ -1,5 +1,4 @@
 ﻿using FoodDelivery.Services.Models.ViewModels.Categories;
-using FoodDelivery.Services.Models.ViewModels.Products;
 using System.Collections.Generic;
 
 namespace FoodDelivery.Services
@@ -11,8 +10,6 @@ namespace FoodDelivery.Services
         void Edit(int id, string name, byte[] image);
 
         CategoryViewModel GetCategory(int id);
-
-        IEnumerable<ListProductsViewModel> Products(int categoryId);
 
         IEnumerable<ListCategoriesViewModel> Categories();
     }

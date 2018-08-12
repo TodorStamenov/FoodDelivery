@@ -3,11 +3,12 @@ import protectedRoute from '../../utils/protectedRoute'
 
 import category from '../../api/category'
 
-class CreateCategoryFormBase extends Component {
+class EditCategoryFormBase extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
+      id: 0,
       name: '',
       image: null
     }
@@ -29,7 +30,7 @@ class CreateCategoryFormBase extends Component {
     fd.append('name', this.state.name)
     fd.append('image', this.state.image)
 
-    category.addCategory(fd).then(res => {
+    category.editCategory(this.state.id, fd).then(res => {
       if (res.ModelState) {
         console.log(Object.values(res.ModelState).join('\n'))
         return
@@ -54,6 +55,17 @@ class CreateCategoryFormBase extends Component {
     })
   }
 
+  componentDidMount () {
+    category
+      .getCategory(this.props.match.params.id)
+      .then(res => {
+        this.setState({
+          id: res.Id,
+          name: res.Name
+        })
+      })
+  }
+
   render () {
     return (
       <div className='form-group col-md-3 offset-md-2'>
@@ -68,13 +80,13 @@ class CreateCategoryFormBase extends Component {
               Choose an Image
             </button>
           </div>
-          <input className='btn btn-dark' type='submit' value='Add Category' />
+          <input className='btn btn-dark' type='submit' value='Edit Category' />
         </form>
       </div>
     )
   }
 }
 
-const CreateCategoryForm = protectedRoute(CreateCategoryFormBase, 'Moderator')
+const EditCategoryForm = protectedRoute(EditCategoryFormBase, 'Moderator')
 
-export default CreateCategoryForm
+export default EditCategoryForm

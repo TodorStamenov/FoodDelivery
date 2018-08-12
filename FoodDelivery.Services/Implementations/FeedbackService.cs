@@ -7,14 +7,14 @@ namespace FoodDelivery.Services.Implementations
 {
     public class FeedbackService : Service, IFeedbackService
     {
-        public FeedbackService(FoodDeliveryDbContext db)
-            : base(db)
+        public FeedbackService(FoodDeliveryDbContext database)
+            : base(database)
         {
         }
 
         public IEnumerable<ListFeedbacksViewModel> All()
         {
-            return this.db.Feedbacks
+            return Database.Feedbacks
                 .Select(f => new ListFeedbacksViewModel
                 {
                     Id = f.Id,

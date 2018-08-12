@@ -3,7 +3,6 @@ using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
-using FoodDelivery.Services.Models.ViewModels.Products;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,14 +12,19 @@ namespace FoodDelivery.Services.Implementations
     {
         private const string Category = "Category";
 
-        public CategoryService(FoodDeliveryDbContext db)
-            : base(db)
+        public CategoryService(FoodDeliveryDbContext database)
+            : base(database)
         {
         }
 
         public void Create(string name, byte[] image)
         {
-            this.db
+            if (HasCategory(name))
+            {
+                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, name));
+            }
+
+            Database
                 .Categories
                 .Add(new Category
                 {
@@ -28,17 +32,34 @@ namespace FoodDelivery.Services.Implementations
                     Image = image
                 });
 
-            this.db.SaveChanges();
+            Database.SaveChanges();
         }
 
         public void Edit(int id, string name, byte[] image)
         {
-            throw new System.NotImplementedException();
+            Category category = Database
+                .Categories
+                .Find(id);
+
+            if (category == null)
+            {
+                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, id));
+            }
+
+            if (HasCategory(name) && name != category.Name)
+            {
+                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, name));
+            }
+
+            category.Name = name;
+            category.Image = image ?? category.Image;
+
+            Database.SaveChanges();
         }
 
         public CategoryViewModel GetCategory(int id)
         {
-            CategoryViewModel model = this.db
+            CategoryViewModel model = Database
                 .Categories
                 .Where(c => c.Id == id)
                 .Select(c => new CategoryViewModel
@@ -58,7 +79,7 @@ namespace FoodDelivery.Services.Implementations
 
         public IEnumerable<ListCategoriesViewModel> Categories()
         {
-            return this.db
+            return Database
                 .Categories
                 .Select(c => new ListCategoriesViewModel
                 {
@@ -69,22 +90,9 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
-        public IEnumerable<ListProductsViewModel> Products(int categoryId)
+        private bool HasCategory(string name)
         {
-            IEnumerable<ListProductsViewModel> model = this.db
-                .Products
-                .Where(p => p.CategoryId == categoryId)
-                .Select(p => new ListProductsViewModel
-                {
-                })
-                .ToList();
-
-            if (!model.Any())
-            {
-                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, Category));
-            }
-
-            return model;
+            return Database.Categories.Any(c => c.Name == name);
         }
     }
 }

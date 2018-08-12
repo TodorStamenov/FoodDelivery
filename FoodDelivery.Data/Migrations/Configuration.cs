@@ -9,7 +9,9 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace FoodDelivery.Data.Migrations
 {
@@ -148,7 +150,7 @@ namespace FoodDelivery.Data.Migrations
                 context.Categories.Add(new Category
                 {
                     Name = $"Category{i}",
-                    Image = File.ReadAllBytes($"FoodDelivery.Data/Files/CategoryImage{i}.jpg")
+                    Image = File.ReadAllBytes($"{this.GetCurrentDirectory()}/Files/CategoryImage{i}.jpg")
                 });
             }
 
@@ -296,7 +298,7 @@ namespace FoodDelivery.Data.Migrations
 
             List<Rate> rates = Enum.GetValues(typeof(Rate)).Cast<Rate>().ToList();
 
-            string[] loremTokens = File.ReadAllText("FoodDelivery.Data/Files/Lorem.txt").Split();
+            string[] loremTokens = File.ReadAllText($"{this.GetCurrentDirectory()}/Files/Lorem.txt").Split();
             string lorem = string.Join(" ", loremTokens.Take(loremTokens.Length / 4));
 
             for (int i = 1; i <= feedbacksCount; i++)
@@ -312,6 +314,11 @@ namespace FoodDelivery.Data.Migrations
             }
 
             await context.SaveChangesAsync();
+        }
+
+        private string GetCurrentDirectory()
+        {
+            return Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
         }
     }
 }

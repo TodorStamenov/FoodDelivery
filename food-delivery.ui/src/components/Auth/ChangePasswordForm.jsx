@@ -13,10 +13,7 @@ export default class ChangePasswordForm extends Component {
     auth.changePassword(data.oldPassword, data.newPassword, data.confirmPassword)
       .then(res => {
         if (res.ModelState) {
-          for (const key in res.ModelState) {
-            console.log(res.ModelState[key])
-          }
-
+          console.log(Object.values(res.ModelState).join('\n'))
           return
         }
 

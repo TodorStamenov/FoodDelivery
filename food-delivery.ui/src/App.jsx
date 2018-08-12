@@ -12,6 +12,7 @@ import ChangePasswordForm from './components/Auth/ChangePasswordForm'
 
 import auth from './api/auth'
 import CreateCategoryForm from './components/Categories/CreateCategoryForm'
+import EditCategoryForm from './components/Categories/EditCategoryForm'
 
 class App extends Component {
   constructor (props) {
@@ -98,6 +99,7 @@ class App extends Component {
             <Route exact path='/users/all' component={UsersPage} />
             <Route exact path='/moderator/categories' component={CategoriesPage} />
             <Route exact path='/moderator/categories/create' component={CreateCategoryForm} />
+            <Route exact path='/moderator/categories/edit/:id' component={EditCategoryForm} />
             <Route component={HomePage} />
           </Switch>
         </div>

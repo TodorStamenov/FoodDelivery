@@ -11,14 +11,14 @@ namespace FoodDelivery.Services.Implementations
     {
         private const int UsersInPage = 20;
 
-        public UserService(FoodDeliveryDbContext db)
-            : base(db)
+        public UserService(FoodDeliveryDbContext database)
+            : base(database)
         {
         }
 
         public void AddRole(string username, string roleName)
         {
-            var userRoleInfo = this.db
+            var userRoleInfo = Database
                 .UserRoles
                 .Where(ur => ur.Role.Name == roleName)
                 .Where(ur => ur.User.UserName == username)
@@ -34,14 +34,14 @@ namespace FoodDelivery.Services.Implementations
                 throw new DuplicateEntryException($"User {username} is already in {roleName} role");
             }
 
-            int? userId = this.db
+            int? userId = Database
                 .Users
                 .Where(u => u.UserName == username)
                 .Select(u => new { u.Id })
                 .FirstOrDefault()?
                 .Id;
 
-            int? roleId = this.db
+            int? roleId = Database
                 .Roles
                 .Where(r => r.Name == roleName)
                 .Select(r => new { r.Id })?
@@ -59,13 +59,13 @@ namespace FoodDelivery.Services.Implementations
                 UserId = userId.Value
             };
 
-            this.db.UserRoles.Add(userRole);
-            this.db.SaveChanges();
+            Database.UserRoles.Add(userRole);
+            Database.SaveChanges();
         }
 
         public void RemoveRole(string username, string roleName)
         {
-            UserRole userRole = this.db
+            UserRole userRole = Database
                 .UserRoles
                 .Where(ur => ur.Role.Name == roleName)
                 .Where(ur => ur.User.UserName == username)
@@ -76,13 +76,13 @@ namespace FoodDelivery.Services.Implementations
                 throw new DuplicateEntryException($"User {username} is not in {roleName} role");
             }
 
-            this.db.UserRoles.Remove(userRole);
-            this.db.SaveChanges();
+            Database.UserRoles.Remove(userRole);
+            Database.SaveChanges();
         }
 
         public IEnumerable<ListUsersViewModel> All(string userQuery)
         {
-            IQueryable<User> query = this.db.Users;
+            IQueryable<User> query = Database.Users;
 
             if (!string.IsNullOrEmpty(userQuery) &&
                !string.IsNullOrWhiteSpace(userQuery))

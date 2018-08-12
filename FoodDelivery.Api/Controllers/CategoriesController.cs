@@ -8,7 +8,6 @@ using FoodDelivery.Services.Models.ViewModels.Products;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Http;
-using System.Web.ModelBinding;
 
 namespace FoodDelivery.Api.Controllers
 {
@@ -16,14 +15,19 @@ namespace FoodDelivery.Api.Controllers
     [RoutePrefix("api/Categories")]
     public class CategoriesController : ApiController
     {
+        private const string Image = "image";
         private const string Category = "Category";
         private const string ImageSizeMessage = "Uploaded file must be of type image with size less then 1 MB";
 
         private readonly ICategoryService category;
+        private readonly IProductService product;
 
-        public CategoriesController(ICategoryService category)
+        public CategoriesController(
+            ICategoryService category,
+            IProductService product)
         {
             this.category = category;
+            this.product = product;
         }
 
         public IEnumerable<ListCategoriesViewModel> Get()
@@ -40,7 +44,8 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                return BadRequest(bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                return BadRequest(ModelState);
             }
         }
 
@@ -50,12 +55,13 @@ namespace FoodDelivery.Api.Controllers
         {
             try
             {
-                IEnumerable<ListProductsViewModel> model = this.category.Products(id);
+                IEnumerable<ListProductsViewModel> model = this.product.Products(id);
                 return Ok(model);
             }
             catch (BadRequestException bre)
             {
-                return BadRequest(bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                return BadRequest(ModelState);
             }
         }
 
@@ -68,17 +74,17 @@ namespace FoodDelivery.Api.Controllers
                 string.IsNullOrWhiteSpace(name) ||
                 images.Count == 0)
             {
-                ModelState.AddModelError("errorMessage", "Category name and image are required");
-
+                ModelState.AddModelError(CommonConstants.ErrorMessage, "Category name and image are required");
                 return BadRequest(ModelState);
             }
 
             HttpPostedFile image = images[0];
 
-            if (!image.ContentType.Contains("image")
+            if (!image.ContentType.Contains(Image)
                 || image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
             {
-                return BadRequest(ImageSizeMessage);
+                ModelState.AddModelError(CommonConstants.ErrorMessage, ImageSizeMessage);
+                return BadRequest(ModelState);
             }
 
             try
@@ -87,7 +93,8 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                return BadRequest(bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                return BadRequest(ModelState);
             }
 
             return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Created));
@@ -96,21 +103,33 @@ namespace FoodDelivery.Api.Controllers
         public IHttpActionResult Put(int id)
         {
             string name = HttpContext.Current.Request.Form["name"];
-            HttpPostedFile image = HttpContext.Current.Request.Files[0];
+            HttpFileCollection images = HttpContext.Current.Request.Files;
 
-            if (!image.ContentType.Contains("image")
-                || image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                return BadRequest(ImageSizeMessage);
+                ModelState.AddModelError(CommonConstants.ErrorMessage, "Category name is required");
+                return BadRequest(ModelState);
+            }
+
+            HttpPostedFile image = images.Count > 0
+                ? images[0]
+                : null;
+
+            if (image != null
+                && (!image.ContentType.Contains(Image) || image.ContentLength > DataConstants.CategoryConstants.MaxImageSize))
+            {
+                ModelState.AddModelError(CommonConstants.ErrorMessage, ImageSizeMessage);
+                return BadRequest(ModelState);
             }
 
             try
             {
-                this.category.Edit(id, name, image.ToByteArray());
+                this.category.Edit(id, name, image?.ToByteArray());
             }
             catch (BadRequestException bre)
             {
-                return BadRequest(bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                return BadRequest(ModelState);
             }
 
             return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Edited));
