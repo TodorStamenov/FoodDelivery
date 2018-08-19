@@ -1,12 +1,16 @@
-﻿using FoodDelivery.Services;
+﻿using FoodDelivery.Common;
+using FoodDelivery.Services;
 using FoodDelivery.Services.Models.ViewModels.Feedbacks;
-using System.Collections.Generic;
 using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
 {
+    [Authorize(Roles = CommonConstants.ModeratorRole)]
+    [RoutePrefix("api/Feedbacks")]
     public class FeedbacksController : ApiController
     {
+        private const int PageSize = 10;
+
         private readonly IFeedbackService feedbacks;
 
         public FeedbacksController(IFeedbackService feedbacks)
@@ -14,10 +18,26 @@ namespace FoodDelivery.Api.Controllers
             this.feedbacks = feedbacks;
         }
 
-        [HttpGet]
-        public IEnumerable<ListFeedbacksViewModel> Get()
+        [Route("{page?}")]
+        public IHttpActionResult Get(int page = 1)
         {
-            return this.feedbacks.All();
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            return Ok(new FeedbacksViewModel
+            {
+                CurrentPage = page,
+                EntriesPerPage = PageSize,
+                TotalEntries = this.feedbacks.GetTotalEntries(),
+                Feedbacks = this.feedbacks.All(page, PageSize)
+            });
+        }
+
+        public IHttpActionResult Post()
+        {
+            return Ok();
         }
     }
 }

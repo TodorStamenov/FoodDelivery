@@ -15,7 +15,6 @@ class EditCategoryFormBase extends Component {
 
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.clearForm = this.clearForm.bind(this)
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
   }
 
@@ -30,23 +29,14 @@ class EditCategoryFormBase extends Component {
     fd.append('name', this.state.name)
     fd.append('image', this.state.image)
 
-    category.editCategory(this.state.id, fd).then(res => {
+    category.edit(this.state.id, fd).then(res => {
       if (res.ModelState) {
         console.log(Object.values(res.ModelState).join('\n'))
         return
       }
 
       this.props.history.push('/moderator/categories')
-      this.clearForm()
     })
-  }
-
-  clearForm () {
-    for (const key in this.state) {
-      this.setState({
-        [key]: ''
-      })
-    }
   }
 
   fileSelectedHandler (e) {
@@ -56,8 +46,7 @@ class EditCategoryFormBase extends Component {
   }
 
   componentDidMount () {
-    category
-      .getCategory(this.props.match.params.id)
+    category.get(this.props.match.params.id)
       .then(res => {
         this.setState({
           id: res.Id,

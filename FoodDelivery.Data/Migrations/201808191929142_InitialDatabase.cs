@@ -101,6 +101,7 @@ namespace FoodDelivery.Data.Migrations
                     Id = c.Int(nullable: false, identity: true),
                     Address = c.String(nullable: false, maxLength: 500),
                     Price = c.Decimal(nullable: false, precision: 18, scale: 2),
+                    TimeStamp = c.DateTime(nullable: false),
                     Status = c.Int(nullable: false),
                     UserId = c.Int(nullable: false),
                     ExecutorId = c.Int(nullable: false),
@@ -166,8 +167,10 @@ namespace FoodDelivery.Data.Migrations
                 {
                     Id = c.Int(nullable: false, identity: true),
                     Name = c.String(nullable: false, maxLength: 50),
+                    IngredientType = c.Int(nullable: false),
                 })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.Name, unique: true);
         }
 
         public override void Down()
@@ -185,6 +188,7 @@ namespace FoodDelivery.Data.Migrations
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.Users");
             DropForeignKey("dbo.Feedbacks", "UserId", "dbo.Users");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.Users");
+            DropIndex("dbo.Ingredients", new[] { "Name" });
             DropIndex("dbo.ProductsIngredients", new[] { "IngredientId" });
             DropIndex("dbo.ProductsIngredients", new[] { "ProductId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");

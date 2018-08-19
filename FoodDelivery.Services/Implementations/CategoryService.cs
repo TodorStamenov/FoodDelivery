@@ -8,10 +8,8 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class CategoryService : Service, ICategoryService
+    public class CategoryService : Service<Category>, ICategoryService
     {
-        private const string Category = "Category";
-
         public CategoryService(FoodDeliveryDbContext database)
             : base(database)
         {
@@ -71,13 +69,13 @@ namespace FoodDelivery.Services.Implementations
 
             if (model == null)
             {
-                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, Category));
+                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, nameof(Category)));
             }
 
             return model;
         }
 
-        public IEnumerable<ListCategoriesViewModel> Categories()
+        public IEnumerable<ListCategoriesViewModel> All()
         {
             return Database
                 .Categories

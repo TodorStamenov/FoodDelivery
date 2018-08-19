@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace FoodDelivery.Services
 {
-    public interface IFeedbackService
+    public interface IFeedbackService : IService
     {
-        IEnumerable<ListFeedbacksViewModel> All();
+        IEnumerable<ListFeedbacksViewModel> All(int page, int pageSize);
     }
 }

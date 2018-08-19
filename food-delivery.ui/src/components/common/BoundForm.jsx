@@ -8,7 +8,6 @@ export default class BoundForm extends Component {
 
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.clearForm = this.clearForm.bind(this)
   }
 
   onChange (e) {
@@ -18,15 +17,6 @@ export default class BoundForm extends Component {
   onSubmit (e) {
     e.preventDefault()
     this.props.onSubmit(Object.assign({}, this.state))
-    this.clearForm()
-  }
-
-  clearForm () {
-    for (const key in this.state) {
-      this.setState({
-        [key]: ''
-      })
-    }
   }
 
   render () {

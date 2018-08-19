@@ -9,7 +9,7 @@ function all () {
   }).then(res => res.json())
 }
 
-function addCategory (formData) {
+function add (formData) {
   return fetch(host + categoryRoute, {
     method: 'POST',
     body: formData,
@@ -17,7 +17,7 @@ function addCategory (formData) {
   }).then(res => res.json())
 }
 
-function editCategory (id, formData) {
+function edit (id, formData) {
   return fetch(host + categoryRoute + id, {
     method: 'PUT',
     body: formData,
@@ -25,13 +25,13 @@ function editCategory (id, formData) {
   }).then(res => res.json())
 }
 
-function getCategory (id) {
+function get (id) {
   return fetch(host + categoryRoute + id, {
     method: 'GET',
     headers: getHeaders(true, true)
   }).then(res => res.json())
 }
 
-const moderator = { all, getCategory, addCategory, editCategory }
+const moderator = { all, get, add, edit }
 
 export default moderator

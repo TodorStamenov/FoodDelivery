@@ -2,17 +2,29 @@ import React, { Component } from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 
 import Header from './components/common/Header'
+import Footer from './components/common/Footer'
+
+import HomePage from './components/Home/HomePage'
+
 import RegisterForm from './components/Auth/RegisterForm'
 import LoginForm from './components/Auth/LoginForm'
-import HomePage from './components/Home/HomePage'
-import Footer from './components/common/Footer'
-import UsersPage from './components/Users/UsersPage'
-import CategoriesPage from './components/Categories/CategoriesPage'
 import ChangePasswordForm from './components/Auth/ChangePasswordForm'
 
-import auth from './api/auth'
+import UsersPage from './components/Users/UsersPage'
+
+import CategoriesPage from './components/Categories/CategoriesPage'
 import CreateCategoryForm from './components/Categories/CreateCategoryForm'
 import EditCategoryForm from './components/Categories/EditCategoryForm'
+
+import FeedbacksPage from './components/Feedbacks/FeedbacksPage'
+
+import IngredientsPage from './components/Ingredients/IngredientsPage'
+import CreateIngredientForm from './components/Ingredients/CreateIngredientForm'
+import EditIngredientForm from './components/Ingredients/EditIngredientForm'
+
+import OrdersPage from './components/Orders/OrdersPage'
+
+import auth from './api/auth'
 
 class App extends Component {
   constructor (props) {
@@ -44,7 +56,7 @@ class App extends Component {
     auth.register(data.email, data.password, data.confirmPassword)
       .then(res => {
         if (res.ModelState) {
-          console.log(Object.values(res.ModelState).join('\n'))
+          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
           return
         }
 
@@ -58,6 +70,11 @@ class App extends Component {
       .then(res => {
         if (res.error) {
           console.log(res.error_description)
+          return
+        }
+
+        if (res.ModelState) {
+          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
           return
         }
 
@@ -96,10 +113,22 @@ class App extends Component {
             <Route exact path='/account/user' component={ChangePasswordForm} />
             <Route exact path='/account/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
             <Route exact path='/account/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
-            <Route exact path='/users/all' component={UsersPage} />
+
+            <Route exact path='/admin/users/all' component={UsersPage} />
+
             <Route exact path='/moderator/categories' component={CategoriesPage} />
             <Route exact path='/moderator/categories/create' component={CreateCategoryForm} />
             <Route exact path='/moderator/categories/edit/:id' component={EditCategoryForm} />
+
+            <Route exact path='/moderator/feedbacks' component={FeedbacksPage} />
+            <Route exact path='/feedbacks/create' component={FeedbacksPage} />
+
+            <Route exact path='/moderator/ingredients' component={IngredientsPage} />
+            <Route exact path='/moderator/ingredients/create' component={CreateIngredientForm} />
+            <Route exact path='/moderator/ingredients/edit/:id' component={EditIngredientForm} />
+
+            <Route exact path='/moderator/orders' component={OrdersPage} />
+
             <Route component={HomePage} />
           </Switch>
         </div>

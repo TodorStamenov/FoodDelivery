@@ -29,6 +29,7 @@ class CategoriesPageBase extends Component {
             <h2>All Categories - <Link className='btn btn-secondary btn-md' to='/moderator/categories/create'>Create new Category</Link></h2>
           </div>
         </div>
+        <br />
         <div className='row'>
           <table className='table table-hover table-striped'>
             {<TableHead heads={['Name', 'Products Count', 'Products', 'Actions']} />}

@@ -194,11 +194,14 @@ namespace FoodDelivery.Data.Migrations
                 .Select(p => p.Id)
                 .ToList();
 
+            List<IngredientType> productTypes = Enum.GetValues(typeof(IngredientType)).Cast<IngredientType>().ToList();
+
             for (int i = 1; i < ingredientsCount; i++)
             {
                 Ingredient ingredient = new Ingredient
                 {
-                    Name = $"Ingredient{i}"
+                    Name = $"Ingredient{i}",
+                    IngredientType = productTypes[random.Next(0, productTypes.Count)]
                 };
 
                 context.Ingredients.Add(ingredient);
@@ -249,6 +252,7 @@ namespace FoodDelivery.Data.Migrations
                 {
                     Address = $"Delivery address number{i}",
                     Status = statuses[random.Next(0, statuses.Count)],
+                    TimeStamp = DateTime.Now.AddDays(i).AddHours(i),
                     UserId = userIds[random.Next(0, userIds.Count)],
                     ExecutorId = employeeIds[random.Next(0, employeeIds.Count)]
                 };

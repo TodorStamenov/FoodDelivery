@@ -48,7 +48,7 @@ export default class Header extends Component {
         <div className='collapse navbar-collapse' id='navbarSupportedContent'>
           <ul className='navbar-nav mr-auto'>
             {this.props.isAuthed && <li><Link className='nav-link' to='/orders/my'>My Orders</Link></li>}
-            {this.props.isAuthed && <li><Link className='nav-link' to='/feedback/create'>Add Feedback</Link></li>}
+            {this.props.isAuthed && <li><Link className='nav-link' to='/feedbacks/create'>Add Feedback</Link></li>}
           </ul>
           <ul className='nav navbar-nav navbar-right'>
             {
@@ -56,7 +56,7 @@ export default class Header extends Component {
               <Dropdown isOpen={this.state.adminDropdownOpen} toggle={this.toggleAdmin}>
                 <DropdownToggle nav caret>Admin</DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem><Link className='dropdown-item' to='/users/all'>Users</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/admin/users/all'>Users</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             }
@@ -65,11 +65,10 @@ export default class Header extends Component {
               <Dropdown isOpen={this.state.moderatorDropdownOpen} toggle={this.toggleModerator}>
                 <DropdownToggle nav caret>Moderator</DropdownToggle>
                 <DropdownMenu>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/orders'>Orders</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/categories'>Categories</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/products'>Products</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/ingredients'>Ingredients</Link></DropdownItem>
-                  <DropdownItem><Link className='dropdown-item' to='/moderator/orders'>Orders</Link></DropdownItem>
-                  <DropdownItem><Link className='dropdown-item' to='/moderator/orders/queue'>Orders Queue</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/feedbacks'>Feedbacks</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>

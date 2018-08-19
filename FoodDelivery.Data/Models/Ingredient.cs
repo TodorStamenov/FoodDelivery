@@ -12,6 +12,8 @@ namespace FoodDelivery.Data.Models
         [MaxLength(DataConstants.IngredientConstants.MaxNameLength)]
         public string Name { get; set; }
 
+        public IngredientType IngredientType { get; set; }
+
         public virtual List<ProductsIngredients> Products { get; set; } = new List<ProductsIngredients>();
     }
 }

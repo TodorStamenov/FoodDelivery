@@ -14,7 +14,6 @@ class CreateCategoryFormBase extends Component {
 
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-    this.clearForm = this.clearForm.bind(this)
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
   }
 
@@ -29,23 +28,14 @@ class CreateCategoryFormBase extends Component {
     fd.append('name', this.state.name)
     fd.append('image', this.state.image)
 
-    category.addCategory(fd).then(res => {
+    category.add(fd).then(res => {
       if (res.ModelState) {
         console.log(Object.values(res.ModelState).join('\n'))
         return
       }
 
       this.props.history.push('/moderator/categories')
-      this.clearForm()
     })
-  }
-
-  clearForm () {
-    for (const key in this.state) {
-      this.setState({
-        [key]: ''
-      })
-    }
   }
 
   fileSelectedHandler (e) {

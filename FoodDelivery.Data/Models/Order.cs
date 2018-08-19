@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FoodDelivery.Data.Models
@@ -16,6 +17,8 @@ namespace FoodDelivery.Data.Models
             DataConstants.OrderConstants.MinPrice,
             DataConstants.OrderConstants.MaxPrice)]
         public decimal Price { get; set; }
+
+        public DateTime TimeStamp { get; set; }
 
         public Status Status { get; set; }
 

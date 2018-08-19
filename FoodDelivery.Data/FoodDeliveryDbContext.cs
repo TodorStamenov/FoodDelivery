@@ -38,6 +38,7 @@ namespace FoodDelivery.Data
 
             builder.Configurations.Add(new CategoryConfiguration());
             builder.Configurations.Add(new ProductConfiguration());
+            builder.Configurations.Add(new IngredientConfiguration());
             builder.Configurations.Add(new UserConfiguration());
             builder.Configurations.Add(new UserRoleConfiguration());
             builder.Configurations.Add(new ProductsOrdersConfiguration());

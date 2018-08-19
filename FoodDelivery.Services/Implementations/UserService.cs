@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class UserService : Service, IUserService
+    public class UserService : Service<User>, IUserService
     {
         private const int UsersInPage = 20;
 

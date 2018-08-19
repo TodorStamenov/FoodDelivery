@@ -55,22 +55,34 @@
   <ItemGroup>
     <Compile Include="Exceptions\BadRequestException.cs" />
     <Compile Include="Exceptions\DuplicateEntryException.cs" />
+    <Compile Include="Exceptions\InvalidEnumException.cs" />
     <Compile Include="Exceptions\NotExistingEntryException.cs" />
-    <Compile Include="IAdminService.cs" />
+    <Compile Include="Implementations\OrderService.cs" />
+    <Compile Include="IUserService.cs" />
     <Compile Include="IFeedbackService.cs" />
     <Compile Include="ICategoryService.cs" />
+    <Compile Include="IIngredientService.cs" />
+    <Compile Include="Implementations\IngredientService.cs" />
     <Compile Include="Implementations\ProductService.cs" />
     <Compile Include="Implementations\UserService.cs" />
     <Compile Include="Implementations\FeedbackService.cs" />
     <Compile Include="Implementations\CategoryService.cs" />
+    <Compile Include="IOrderService.cs" />
     <Compile Include="IProductService.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="Models\BindingModels\Ingredients\IngredientBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\LoginBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\RegisterBindingModel.cs" />
+    <Compile Include="Models\ViewModels\BasePageViewModel.cs" />
     <Compile Include="Models\ViewModels\Categories\CategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\Categories\ListCategoriesViewModel.cs" />
+    <Compile Include="Models\ViewModels\Feedbacks\FeedbacksViewModel.cs" />
     <Compile Include="Models\ViewModels\Feedbacks\ListFeedbacksViewModel.cs" />
+    <Compile Include="Models\ViewModels\Ingredients\IngredientsViewModel.cs" />
+    <Compile Include="Models\ViewModels\Ingredients\IngredientViewModel.cs" />
+    <Compile Include="Models\ViewModels\Ingredients\ListIngredientsViewModel.cs" />
+    <Compile Include="Models\ViewModels\Orders\ListOrdersViewModel.cs" />
     <Compile Include="Models\ViewModels\Products\ListProductsViewModel.cs" />
     <Compile Include="Models\ViewModels\Users\ListUsersViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,9 +98,7 @@
       <Name>FoodDelivery.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\BindingModels\Categories\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
