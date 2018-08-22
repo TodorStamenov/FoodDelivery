@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace FoodDelivery.Data.Migrations
 {
@@ -173,7 +172,6 @@ namespace FoodDelivery.Data.Migrations
                 context.Products.Add(new Product
                 {
                     Name = $"Product{i}",
-                    Description = $"Very very long and detailed product desctiption here {i}",
                     Mass = random.Next(50, 800),
                     Price = random.Next(MinPrice, MaxPrice),
                     CategoryId = categoryIds[random.Next(0, categoryIds.Count)]

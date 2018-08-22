@@ -36,7 +36,6 @@
             public const double MaxPrice = double.MaxValue;
             public const double MinMass = double.Epsilon;
             public const double MaxMass = double.MaxValue;
-            public const int MaxDescriptionLength = 5000;
         }
     }
 }

@@ -25,7 +25,6 @@ namespace FoodDelivery.Data.Migrations
                     Name = c.String(nullable: false, maxLength: 50),
                     Price = c.Decimal(nullable: false, precision: 18, scale: 2),
                     Mass = c.Double(nullable: false),
-                    Description = c.String(nullable: false),
                     CategoryId = c.Int(nullable: false),
                 })
                 .PrimaryKey(t => t.Id)

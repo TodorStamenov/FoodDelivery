@@ -22,10 +22,6 @@ namespace FoodDelivery.Data.Models
             DataConstants.ProductConstants.MaxMass)]
         public double Mass { get; set; }
 
-        [Required]
-        [MaxLength(DataConstants.ProductConstants.MaxDescriptionLength)]
-        public string Description { get; set; }
-
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; }

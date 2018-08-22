@@ -9,42 +9,107 @@ class OrdersPageBase extends Component {
     super(props)
 
     this.state = {
+      isQueue: true,
+      isHistory: false,
+      queueButtonClass: 'btn-outline-dark',
+      historyButtonClass: 'btn-secondary',
       orders: []
     }
 
     this.queue = this.queue.bind(this)
     this.history = this.history.bind(this)
+    this.loadMoreItems = this.loadMoreItems.bind(this)
   }
 
   componentDidMount () {
-    this.queue()
-  }
+    this.loadMoreItems()
 
-  history () {
-    order.history().then(res => {
-      this.setState({
-        orders: res
-      })
+    window.addEventListener('scroll', () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        this.loadMoreItems()
+      }
     })
   }
 
-  queue () {
-    order.queue().then(res => {
+  loadMoreItems () {
+    if (this.state.isQueue) {
+      this.queue()
+    } else if (this.state.isHistory) {
+      this.history()
+    }
+  }
+
+  history (isClick) {
+    this.setState({
+      queueButtonClass: 'btn-secondary',
+      historyButtonClass: 'btn-outline-dark'
+    })
+
+    let ordersLength = this.state.orders.length
+
+    if (isClick &&
+      ordersLength >= 10 &&
+      this.state.isHistory) {
+      return
+    }
+
+    if (this.state.isQueue) {
       this.setState({
-        orders: res
+        isQueue: false,
+        isHistory: true,
+        orders: []
       })
+
+      ordersLength = 0
+    }
+
+    order.history(ordersLength).then(res => {
+      this.setState(prevState => ({
+        orders: [...prevState.orders, ...res]
+      }))
+    })
+  }
+
+  queue (isClick) {
+    this.setState({
+      queueButtonClass: 'btn-outline-dark',
+      historyButtonClass: 'btn-secondary'
+    })
+
+    let ordersLength = this.state.orders.length
+
+    if (isClick &&
+      ordersLength >= 10 &&
+      this.state.isQueue) {
+      return
+    }
+
+    if (this.state.isHistory) {
+      this.setState({
+        isQueue: true,
+        isHistory: false,
+        orders: []
+      })
+
+      ordersLength = 0
+    }
+
+    order.queue(ordersLength).then(res => {
+      this.setState(prevState => ({
+        orders: [...prevState.orders, ...res]
+      }))
     })
   }
 
   render () {
     return (
-      <div>
+      <div ref='iScroll'>
         <div className='row'>
           <div className='col-md-6'>
             <h2>
               Orders -
-              <button onClick={this.history} className='btn btn-secondary btn-md ml-3'>Orders History</button>
-              <button onClick={this.queue} className='btn btn-secondary btn-md ml-3'>Orders Queue</button>
+              <button onClick={() => this.queue(true)} className={'btn btn-md ml-2 ' + this.state.queueButtonClass}>Orders Queue</button>
+              <button onClick={() => this.history(true)} className={'btn btn-md ml-2 ' + this.state.historyButtonClass}>Orders History</button>
             </h2>
           </div>
         </div>

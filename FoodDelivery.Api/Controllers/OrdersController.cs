@@ -10,6 +10,8 @@ namespace FoodDelivery.Api.Controllers
     [RoutePrefix("api/Orders")]
     public class OrdersController : ApiController
     {
+        private const int LoadElements = 10;
+
         private readonly IOrderService order;
 
         public OrdersController(IOrderService order)
@@ -18,17 +20,17 @@ namespace FoodDelivery.Api.Controllers
         }
 
         [HttpGet]
-        [Route("history")]
-        public IEnumerable<ListOrdersViewModel> History()
+        [Route("history/{loadedElements?}")]
+        public IEnumerable<ListOrdersViewModel> History(int loadedElements = 0)
         {
-            return this.order.History();
+            return this.order.History(LoadElements, loadedElements);
         }
 
         [HttpGet]
-        [Route("queue")]
-        public IEnumerable<ListOrdersViewModel> Queue()
+        [Route("queue/{loadedElements?}")]
+        public IEnumerable<ListOrdersViewModel> Queue(int loadedElements = 0)
         {
-            return this.order.Queue();
+            return this.order.Queue(LoadElements, loadedElements);
         }
     }
 }

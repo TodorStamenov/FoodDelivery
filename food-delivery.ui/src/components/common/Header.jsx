@@ -13,6 +13,7 @@ export default class Header extends Component {
 
     this.toggleAdmin = this.toggleAdmin.bind(this)
     this.toggleModerator = this.toggleModerator.bind(this)
+    this.toggleEmployee = this.toggleEmployee.bind(this)
   }
 
   componentDidMount () {
@@ -22,7 +23,8 @@ export default class Header extends Component {
       isAdmin: sessionStorage.getItem('roles') !== null && sessionStorage.getItem('roles').includes('Admin'),
       isModerator: sessionStorage.getItem('roles') !== null && sessionStorage.getItem('roles').includes('Moderator'),
       adminDropdownOpen: false,
-      moderatorDropdownOpen: false
+      moderatorDropdownOpen: false,
+      employeeDropdownOpen: false
     })
   }
 
@@ -35,6 +37,12 @@ export default class Header extends Component {
   toggleModerator () {
     this.setState(prevState => ({
       moderatorDropdownOpen: !prevState.moderatorDropdownOpen
+    }))
+  }
+
+  toggleEmployee () {
+    this.setState(prevState => ({
+      employeeDropdownOpen: !prevState.employeeDropdownOpen
     }))
   }
 
@@ -70,6 +78,15 @@ export default class Header extends Component {
                   <DropdownItem><Link className='dropdown-item' to='/moderator/products'>Products</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/ingredients'>Ingredients</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/feedbacks'>Feedbacks</Link></DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            }
+            {
+              this.props.isEmployee &&
+              <Dropdown isOpen={this.state.employeeDropdownOpen} toggle={this.toggleEmployee}>
+                <DropdownToggle nav caret>Employee</DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem><Link className='dropdown-item' to='/employee/orders'>Orders</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             }

@@ -13,12 +13,14 @@ namespace FoodDelivery.Services.Implementations
         {
         }
 
-        public IEnumerable<ListOrdersViewModel> History()
+        public IEnumerable<ListOrdersViewModel> History(int loadElements, int loadedElements)
         {
             return Database
                 .Orders
                 .OrderByDescending(o => o.TimeStamp)
                 .Where(o => o.Status == Status.Delivered)
+                .Skip(loadedElements)
+                .Take(loadElements)
                 .Select(o => new ListOrdersViewModel
                 {
                     Id = o.Id,
@@ -32,12 +34,14 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
-        public IEnumerable<ListOrdersViewModel> Queue()
+        public IEnumerable<ListOrdersViewModel> Queue(int loadElements, int loadedElements)
         {
             return Database
                 .Orders
                 .OrderBy(o => o.TimeStamp)
                 .Where(o => o.Status != Status.Delivered)
+                .Skip(loadedElements)
+                .Take(loadElements)
                 .Select(o => new ListOrdersViewModel
                 {
                     Id = o.Id,

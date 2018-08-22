@@ -13,7 +13,7 @@ namespace FoodDelivery.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201808191929142_InitialDatabase"; }
+            get { return "201808211931007_InitialDatabase"; }
         }
         
         string IMigrationMetadata.Source

@@ -5,8 +5,8 @@ namespace FoodDelivery.Services
 {
     public interface IOrderService : IService
     {
-        IEnumerable<ListOrdersViewModel> History();
+        IEnumerable<ListOrdersViewModel> History(int loadElements, int loadedElements);
 
-        IEnumerable<ListOrdersViewModel> Queue();
+        IEnumerable<ListOrdersViewModel> Queue(int loadElements, int loadedElements);
     }
 }

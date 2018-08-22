@@ -98,10 +98,11 @@ class App extends Component {
 
   render () {
     return (
-      <div>
+      <div style={{'overflowX': 'hidden'}}>
         <Header
           isAdmin={this.state.isAuthed && sessionStorage.getItem('roles').includes('Admin')}
           isModerator={this.state.isAuthed && sessionStorage.getItem('roles').includes('Moderator')}
+          isEmployee={this.state.isAuthed && sessionStorage.getItem('roles').includes('Employee')}
           isAuthed={this.state.isAuthed}
           username={this.state.username}
           onLogout={this.onLogout}

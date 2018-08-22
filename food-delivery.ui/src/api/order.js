@@ -2,15 +2,15 @@ import { host, getHeaders } from './common'
 
 const feedbackRoute = 'api/orders/'
 
-function queue () {
-  return fetch(host + feedbackRoute + 'queue', {
+function queue (loadedElements) {
+  return fetch(host + feedbackRoute + 'queue/' + loadedElements, {
     method: 'GET',
     headers: getHeaders(true, true)
   }).then(res => res.json())
 }
 
-function history () {
-  return fetch(host + feedbackRoute + 'history', {
+function history (loadedElements) {
+  return fetch(host + feedbackRoute + 'history/' + loadedElements, {
     method: 'GET',
     headers: getHeaders(true, true)
   }).then(res => res.json())
