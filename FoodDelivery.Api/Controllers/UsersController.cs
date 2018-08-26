@@ -10,8 +10,8 @@ using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
 {
-    [Authorize(Roles = CommonConstants.AdminRole)]
     [RoutePrefix("api/Users")]
+    [Authorize(Roles = CommonConstants.AdminRole)]
     public class UsersController : BaseApiController
     {
         private const string UsernameNotNull = "Username cannot be null";

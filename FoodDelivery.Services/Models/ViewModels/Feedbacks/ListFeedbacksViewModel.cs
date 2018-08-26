@@ -1,10 +1,11 @@
 ﻿using FoodDelivery.Data.Models;
+using System;
 
 namespace FoodDelivery.Services.Models.ViewModels.Feedbacks
 {
     public class ListFeedbacksViewModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string ProductName { get; set; }
 

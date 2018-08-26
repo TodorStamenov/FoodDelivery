@@ -40,10 +40,15 @@ namespace FoodDelivery.Api.Providers
 
             string roles = string.Join(", ", user.Roles.Select(r => r.Role.Name));
 
-            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-               OAuthDefaults.AuthenticationType);
-            ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
-                CookieAuthenticationDefaults.AuthenticationType);
+            ClaimsIdentity oAuthIdentity = await user
+                .GenerateUserIdentityAsync(
+                    userManager,
+                    OAuthDefaults.AuthenticationType);
+
+            ClaimsIdentity cookiesIdentity = await user
+                .GenerateUserIdentityAsync(
+                    userManager,
+                    CookieAuthenticationDefaults.AuthenticationType);
 
             AuthenticationProperties properties = CreateProperties(user.UserName, roles);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);

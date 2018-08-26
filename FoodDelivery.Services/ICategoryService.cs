@@ -1,15 +1,16 @@
 ﻿using FoodDelivery.Services.Models.ViewModels.Categories;
+using System;
 using System.Collections.Generic;
 
 namespace FoodDelivery.Services
 {
-    public interface ICategoryService
+    public interface ICategoryService : IService
     {
         void Create(string name, byte[] image);
 
-        void Edit(int id, string name, byte[] image);
+        void Edit(Guid id, string name, byte[] image);
 
-        CategoryViewModel GetCategory(int id);
+        CategoryViewModel GetCategory(Guid id);
 
         IEnumerable<ListCategoriesViewModel> All();
     }

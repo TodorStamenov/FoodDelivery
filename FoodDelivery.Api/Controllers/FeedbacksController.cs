@@ -5,8 +5,8 @@ using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
 {
-    [Authorize(Roles = CommonConstants.ModeratorRole)]
     [RoutePrefix("api/Feedbacks")]
+    [Authorize(Roles = CommonConstants.ModeratorRole)]
     public class FeedbacksController : ApiController
     {
         private const int PageSize = 10;

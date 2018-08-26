@@ -42,8 +42,8 @@ class IngredientsPageBase extends Component {
       <nav aria-label='Page navigation example'>
         <ul className='pagination'>
           {pageLinks.map(p =>
-            <li key={p} className={'page-item ' + (p === this.state.ingredientPage.CurrentPage ? 'active' : '')}>
-              <a onClick={() => this.getIngredients(p)} className='page-link'>{p}</a>
+            <li key={p} className='page-item'>
+              <a onClick={() => this.getIngredients(p)} className={'page-link ' + (p === this.state.ingredientPage.CurrentPage ? 'text-light bg-secondary' : '')}>{p}</a>
             </li>)}
         </ul>
       </nav>)
@@ -63,7 +63,7 @@ class IngredientsPageBase extends Component {
         </div>
         <br />
         <div className='row'>
-          <table className='table table-hover table-striped'>
+          <table className='table table-hover'>
             {<TableHead heads={['Name', 'Type', 'Actions']} />}
             <tbody>
               {this.state.ingredientPage.Ingredients.map(i =>

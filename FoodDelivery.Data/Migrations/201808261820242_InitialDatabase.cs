@@ -10,7 +10,7 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.Categories",
                 c => new
                 {
-                    Id = c.Int(nullable: false, identity: true),
+                    Id = c.Guid(nullable: false, identity: true),
                     Name = c.String(nullable: false, maxLength: 50),
                     Image = c.Binary(),
                 })
@@ -21,11 +21,11 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.Products",
                 c => new
                 {
-                    Id = c.Int(nullable: false, identity: true),
+                    Id = c.Guid(nullable: false, identity: true),
                     Name = c.String(nullable: false, maxLength: 50),
                     Price = c.Decimal(nullable: false, precision: 18, scale: 2),
                     Mass = c.Double(nullable: false),
-                    CategoryId = c.Int(nullable: false),
+                    CategoryId = c.Guid(nullable: false),
                 })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
@@ -36,12 +36,12 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.Feedbacks",
                 c => new
                 {
-                    Id = c.Int(nullable: false, identity: true),
+                    Id = c.Guid(nullable: false, identity: true),
                     Content = c.String(),
                     Rate = c.Int(nullable: false),
                     TimeStamp = c.DateTime(nullable: false),
-                    ProductId = c.Int(nullable: false),
-                    UserId = c.Int(nullable: false),
+                    ProductId = c.Guid(nullable: false),
+                    UserId = c.Guid(nullable: false),
                 })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Users", t => t.UserId)
@@ -53,7 +53,7 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.Users",
                 c => new
                 {
-                    Id = c.Int(nullable: false, identity: true),
+                    Id = c.Guid(nullable: false),
                     Email = c.String(),
                     EmailConfirmed = c.Boolean(nullable: false),
                     PasswordHash = c.String(),
@@ -73,7 +73,7 @@ namespace FoodDelivery.Data.Migrations
                 c => new
                 {
                     Id = c.Int(nullable: false, identity: true),
-                    UserId = c.Int(nullable: false),
+                    UserId = c.Guid(nullable: false),
                     ClaimType = c.String(),
                     ClaimValue = c.String(),
                 })
@@ -87,7 +87,7 @@ namespace FoodDelivery.Data.Migrations
                 {
                     LoginProvider = c.String(nullable: false, maxLength: 128),
                     ProviderKey = c.String(nullable: false, maxLength: 128),
-                    UserId = c.Int(nullable: false),
+                    UserId = c.Guid(nullable: false),
                 })
                 .PrimaryKey(t => new { t.LoginProvider, t.ProviderKey, t.UserId })
                 .ForeignKey("dbo.Users", t => t.UserId, cascadeDelete: true)
@@ -97,13 +97,13 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.Orders",
                 c => new
                 {
-                    Id = c.Int(nullable: false, identity: true),
+                    Id = c.Guid(nullable: false, identity: true),
                     Address = c.String(nullable: false, maxLength: 500),
                     Price = c.Decimal(nullable: false, precision: 18, scale: 2),
                     TimeStamp = c.DateTime(nullable: false),
                     Status = c.Int(nullable: false),
-                    UserId = c.Int(nullable: false),
-                    ExecutorId = c.Int(nullable: false),
+                    UserId = c.Guid(nullable: false),
+                    ExecutorId = c.Guid(nullable: false),
                 })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Users", t => t.UserId)
@@ -115,8 +115,8 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.ProductsOrders",
                 c => new
                 {
-                    ProductId = c.Int(nullable: false),
-                    OrderId = c.Int(nullable: false),
+                    ProductId = c.Guid(nullable: false),
+                    OrderId = c.Guid(nullable: false),
                 })
                 .PrimaryKey(t => new { t.ProductId, t.OrderId })
                 .ForeignKey("dbo.Orders", t => t.OrderId, cascadeDelete: true)
@@ -128,8 +128,8 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.UserRoles",
                 c => new
                 {
-                    UserId = c.Int(nullable: false),
-                    RoleId = c.Int(nullable: false),
+                    UserId = c.Guid(nullable: false),
+                    RoleId = c.Guid(nullable: false),
                 })
                 .PrimaryKey(t => new { t.UserId, t.RoleId })
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
@@ -141,7 +141,7 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.AspNetRoles",
                 c => new
                 {
-                    Id = c.Int(nullable: false, identity: true),
+                    Id = c.Guid(nullable: false),
                     Name = c.String(nullable: false, maxLength: 256),
                 })
                 .PrimaryKey(t => t.Id)
@@ -151,8 +151,8 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.ProductsIngredients",
                 c => new
                 {
-                    ProductId = c.Int(nullable: false),
-                    IngredientId = c.Int(nullable: false),
+                    ProductId = c.Guid(nullable: false),
+                    IngredientId = c.Guid(nullable: false),
                 })
                 .PrimaryKey(t => new { t.ProductId, t.IngredientId })
                 .ForeignKey("dbo.Ingredients", t => t.IngredientId, cascadeDelete: true)
@@ -164,7 +164,7 @@ namespace FoodDelivery.Data.Migrations
                 "dbo.Ingredients",
                 c => new
                 {
-                    Id = c.Int(nullable: false, identity: true),
+                    Id = c.Guid(nullable: false, identity: true),
                     Name = c.String(nullable: false, maxLength: 50),
                     IngredientType = c.Int(nullable: false),
                 })

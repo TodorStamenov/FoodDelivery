@@ -3,6 +3,7 @@ using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +34,7 @@ namespace FoodDelivery.Services.Implementations
             Database.SaveChanges();
         }
 
-        public void Edit(int id, string name, byte[] image)
+        public void Edit(Guid id, string name, byte[] image)
         {
             Category category = Database
                 .Categories
@@ -55,7 +56,7 @@ namespace FoodDelivery.Services.Implementations
             Database.SaveChanges();
         }
 
-        public CategoryViewModel GetCategory(int id)
+        public CategoryViewModel GetCategory(Guid id)
         {
             CategoryViewModel model = Database
                 .Categories

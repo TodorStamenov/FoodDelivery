@@ -1,16 +1,9 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 
 namespace FoodDelivery.Data.Models
 {
-    public class Role : IdentityRole<int, UserRole>
+    public class Role : IdentityRole<Guid, UserRole>
     {
-        public Role()
-        {
-        }
-
-        public Role(string name)
-        {
-            Name = name;
-        }
     }
 }

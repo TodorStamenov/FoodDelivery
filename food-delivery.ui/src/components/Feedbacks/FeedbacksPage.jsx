@@ -3,6 +3,8 @@ import feedback from '../../api/feedback'
 import TableHead from '../common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
+const tableHeadNames = ['Product', 'Rate', 'Timestamp', 'User', 'Actions']
+
 class FeedbacksPageBase extends Component {
   constructor (props) {
     super(props)
@@ -59,8 +61,8 @@ class FeedbacksPageBase extends Component {
       <nav aria-label='Page navigation example'>
         <ul className='pagination'>
           {pageLinks.map(p =>
-            <li key={p} className={'page-item ' + (p === this.state.feedbackPage.CurrentPage ? 'active' : '')}>
-              <a onClick={() => this.getFeedbacks(p)} className='page-link'>{p}</a>
+            <li key={p} className='page-item'>
+              <a onClick={() => this.getFeedbacks(p)} className={'page-link ' + (p === this.state.feedbackPage.CurrentPage ? 'text-light bg-secondary' : '')}>{p}</a>
             </li>)}
         </ul>
       </nav>)
@@ -80,8 +82,8 @@ class FeedbacksPageBase extends Component {
         </tr>)
 
       table.push(
-        <tr className='feedback-content' style={{display: 'none'}} data-id={feedback.Id} key={feedback.Id * 100}>
-          <td colSpan={5}>{feedback.Content}</td>
+        <tr className='feedback-content' style={{display: 'none'}} data-id={feedback.Id} key={feedback.Id + '1'}>
+          <td colSpan={tableHeadNames.length}>{feedback.Content}</td>
         </tr>)
     }
 
@@ -102,14 +104,16 @@ class FeedbacksPageBase extends Component {
         </div>
         <br />
         <div className='row'>
-          <table className='table table-hover table-striped'>
-            {<TableHead heads={['Product', 'Rate', 'Timestamp', 'User', 'Actions']} />}
+          <table className='table table-hover'>
+            {<TableHead heads={tableHeadNames} />}
             <tbody>
               {this.renderTable()}
             </tbody>
           </table>
         </div>
-        {this.renderPageLinks()}
+        <div className='row'>
+          {this.renderPageLinks()}
+        </div>
       </div>
     )
   }

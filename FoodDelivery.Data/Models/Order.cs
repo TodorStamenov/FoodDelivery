@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FoodDelivery.Data.Models
 {
     public class Order
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [MinLength(DataConstants.OrderConstants.MinAddressLength)]
@@ -22,11 +25,11 @@ namespace FoodDelivery.Data.Models
 
         public Status Status { get; set; }
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public virtual User User { get; set; }
 
-        public int ExecutorId { get; set; }
+        public Guid ExecutorId { get; set; }
 
         public virtual User Executor { get; set; }
 

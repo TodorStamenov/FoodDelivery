@@ -13,7 +13,7 @@ namespace FoodDelivery.Services.Implementations
         {
         }
 
-        public IEnumerable<ListProductsViewModel> All(int categoryId)
+        public IEnumerable<ListProductsViewModel> All(Guid categoryId)
         {
             throw new NotImplementedException();
         }

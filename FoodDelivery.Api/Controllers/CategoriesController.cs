@@ -5,14 +5,15 @@ using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
 using FoodDelivery.Services.Models.ViewModels.Products;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
 {
-    [Authorize(Roles = CommonConstants.ModeratorRole)]
     [RoutePrefix("api/Categories")]
+    [Authorize(Roles = CommonConstants.ModeratorRole)]
     public class CategoriesController : ApiController
     {
         private const string Image = "image";
@@ -35,11 +36,11 @@ namespace FoodDelivery.Api.Controllers
             return this.category.All();
         }
 
-        public IHttpActionResult Get(int id)
+        public IHttpActionResult Get(Guid? id)
         {
             try
             {
-                CategoryViewModel model = this.category.GetCategory(id);
+                CategoryViewModel model = this.category.GetCategory(id.GetValueOrDefault());
                 return Ok(model);
             }
             catch (BadRequestException bre)
@@ -51,11 +52,11 @@ namespace FoodDelivery.Api.Controllers
 
         [HttpGet]
         [Route("{id}/Products")]
-        public IHttpActionResult Products(int id)
+        public IHttpActionResult Products(Guid? id)
         {
             try
             {
-                IEnumerable<ListProductsViewModel> model = this.product.All(id);
+                IEnumerable<ListProductsViewModel> model = this.product.All(id.GetValueOrDefault());
                 return Ok(model);
             }
             catch (BadRequestException bre)
@@ -65,7 +66,7 @@ namespace FoodDelivery.Api.Controllers
             }
         }
 
-        public IHttpActionResult Put(int id)
+        public IHttpActionResult Put(Guid? id)
         {
             string name = HttpContext.Current.Request.Form["name"];
             HttpFileCollection images = HttpContext.Current.Request.Files;
@@ -89,7 +90,7 @@ namespace FoodDelivery.Api.Controllers
 
             try
             {
-                this.category.Edit(id, name, image?.ToByteArray());
+                this.category.Edit(id.GetValueOrDefault(), name, image?.ToByteArray());
                 return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Edited));
             }
             catch (BadRequestException bre)

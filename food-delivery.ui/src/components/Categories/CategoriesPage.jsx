@@ -31,7 +31,7 @@ class CategoriesPageBase extends Component {
         </div>
         <br />
         <div className='row'>
-          <table className='table table-hover table-striped'>
+          <table className='table table-hover'>
             {<TableHead heads={['Name', 'Products Count', 'Products', 'Actions']} />}
             <tbody>
               {this.state.categories.map(c =>

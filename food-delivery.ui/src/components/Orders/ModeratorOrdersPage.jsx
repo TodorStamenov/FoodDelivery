@@ -1,24 +1,27 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import order from '../../api/order'
 import TableHead from '../common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
-class OrdersPageBase extends Component {
+const tableHeadNames = ['User', 'Executor', 'Price', 'Status', 'Products', 'Time Stamp', 'Actions']
+
+class ModeratorOrdersPageBase extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
       isQueue: true,
       isHistory: false,
-      queueButtonClass: 'btn-outline-dark',
-      historyButtonClass: 'btn-secondary',
+      queueButtonClass: 'btn-secondary',
+      historyButtonClass: 'btn-outline-dark',
       orders: []
     }
 
     this.queue = this.queue.bind(this)
     this.history = this.history.bind(this)
     this.loadMoreItems = this.loadMoreItems.bind(this)
+    this.renderTable = this.renderTable.bind(this)
+    this.toggleDetails = this.toggleDetails.bind(this)
   }
 
   componentDidMount () {
@@ -41,8 +44,8 @@ class OrdersPageBase extends Component {
 
   history (isClick) {
     this.setState({
-      queueButtonClass: 'btn-secondary',
-      historyButtonClass: 'btn-outline-dark'
+      queueButtonClass: 'btn-outline-dark',
+      historyButtonClass: 'btn-secondary'
     })
 
     let ordersLength = this.state.orders.length
@@ -72,8 +75,8 @@ class OrdersPageBase extends Component {
 
   queue (isClick) {
     this.setState({
-      queueButtonClass: 'btn-outline-dark',
-      historyButtonClass: 'btn-secondary'
+      queueButtonClass: 'btn-secondary',
+      historyButtonClass: 'btn-outline-dark'
     })
 
     let ordersLength = this.state.orders.length
@@ -101,9 +104,55 @@ class OrdersPageBase extends Component {
     })
   }
 
+  renderTable () {
+    let table = []
+
+    for (const order of this.state.orders) {
+      table.push(
+        <tr key={order.Id}>
+          <td>{order.User}</td>
+          <td>{order.Executor}</td>
+          <td>${order.Price.toFixed(2)}</td>
+          <td>{order.Status}</td>
+          <td>{order.ProductsCount}</td>
+          <td>{order.TimeStamp}</td>
+          <td><button onClick={() => this.toggleDetails(order.Id)} className='btn btn-secondary btn-sm'>Details</button></td>
+        </tr>
+      )
+
+      table.push(
+        <tr className='order-details' style={{display: 'none'}} data-id={order.Id} key={order.Id + '1'}>
+          <td colSpan={tableHeadNames.length}>
+            <ul className='list-group'>
+              {order.Products.map(p => <li key={p.Id} className='list-group-item'>{p.Name} - ${p.Price.toFixed(2)}</li>)}
+            </ul>
+          </td>
+        </tr>
+      )
+    }
+
+    return table
+  }
+
+  toggleDetails (id) {
+    let elements = document.getElementsByClassName('order-details')
+
+    for (const element of elements) {
+      if (element.getAttribute('data-id') === id) {
+        if (element.style.display === '') {
+          element.style.display = 'none'
+        } else {
+          element.style.display = ''
+        }
+      } else {
+        element.style.display = 'none'
+      }
+    }
+  }
+
   render () {
     return (
-      <div ref='iScroll'>
+      <div>
         <div className='row'>
           <div className='col-md-6'>
             <h2>
@@ -115,20 +164,10 @@ class OrdersPageBase extends Component {
         </div>
         <br />
         <div className='row'>
-          <table className='table table-hover table-striped'>
-            {<TableHead heads={['User', 'Executor', 'Price', 'Status', 'Products', 'Time Stamp', 'Actions']} />}
+          <table className='table table-hover'>
+            {<TableHead heads={tableHeadNames} />}
             <tbody>
-              {this.state.orders.map(o =>
-                <tr key={o.Id}>
-                  <td>{o.User}</td>
-                  <td>{o.Executor}</td>
-                  <td>${o.Price.toFixed(2)}</td>
-                  <td>{o.Status}</td>
-                  <td>{o.ProductsCount}</td>
-                  <td>{o.TimeStamp}</td>
-                  <td><Link className='btn btn-secondary btn-sm' to={'/moderator/orders/' + o.Id}>Details</Link></td>
-                </tr>
-              )}
+              {this.renderTable()}
             </tbody>
           </table>
         </div>
@@ -137,6 +176,6 @@ class OrdersPageBase extends Component {
   }
 }
 
-const OrdersPage = protectedRoute(OrdersPageBase, 'Moderator')
+const ModeratorOrdersPage = protectedRoute(ModeratorOrdersPageBase, 'Moderator')
 
-export default OrdersPage
+export default ModeratorOrdersPage

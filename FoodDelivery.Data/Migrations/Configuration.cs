@@ -23,7 +23,7 @@ namespace FoodDelivery.Data.Migrations
         private const int CategoriesCount = 3;
         private const int ProductsCount = CategoriesCount * 10;
         private const int FeedbacksCount = ProductsCount * 3;
-        private const int IngredientsCount = ProductsCount * 6;
+        private const int IngredientsCount = ProductsCount;
         private const int OrdersCount = 100;
         private const int MinPrice = 1;
         private const int MaxPrice = 10;
@@ -40,11 +40,11 @@ namespace FoodDelivery.Data.Migrations
 
         protected override void Seed(FoodDeliveryDbContext context)
         {
-            var roleStore = new RoleStore<Role, int, UserRole>(context);
-            var roleManager = new RoleManager<Role, int>(roleStore);
+            var roleStore = new RoleStore<Role, Guid, UserRole>(context);
+            var roleManager = new RoleManager<Role, Guid>(roleStore);
 
-            var userStore = new UserStore<User, Role, int, UserLogin, UserRole, UserClaim>(context);
-            var userManager = new UserManager<User, int>(userStore);
+            var userStore = new UserStore<User, Role, Guid, UserLogin, UserRole, UserClaim>(context);
+            var userManager = new UserManager<User, Guid>(userStore);
 
             userManager.PasswordValidator = new PasswordValidator()
             {
@@ -63,8 +63,8 @@ namespace FoodDelivery.Data.Migrations
                 await this.SeedUsersAsync(userManager, roleManager, ModeratorsCount, CommonConstants.ModeratorRole, context);
                 await this.SeedUsersAsync(userManager, roleManager, EmployeesCount, CommonConstants.EmployeeRole, context);
                 await this.SeedCategoriesAsync(CategoriesCount, context);
-                await this.SeedProductsAsync(ProductsCount, context);
                 await this.SeedIngredientsAsync(IngredientsCount, context);
+                await this.SeedProductsAsync(ProductsCount, context);
                 await this.SeedOrdersAsync(OrdersCount, context);
                 await this.SeedFeedbacksAsync(FeedbacksCount, context);
             })
@@ -72,21 +72,21 @@ namespace FoodDelivery.Data.Migrations
             .GetResult();
         }
 
-        private async Task SeedRolesAsync(RoleManager<Role, int> roleManager, FoodDeliveryDbContext context)
+        private async Task SeedRolesAsync(RoleManager<Role, Guid> roleManager, FoodDeliveryDbContext context)
         {
             if (await context.Roles.AnyAsync())
             {
                 return;
             }
 
-            await roleManager.CreateAsync(new Role { Name = CommonConstants.AdminRole });
-            await roleManager.CreateAsync(new Role { Name = CommonConstants.ModeratorRole });
-            await roleManager.CreateAsync(new Role { Name = CommonConstants.EmployeeRole });
+            await roleManager.CreateAsync(new Role { Id = Guid.NewGuid(), Name = CommonConstants.AdminRole });
+            await roleManager.CreateAsync(new Role { Id = Guid.NewGuid(), Name = CommonConstants.ModeratorRole });
+            await roleManager.CreateAsync(new Role { Id = Guid.NewGuid(), Name = CommonConstants.EmployeeRole });
 
             await context.SaveChangesAsync();
         }
 
-        private async Task SeedUsersAsync(UserManager<User, int> userManager, int usersCount, FoodDeliveryDbContext context)
+        private async Task SeedUsersAsync(UserManager<User, Guid> userManager, int usersCount, FoodDeliveryDbContext context)
         {
             if (await context.Users.AnyAsync(u => !u.Roles.Any()))
             {
@@ -99,6 +99,7 @@ namespace FoodDelivery.Data.Migrations
 
                 User user = new User
                 {
+                    Id = Guid.NewGuid(),
                     UserName = email,
                     Email = email
                 };
@@ -109,8 +110,8 @@ namespace FoodDelivery.Data.Migrations
         }
 
         private async Task SeedUsersAsync(
-            UserManager<User, int> userManager,
-            RoleManager<Role, int> roleManager,
+            UserManager<User, Guid> userManager,
+            RoleManager<Role, Guid> roleManager,
             int usersCount,
             string role,
             FoodDeliveryDbContext context)
@@ -126,6 +127,7 @@ namespace FoodDelivery.Data.Migrations
 
                 User user = new User
                 {
+                    Id = Guid.NewGuid(),
                     UserName = email,
                     Email = email,
                 };
@@ -156,31 +158,6 @@ namespace FoodDelivery.Data.Migrations
             await context.SaveChangesAsync();
         }
 
-        private async Task SeedProductsAsync(int productsCount, FoodDeliveryDbContext context)
-        {
-            if (await context.Products.AnyAsync())
-            {
-                return;
-            }
-
-            List<int> categoryIds = context.Categories
-                .Select(c => c.Id)
-                .ToList();
-
-            for (int i = 1; i <= productsCount; i++)
-            {
-                context.Products.Add(new Product
-                {
-                    Name = $"Product{i}",
-                    Mass = random.Next(50, 800),
-                    Price = random.Next(MinPrice, MaxPrice),
-                    CategoryId = categoryIds[random.Next(0, categoryIds.Count)]
-                });
-            }
-
-            await context.SaveChangesAsync();
-        }
-
         private async Task SeedIngredientsAsync(int ingredientsCount, FoodDeliveryDbContext context)
         {
             if (await context.Ingredients.AnyAsync())
@@ -188,35 +165,62 @@ namespace FoodDelivery.Data.Migrations
                 return;
             }
 
-            List<int> productIds = context.Products
-                .Select(p => p.Id)
-                .ToList();
-
-            List<IngredientType> productTypes = Enum.GetValues(typeof(IngredientType)).Cast<IngredientType>().ToList();
+            List<IngredientType> ingredientTypes = Enum.GetValues(typeof(IngredientType)).Cast<IngredientType>().ToList();
 
             for (int i = 1; i < ingredientsCount; i++)
             {
-                Ingredient ingredient = new Ingredient
+                context.Ingredients.Add(new Ingredient
                 {
                     Name = $"Ingredient{i}",
-                    IngredientType = productTypes[random.Next(0, productTypes.Count)]
+                    IngredientType = ingredientTypes[random.Next(0, ingredientTypes.Count)]
+                });
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        private async Task SeedProductsAsync(int productsCount, FoodDeliveryDbContext context)
+        {
+            if (await context.Products.AnyAsync())
+            {
+                return;
+            }
+
+            List<Guid> categoryIds = context
+                .Categories
+                .Select(c => c.Id)
+                .ToList();
+
+            List<Guid> ingredientIds = context
+                .Ingredients
+                .Select(p => p.Id)
+                .ToList();
+
+            for (int i = 1; i <= productsCount; i++)
+            {
+                Product product = new Product
+                {
+                    Name = $"Product{i}",
+                    Mass = random.Next(50, 800),
+                    Price = random.Next(MinPrice, MaxPrice),
+                    CategoryId = categoryIds[random.Next(0, categoryIds.Count)]
                 };
 
-                context.Ingredients.Add(ingredient);
+                context.Products.Add(product);
 
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 7; j++)
                 {
-                    int productId = productIds[random.Next(0, productIds.Count)];
+                    Guid ingredientId = ingredientIds[random.Next(0, ingredientIds.Count)];
 
-                    if (ingredient.Products.Any(p => p.ProductId == productId))
+                    if (product.Ingredients.Any(ing => ing.IngredientId == ingredientId))
                     {
                         j--;
                         continue;
                     }
 
-                    ingredient.Products.Add(new ProductsIngredients
+                    product.Ingredients.Add(new ProductsIngredients
                     {
-                        ProductId = productId
+                        IngredientId = ingredientId
                     });
                 }
             }
@@ -231,13 +235,18 @@ namespace FoodDelivery.Data.Migrations
                 return;
             }
 
-            List<Product> products = context.Products.ToList();
-            List<int> userIds = context.Users
+            List<Product> products = context
+                .Products
+                .ToList();
+
+            List<Guid> userIds = context
+                .Users
                 .Where(u => !u.Roles.Any(r => r.Role.Name == CommonConstants.EmployeeRole))
                 .Select(u => u.Id)
                 .ToList();
 
-            List<int> employeeIds = context.Users
+            List<Guid> employeeIds = context
+                .Users
                 .Where(u => u.Roles.Any(r => r.Role.Name == CommonConstants.EmployeeRole))
                 .Select(e => e.Id)
                 .ToList();
@@ -260,7 +269,7 @@ namespace FoodDelivery.Data.Migrations
                 for (int j = 0; j < productsCount; j++)
                 {
                     Product product = products[random.Next(0, products.Count)];
-                    int productId = product.Id;
+                    Guid productId = product.Id;
 
                     if (order.Products.Any(p => p.ProductId == productId))
                     {
@@ -289,12 +298,14 @@ namespace FoodDelivery.Data.Migrations
                 return;
             }
 
-            List<int> userIds = context.Users
+            List<Guid> userIds = context
+                .Users
                 .Where(u => !u.Roles.Any(r => r.Role.Name == CommonConstants.EmployeeRole))
                 .Select(u => u.Id)
                 .ToList();
 
-            List<int> productIds = context.Products
+            List<Guid> productIds = context
+                .Products
                 .Select(p => p.Id)
                 .ToList();
 

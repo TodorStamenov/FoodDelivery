@@ -41,7 +41,7 @@ namespace FoodDelivery.Services.Implementations
             Database.SaveChanges();
         }
 
-        public void Edit(int id, string name, string ingredientTypeString)
+        public void Edit(Guid id, string name, string ingredientTypeString)
         {
             Ingredient ingredient = Database
                 .Ingredients
@@ -70,7 +70,7 @@ namespace FoodDelivery.Services.Implementations
             Database.SaveChanges();
         }
 
-        public IngredientViewModel GetIngredient(int id)
+        public IngredientViewModel GetIngredient(Guid id)
         {
             IngredientViewModel model = Database
                 .Ingredients

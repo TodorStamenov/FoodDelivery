@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FoodDelivery.Services.Models.ViewModels.Categories
+namespace FoodDelivery.Services.Models.ViewModels.Products
 {
-    public class CategoryViewModel
+    public class ProductViewModel
     {
         public Guid Id { get; set; }
 

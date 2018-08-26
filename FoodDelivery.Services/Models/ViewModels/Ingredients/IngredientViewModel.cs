@@ -1,8 +1,10 @@
-﻿namespace FoodDelivery.Services.Models.ViewModels.Ingredients
+﻿using System;
+
+namespace FoodDelivery.Services.Models.ViewModels.Ingredients
 {
     public class IngredientViewModel
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
     }

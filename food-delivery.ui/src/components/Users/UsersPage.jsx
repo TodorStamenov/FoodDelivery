@@ -82,7 +82,7 @@ class UsersPageBase extends Component {
         </div>
         <br />
         <div className='row'>
-          <table className='table table-hover table-striped'>
+          <table className='table table-hover'>
             {<TableHead heads={['Username', 'Is Locked', Admin, Moderator, Employee]} />}
             <tbody>
               {this.state.users.map(u =>

@@ -2,6 +2,7 @@
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,14 +35,14 @@ namespace FoodDelivery.Services.Implementations
                 throw new DuplicateEntryException($"User {username} is already in {roleName} role");
             }
 
-            int? userId = Database
+            Guid? userId = Database
                 .Users
                 .Where(u => u.UserName == username)
                 .Select(u => new { u.Id })
                 .FirstOrDefault()?
                 .Id;
 
-            int? roleId = Database
+            Guid? roleId = Database
                 .Roles
                 .Where(r => r.Name == roleName)
                 .Select(r => new { r.Id })?

@@ -56,7 +56,6 @@ export default class Header extends Component {
         <div className='collapse navbar-collapse' id='navbarSupportedContent'>
           <ul className='navbar-nav mr-auto'>
             {this.props.isAuthed && <li><Link className='nav-link' to='/orders/my'>My Orders</Link></li>}
-            {this.props.isAuthed && <li><Link className='nav-link' to='/feedbacks/create'>Add Feedback</Link></li>}
           </ul>
           <ul className='nav navbar-nav navbar-right'>
             {

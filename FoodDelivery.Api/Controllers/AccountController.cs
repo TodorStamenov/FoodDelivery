@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Testing;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace FoodDelivery.Api.Controllers
 
             User user = new User()
             {
+                Id = Guid.NewGuid(),
                 UserName = model.Email,
                 Email = model.Email
             };
@@ -104,7 +106,7 @@ namespace FoodDelivery.Api.Controllers
             }
 
             IdentityResult result = await UserManager.ChangePasswordAsync(
-                User.Identity.GetUserId<int>(),
+                Guid.Parse(User.Identity.GetUserId()),
                 model.OldPassword,
                 model.NewPassword);
 

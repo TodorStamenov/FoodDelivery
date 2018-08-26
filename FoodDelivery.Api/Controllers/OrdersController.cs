@@ -6,8 +6,8 @@ using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
 {
-    [Authorize(Roles = CommonConstants.ModeratorRole)]
     [RoutePrefix("api/Orders")]
+    [Authorize(Roles = CommonConstants.ModeratorRole)]
     public class OrdersController : ApiController
     {
         private const int LoadElements = 10;
@@ -21,16 +21,25 @@ namespace FoodDelivery.Api.Controllers
 
         [HttpGet]
         [Route("history/{loadedElements?}")]
-        public IEnumerable<ListOrdersViewModel> History(int loadedElements = 0)
+        public IEnumerable<ListOrdersModeratorViewModel> History(int loadedElements = 0)
         {
             return this.order.History(LoadElements, loadedElements);
         }
 
         [HttpGet]
         [Route("queue/{loadedElements?}")]
-        public IEnumerable<ListOrdersViewModel> Queue(int loadedElements = 0)
+        public IEnumerable<ListOrdersModeratorViewModel> Queue(int loadedElements = 0)
         {
             return this.order.Queue(LoadElements, loadedElements);
+        }
+
+        [HttpGet]
+        [Route("employeeQueue")]
+        [OverrideAuthorization]
+        [Authorize(Roles = CommonConstants.EmployeeRole)]
+        public IEnumerable<ListOrdersEmployeeViewModel> MyQueue()
+        {
+            return this.order.EmployeeQueue(User.Identity.Name);
         }
     }
 }

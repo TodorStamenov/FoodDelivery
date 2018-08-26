@@ -22,7 +22,8 @@ import IngredientsPage from './components/Ingredients/IngredientsPage'
 import CreateIngredientForm from './components/Ingredients/CreateIngredientForm'
 import EditIngredientForm from './components/Ingredients/EditIngredientForm'
 
-import OrdersPage from './components/Orders/OrdersPage'
+import ModeratorOrdersPage from './components/Orders/ModeratorOrdersPage'
+import EmployeeOrdersPage from './components/Orders/EmployeeOrdersPage'
 
 import auth from './api/auth'
 
@@ -128,7 +129,8 @@ class App extends Component {
             <Route exact path='/moderator/ingredients/create' component={CreateIngredientForm} />
             <Route exact path='/moderator/ingredients/edit/:id' component={EditIngredientForm} />
 
-            <Route exact path='/moderator/orders' component={OrdersPage} />
+            <Route exact path='/moderator/orders' component={ModeratorOrdersPage} />
+            <Route exact path='/employee/orders' component={EmployeeOrdersPage} />
 
             <Route component={HomePage} />
           </Switch>

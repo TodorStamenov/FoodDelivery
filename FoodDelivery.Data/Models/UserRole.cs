@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 
 namespace FoodDelivery.Data.Models
 {
-    public class UserRole : IdentityUserRole<int>
+    public class UserRole : IdentityUserRole<Guid>
     {
         public virtual User User { get; set; }
 

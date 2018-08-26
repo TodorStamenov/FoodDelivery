@@ -1,12 +1,14 @@
-﻿namespace FoodDelivery.Data.Models
+﻿using System;
+
+namespace FoodDelivery.Data.Models
 {
     public class ProductsIngredients
     {
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
         public virtual Product Product { get; set; }
 
-        public int IngredientId { get; set; }
+        public Guid IngredientId { get; set; }
 
         public virtual Ingredient Ingredient { get; set; }
     }

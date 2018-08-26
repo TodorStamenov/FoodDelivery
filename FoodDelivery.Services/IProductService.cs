@@ -1,10 +1,11 @@
 ﻿using FoodDelivery.Services.Models.ViewModels.Products;
+using System;
 using System.Collections.Generic;
 
 namespace FoodDelivery.Services
 {
-    public interface IProductService
+    public interface IProductService : IService
     {
-        IEnumerable<ListProductsViewModel> All(int categoryId);
+        IEnumerable<ListProductsViewModel> All(Guid categoryId);
     }
 }

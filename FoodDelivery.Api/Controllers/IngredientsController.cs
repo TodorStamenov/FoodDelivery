@@ -3,13 +3,14 @@ using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.BindingModels.Ingredients;
 using FoodDelivery.Services.Models.ViewModels.Ingredients;
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
 {
-    [Authorize(Roles = CommonConstants.ModeratorRole)]
     [RoutePrefix("api/Ingredients")]
+    [Authorize(Roles = CommonConstants.ModeratorRole)]
     public class IngredientsController : ApiController
     {
         private const int PageSize = 10;
@@ -40,11 +41,11 @@ namespace FoodDelivery.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetProduct(int id)
+        public IHttpActionResult GetProduct(Guid? id)
         {
             try
             {
-                IngredientViewModel model = this.ingredient.GetIngredient(id);
+                IngredientViewModel model = this.ingredient.GetIngredient(id.GetValueOrDefault());
                 return Ok(model);
             }
             catch (BadRequestException bre)
@@ -55,7 +56,7 @@ namespace FoodDelivery.Api.Controllers
         }
 
         [Route("{id}")]
-        public IHttpActionResult Put(int id, IngredientBindingModel model)
+        public IHttpActionResult Put(Guid? id, IngredientBindingModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -64,7 +65,7 @@ namespace FoodDelivery.Api.Controllers
 
             try
             {
-                this.ingredient.Edit(id, model.Name, model.IngredientType);
+                this.ingredient.Edit(id.GetValueOrDefault(), model.Name, model.IngredientType);
                 return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Ingredient, CommonConstants.Edited));
             }
             catch (BadRequestException bre)

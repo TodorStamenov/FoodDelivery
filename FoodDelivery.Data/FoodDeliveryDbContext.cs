@@ -3,11 +3,12 @@ using FoodDelivery.Data.Migrations;
 using FoodDelivery.Data.ModelConfigurations;
 using FoodDelivery.Data.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Data.Entity;
 
 namespace FoodDelivery.Data
 {
-    public class FoodDeliveryDbContext : IdentityDbContext<User, Role, int, UserLogin, UserRole, UserClaim>
+    public class FoodDeliveryDbContext : IdentityDbContext<User, Role, Guid, UserLogin, UserRole, UserClaim>
     {
         public FoodDeliveryDbContext()
             : base("data source=.;initial catalog=FoodDelivery;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework")

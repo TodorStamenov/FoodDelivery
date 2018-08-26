@@ -1,4 +1,5 @@
 ﻿using FoodDelivery.Services.Models.ViewModels.Ingredients;
+using System;
 using System.Collections.Generic;
 
 namespace FoodDelivery.Services
@@ -7,9 +8,9 @@ namespace FoodDelivery.Services
     {
         void Create(string name, string ingredientTypeString);
 
-        void Edit(int id, string name, string ingredientTypeString);
+        void Edit(Guid id, string name, string ingredientTypeString);
 
-        IngredientViewModel GetIngredient(int id);
+        IngredientViewModel GetIngredient(Guid id);
 
         IEnumerable<string> GetTypes();
 
