@@ -16,13 +16,30 @@ class EmployeeOrdersPageBase extends Component {
     this.renderTable = this.renderTable.bind(this)
     this.toggleIngredients = this.toggleIngredients.bind(this)
     this.toggleProducts = this.toggleProducts.bind(this)
+    this.updateOrders = this.updateOrders.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.loadOrders = this.loadOrders.bind(this)
   }
 
   componentDidMount () {
+    this.loadOrders()
+  }
+
+  loadOrders () {
     order.employeeOrders().then(res => {
       this.setState({
         orders: res
       })
+    })
+  }
+
+  handleChange (event, orderId) {
+    let orders = this.state.orders
+    let orderIndex = orders.findIndex(o => o.Id === orderId)
+    orders[orderIndex].Status = event.target.value
+
+    this.setState({
+      orders
     })
   }
 
@@ -63,6 +80,20 @@ class EmployeeOrdersPageBase extends Component {
     }
   }
 
+  updateOrders () {
+    let orders = this.state
+      .orders
+      .map(o => {
+        return {
+          Id: o.Id,
+          Status: o.Status
+        }
+      })
+
+    order.updateQueue(orders)
+    this.loadOrders()
+  }
+
   renderTable () {
     let table = []
 
@@ -73,8 +104,11 @@ class EmployeeOrdersPageBase extends Component {
           <td>{order.Address}</td>
           <td>{order.TimeStamp}</td>
           <td className='input-group'>
-            <select className='form-control'>
-              {order.Statuses.map(s => <option key={s} value={s} selected={(order.Status === s ? 'selected' : '')}>{s}</option>)}
+            <select onChange={e => this.handleChange(e, order.Id)} className='form-control'>
+              {order.Statuses.sort((x, y) => x.localeCompare(y)).map(s =>
+                <option key={s} value={s} selected={(order.Status === s ? 'selected' : '')}>
+                  {s}
+                </option>)}
             </select>
             <button className='btn btn-secondary btn-sm ml-2' onClick={() => this.toggleProducts(order.Id)}>Details</button>
           </td>
@@ -83,7 +117,7 @@ class EmployeeOrdersPageBase extends Component {
 
       for (const product of order.Products) {
         table.push(
-          <tr style={{display: 'none'}}
+          <tr style={{ display: 'none' }}
             className='product table-secondary'
             onClick={() => this.toggleIngredients(order.Id + product.Id)}
             data-id={order.Id}
@@ -102,7 +136,7 @@ class EmployeeOrdersPageBase extends Component {
 
         for (let i = 0; i < length; i++) {
           table.push(
-            <tr style={{display: 'none'}}
+            <tr style={{ display: 'none' }}
               className='ingredient'
               data-id={order.Id + product.Id}
               key={mains[i] ? mains[i].Id + product.Id + order.Id : toppings[i].Id + product.Id + order.Id}>
@@ -124,7 +158,7 @@ class EmployeeOrdersPageBase extends Component {
       <div>
         <div className='row'>
           <div className='col-md-6'>
-            <h2>Orders Queue</h2>
+            <h2>Orders Queue - <button onClick={this.updateOrders} className='btn btn-md btn-secondary'>Update Orders</button></h2>
           </div>
         </div>
         <br />

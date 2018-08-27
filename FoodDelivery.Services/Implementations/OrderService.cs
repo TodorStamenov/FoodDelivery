@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
+using FoodDelivery.Services.Models.BindingModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Ingredients;
 using FoodDelivery.Services.Models.ViewModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Products;
@@ -14,6 +15,32 @@ namespace FoodDelivery.Services.Implementations
         public OrderService(FoodDeliveryDbContext database)
             : base(database)
         {
+        }
+
+        public void UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model)
+        {
+            Dictionary<Guid, string> orderPairs = model
+                .ToDictionary(
+                    k => k.Id,
+                    v => v.Status);
+
+            List<Guid> orderIds = model
+                .Select(o => o.Id)
+                .ToList();
+
+            IEnumerable<Order> orders = Database
+                .Orders
+                .Where(o => orderIds.Contains(o.Id))
+                .ToList()
+                .Where(o => o.Status.ToString() != orderPairs[o.Id]);
+
+            foreach (var order in orders)
+            {
+                Enum.TryParse(orderPairs[order.Id], out Status newStatus);
+                order.Status = newStatus;
+            }
+
+            Database.SaveChanges();
         }
 
         public IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string username)

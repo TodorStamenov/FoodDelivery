@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Common;
 using FoodDelivery.Services;
+using FoodDelivery.Services.Models.BindingModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Orders;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -11,6 +12,7 @@ namespace FoodDelivery.Api.Controllers
     public class OrdersController : ApiController
     {
         private const int LoadElements = 10;
+        private const string Order = "Order";
 
         private readonly IOrderService order;
 
@@ -40,6 +42,16 @@ namespace FoodDelivery.Api.Controllers
         public IEnumerable<ListOrdersEmployeeViewModel> MyQueue()
         {
             return this.order.EmployeeQueue(User.Identity.Name);
+        }
+
+        [HttpPost]
+        [Route("updateQueue")]
+        [OverrideAuthorization]
+        [Authorize(Roles = CommonConstants.EmployeeRole)]
+        public IHttpActionResult UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model)
+        {
+            this.order.UpdateQueue(model);
+            return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Order, CommonConstants.Edited));
         }
     }
 }

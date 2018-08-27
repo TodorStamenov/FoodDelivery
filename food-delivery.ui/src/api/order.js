@@ -23,6 +23,14 @@ function employeeOrders () {
   }).then(res => res.json())
 }
 
-const feedback = { queue, history, employeeOrders }
+function updateQueue (orders) {
+  return fetch(host + orderRoute + 'updateQueue', {
+    method: 'POST',
+    headers: getHeaders(true, true),
+    body: JSON.stringify(orders)
+  }).then(res => res.json())
+}
+
+const feedback = { queue, history, employeeOrders, updateQueue }
 
 export default feedback
