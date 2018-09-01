@@ -259,7 +259,7 @@ namespace FoodDelivery.Data.Migrations
                 {
                     Address = $"Delivery address number{i}",
                     Status = statuses[random.Next(0, statuses.Count)],
-                    TimeStamp = DateTime.Now.AddDays(i).AddHours(i),
+                    TimeStamp = DateTime.UtcNow.AddDays(i).AddHours(i),
                     UserId = userIds[random.Next(0, userIds.Count)],
                     ExecutorId = employeeIds[random.Next(0, employeeIds.Count)]
                 };
@@ -320,7 +320,7 @@ namespace FoodDelivery.Data.Migrations
                 {
                     Content = lorem,
                     Rate = rates[random.Next(0, rates.Count)],
-                    TimeStamp = DateTime.Now.AddDays(i).AddHours(i),
+                    TimeStamp = DateTime.UtcNow.AddDays(i).AddHours(i),
                     ProductId = productIds[random.Next(0, productIds.Count)],
                     UserId = userIds[random.Next(0, userIds.Count)]
                 });

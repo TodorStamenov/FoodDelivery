@@ -16,18 +16,18 @@ namespace FoodDelivery.Api.Controllers
     {
         private const string UsernameNotNull = "Username cannot be null";
 
-        private readonly IUserService users;
+        private readonly IUserService user;
 
-        public UsersController(IUserService users)
+        public UsersController(IUserService user)
         {
-            this.users = users;
+            this.user = user;
         }
 
         [HttpGet]
         [Route("All")]
         public IEnumerable<ListUsersViewModel> All([FromUri]string username)
         {
-            return this.users.All(username);
+            return this.user.All(username);
         }
 
         [HttpGet]
@@ -94,7 +94,7 @@ namespace FoodDelivery.Api.Controllers
 
             try
             {
-                this.users.AddRole(username, roleName);
+                this.user.AddRole(username, roleName);
             }
             catch (BadRequestException bre)
             {
@@ -115,7 +115,7 @@ namespace FoodDelivery.Api.Controllers
 
             try
             {
-                this.users.RemoveRole(username, roleName);
+                this.user.RemoveRole(username, roleName);
             }
             catch (BadRequestException bre)
             {

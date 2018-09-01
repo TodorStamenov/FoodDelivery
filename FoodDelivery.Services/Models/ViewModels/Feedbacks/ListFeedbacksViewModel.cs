@@ -1,5 +1,4 @@
-﻿using FoodDelivery.Data.Models;
-using System;
+﻿using System;
 
 namespace FoodDelivery.Services.Models.ViewModels.Feedbacks
 {
@@ -9,7 +8,7 @@ namespace FoodDelivery.Services.Models.ViewModels.Feedbacks
 
         public string ProductName { get; set; }
 
-        public Rate Rate { get; set; }
+        public string Rate { get; set; }
 
         public string TimeStamp { get; set; }
 

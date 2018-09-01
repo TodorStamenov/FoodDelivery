@@ -8,10 +8,12 @@ namespace FoodDelivery.Services
     {
         void UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model);
 
-        IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string username);
+        IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string executorId);
 
-        IEnumerable<ListOrdersModeratorViewModel> History(int loadElements, int loadedElements);
+        IEnumerable<ListOrdersModeratorViewModel> ModeratorHistory(int loadElements, int loadedElements);
 
-        IEnumerable<ListOrdersModeratorViewModel> Queue(int loadElements, int loadedElements);
+        IEnumerable<ListOrdersModeratorViewModel> ModeratorQueue(int loadElements, int loadedElements);
+
+        IEnumerable<ListOrdersUserViewModel> UserOrder(string userId, int loadElements, int loadedElements);
     }
 }

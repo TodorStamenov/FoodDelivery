@@ -19,31 +19,27 @@ namespace FoodDelivery.Services.Implementations
 
         public void UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model)
         {
-            Dictionary<Guid, string> orderPairs = model
-                .ToDictionary(
-                    k => k.Id,
-                    v => v.Status);
+            Dictionary<Guid, string> orderPairs = model.ToDictionary(k => k.Id, v => v.Status);
 
-            List<Guid> orderIds = model
-                .Select(o => o.Id)
-                .ToList();
+            IEnumerable<Guid> orderIds = orderPairs.Keys.AsEnumerable();
 
-            IEnumerable<Order> orders = Database
-                .Orders
-                .Where(o => orderIds.Contains(o.Id))
-                .ToList()
-                .Where(o => o.Status.ToString() != orderPairs[o.Id]);
+            IEnumerable<Order> orders = Database.Orders.Where(o => orderIds.Contains(o.Id));
 
             foreach (var order in orders)
             {
-                Enum.TryParse(orderPairs[order.Id], out Status newStatus);
+                if (order.Status.ToString() == orderPairs[order.Id]
+                    || !Enum.TryParse(orderPairs[order.Id], out Status newStatus))
+                {
+                    continue;
+                }
+
                 order.Status = newStatus;
             }
 
             Database.SaveChanges();
         }
 
-        public IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string username)
+        public IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string executorId)
         {
             IEnumerable<string> statuses = Enum
                 .GetValues(typeof(Status))
@@ -52,7 +48,7 @@ namespace FoodDelivery.Services.Implementations
 
             return Database
                 .Orders
-                .Where(o => o.Executor.UserName == username)
+                .Where(o => o.ExecutorId.ToString() == executorId)
                 .Where(o => o.Status != Status.Delivered)
                 .OrderBy(o => o.TimeStamp)
                 .Select(o => new ListOrdersEmployeeViewModel
@@ -92,7 +88,7 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
-        public IEnumerable<ListOrdersModeratorViewModel> History(int loadElements, int loadedElements)
+        public IEnumerable<ListOrdersModeratorViewModel> ModeratorHistory(int loadElements, int loadedElements)
         {
             return Database
                 .Orders
@@ -122,7 +118,7 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
-        public IEnumerable<ListOrdersModeratorViewModel> Queue(int loadElements, int loadedElements)
+        public IEnumerable<ListOrdersModeratorViewModel> ModeratorQueue(int loadElements, int loadedElements)
         {
             return Database
                 .Orders
@@ -140,6 +136,33 @@ namespace FoodDelivery.Services.Implementations
                     ProductsCount = o.Products.Count,
                     Executor = o.Executor.UserName,
                     User = o.User.UserName,
+                    Products = o.Products
+                        .OrderBy(p => p.Product.Name)
+                        .Select(p => new ListProductsViewModel
+                        {
+                            Id = p.Product.Id,
+                            Name = p.Product.Name,
+                            Price = p.Product.Price
+                        })
+                })
+                .ToList();
+        }
+
+        public IEnumerable<ListOrdersUserViewModel> UserOrder(string userId, int loadElements, int loadedElements)
+        {
+            return Database
+                .Orders
+                .Where(o => o.UserId.ToString() == userId)
+                .OrderByDescending(o => o.TimeStamp)
+                .Skip(loadedElements)
+                .Take(loadElements)
+                .Select(o => new ListOrdersUserViewModel
+                {
+                    Id = o.Id,
+                    Price = o.Price,
+                    TimeStamp = o.TimeStamp.ToString(),
+                    ProductsCount = o.Products.Count,
+                    Status = o.Status.ToString(),
                     Products = o.Products
                         .OrderBy(p => p.Product.Name)
                         .Select(p => new ListProductsViewModel

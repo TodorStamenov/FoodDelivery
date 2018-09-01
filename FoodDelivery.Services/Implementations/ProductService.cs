@@ -3,6 +3,7 @@ using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Models.ViewModels.Products;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
@@ -15,7 +16,13 @@ namespace FoodDelivery.Services.Implementations
 
         public IEnumerable<ListProductsViewModel> All(Guid categoryId)
         {
-            throw new NotImplementedException();
+            return Database
+                .Products
+                .Where(p => p.CategoryId == categoryId)
+                .Select(p => new ListProductsViewModel
+                {
+                })
+                .ToList();
         }
     }
 }

@@ -23,7 +23,7 @@ export default class ChangePasswordForm extends Component {
 
   render () {
     return (
-      <div className='form-group col-md-3 offset-md-2'>
+      <div className='form-group col-md-4 offset-md-2'>
         <BoundForm onSubmit={this.onSubmit}>
           <label htmlFor='oldPassword'>Old Password</label>
           <input type='password' name='oldPassword' className='form-control' id='oldPassword' placeholder='Old Password' />

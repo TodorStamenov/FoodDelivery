@@ -18,7 +18,6 @@ class FeedbacksPageBase extends Component {
 
     this.renderPageLinks = this.renderPageLinks.bind(this)
     this.renderTable = this.renderTable.bind(this)
-    this.showDetails = this.showDetails.bind(this)
     this.getFeedbacks = this.getFeedbacks.bind(this)
   }
 
@@ -32,22 +31,6 @@ class FeedbacksPageBase extends Component {
         feedbackPage: res
       })
     })
-  }
-
-  showDetails (id) {
-    let elements = document.getElementsByClassName('feedback-content')
-
-    for (const element of elements) {
-      if (element.getAttribute('data-id') === id) {
-        if (element.style.display === '') {
-          element.style.display = 'none'
-        } else {
-          element.style.display = ''
-        }
-      } else {
-        element.style.display = 'none'
-      }
-    }
   }
 
   renderPageLinks () {
@@ -78,7 +61,7 @@ class FeedbacksPageBase extends Component {
           <td>{feedback.Rate}</td>
           <td>{feedback.TimeStamp}</td>
           <td>{feedback.User}</td>
-          <td><button onClick={() => this.showDetails(feedback.Id.toString())} className='btn btn-secondary btn-sm'>Details</button></td>
+          <td><button onClick={() => this.props.toggleDetails(feedback.Id.toString(), 'feedback-content')} className='btn btn-secondary btn-sm'>Details</button></td>
         </tr>)
 
       table.push(

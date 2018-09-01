@@ -2,6 +2,7 @@
 using FoodDelivery.Services;
 using FoodDelivery.Services.Models.BindingModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Orders;
+using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -22,36 +23,45 @@ namespace FoodDelivery.Api.Controllers
         }
 
         [HttpGet]
-        [Route("history/{loadedElements?}")]
-        public IEnumerable<ListOrdersModeratorViewModel> History(int loadedElements = 0)
+        [Route("moderator/history/{loadedElements?}")]
+        public IEnumerable<ListOrdersModeratorViewModel> ModeratorHistory(int loadedElements = 0)
         {
-            return this.order.History(LoadElements, loadedElements);
+            return this.order.ModeratorHistory(LoadElements, loadedElements);
         }
 
         [HttpGet]
-        [Route("queue/{loadedElements?}")]
-        public IEnumerable<ListOrdersModeratorViewModel> Queue(int loadedElements = 0)
+        [Route("moderator/queue/{loadedElements?}")]
+        public IEnumerable<ListOrdersModeratorViewModel> ModeratorQueue(int loadedElements = 0)
         {
-            return this.order.Queue(LoadElements, loadedElements);
+            return this.order.ModeratorQueue(LoadElements, loadedElements);
         }
 
         [HttpGet]
-        [Route("employeeQueue")]
+        [Route("employee/queue")]
         [OverrideAuthorization]
         [Authorize(Roles = CommonConstants.EmployeeRole)]
         public IEnumerable<ListOrdersEmployeeViewModel> MyQueue()
         {
-            return this.order.EmployeeQueue(User.Identity.Name);
+            return this.order.EmployeeQueue(User.Identity.GetUserId());
         }
 
         [HttpPost]
-        [Route("updateQueue")]
+        [Route("employee/updateQueue")]
         [OverrideAuthorization]
         [Authorize(Roles = CommonConstants.EmployeeRole)]
         public IHttpActionResult UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model)
         {
             this.order.UpdateQueue(model);
             return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Order, CommonConstants.Edited));
+        }
+
+        [HttpGet]
+        [Route("user/orders/{loadedElements?}")]
+        [OverrideAuthorization]
+        [Authorize]
+        public IEnumerable<ListOrdersUserViewModel> UserOrders(int loadedElements = 0)
+        {
+            return this.order.UserOrder(User.Identity.GetUserId(), LoadElements, loadedElements);
         }
     }
 }

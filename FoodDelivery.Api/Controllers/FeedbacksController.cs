@@ -1,6 +1,11 @@
 ﻿using FoodDelivery.Common;
 using FoodDelivery.Services;
+using FoodDelivery.Services.Exceptions;
+using FoodDelivery.Services.Models.BindingModels.Feedback;
 using FoodDelivery.Services.Models.ViewModels.Feedbacks;
+using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
 using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
@@ -10,12 +15,13 @@ namespace FoodDelivery.Api.Controllers
     public class FeedbacksController : ApiController
     {
         private const int PageSize = 10;
+        private const string Feedback = "Feedback";
 
-        private readonly IFeedbackService feedbacks;
+        private readonly IFeedbackService feedback;
 
-        public FeedbacksController(IFeedbackService feedbacks)
+        public FeedbacksController(IFeedbackService feedback)
         {
-            this.feedbacks = feedbacks;
+            this.feedback = feedback;
         }
 
         [Route("{page?}")]
@@ -30,14 +36,41 @@ namespace FoodDelivery.Api.Controllers
             {
                 CurrentPage = page,
                 EntriesPerPage = PageSize,
-                TotalEntries = this.feedbacks.GetTotalEntries(),
-                Feedbacks = this.feedbacks.All(page, PageSize)
+                TotalEntries = this.feedback.GetTotalEntries(),
+                Feedbacks = this.feedback.All(page, PageSize)
             });
         }
 
-        public IHttpActionResult Post()
+        [HttpGet]
+        [Route("rates")]
+        [OverrideAuthorization]
+        [Authorize]
+        public IEnumerable<string> Ratings()
         {
-            return Ok();
+            return this.feedback.Rates();
+        }
+
+        [HttpPost]
+        [Route("{productId}")]
+        [OverrideAuthorization]
+        [Authorize]
+        public IHttpActionResult Post(Guid? productId, FeedbackBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                this.feedback.Create(productId.GetValueOrDefault(), User.Identity.GetUserId(), model.Content, model.Rate);
+                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Feedback, CommonConstants.Created));
+            }
+            catch (BadRequestException bre)
+            {
+                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                return BadRequest(ModelState);
+            }
         }
     }
 }

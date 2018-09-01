@@ -27,7 +27,7 @@ class EditIngredientFormBase extends Component {
     ingredient.edit(this.state.id, this.state.name, this.state.ingredientType)
       .then(res => {
         if (res.ModelState) {
-          console.log(Object.values(res.ModelState).join('\n'))
+          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
           return
         }
 
@@ -53,7 +53,7 @@ class EditIngredientFormBase extends Component {
 
   render () {
     return (
-      <div className='form-group col-md-3 offset-md-2'>
+      <div className='form-group col-md-4 offset-md-2'>
         <form onSubmit={this.onSubmit}>
           <div className='form-group'>
             <label htmlFor='name'>Name</label>

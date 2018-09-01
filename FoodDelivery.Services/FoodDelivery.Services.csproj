@@ -70,6 +70,7 @@
     <Compile Include="IOrderService.cs" />
     <Compile Include="IProductService.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="Models\BindingModels\Feedback\FeedbackBindingModel.cs" />
     <Compile Include="Models\BindingModels\Ingredients\IngredientBindingModel.cs" />
     <Compile Include="Models\BindingModels\Orders\UpdateOrdersBindingModel.cs" />
     <Compile Include="Models\BindingModels\Users\ChangePasswordBindingModel.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Models\ViewModels\Ingredients\ListIngredientsViewModel.cs" />
     <Compile Include="Models\ViewModels\Orders\ListOrdersEmployeeViewModel.cs" />
     <Compile Include="Models\ViewModels\Orders\ListOrdersModeratorViewModel.cs" />
+    <Compile Include="Models\ViewModels\Orders\ListOrdersUserViewModel.cs" />
     <Compile Include="Models\ViewModels\Orders\ListOrdersViewModel.cs" />
     <Compile Include="Models\ViewModels\Products\ListProductsViewModel.cs" />
     <Compile Include="Models\ViewModels\Products\ListProductsWithIngredientsViewModel.cs" />

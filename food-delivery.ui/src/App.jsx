@@ -17,6 +17,7 @@ import CreateCategoryForm from './components/Categories/CreateCategoryForm'
 import EditCategoryForm from './components/Categories/EditCategoryForm'
 
 import FeedbacksPage from './components/Feedbacks/FeedbacksPage'
+import CreateFeedbackForm from './components/Feedbacks/CreateFeedbackForm'
 
 import IngredientsPage from './components/Ingredients/IngredientsPage'
 import CreateIngredientForm from './components/Ingredients/CreateIngredientForm'
@@ -24,6 +25,7 @@ import EditIngredientForm from './components/Ingredients/EditIngredientForm'
 
 import ModeratorOrdersPage from './components/Orders/ModeratorOrdersPage'
 import EmployeeOrdersPage from './components/Orders/EmployeeOrdersPage'
+import UserOrdersPage from './components/Orders/UserOrdersPage'
 
 import auth from './api/auth'
 
@@ -40,6 +42,7 @@ class App extends Component {
     this.onLogin = this.onLogin.bind(this)
     this.onLogout = this.onLogout.bind(this)
     this.saveUserData = this.saveUserData.bind(this)
+    this.toggleDetails = this.toggleDetails.bind(this)
   }
 
   saveUserData (res) {
@@ -97,6 +100,22 @@ class App extends Component {
     })
   }
 
+  toggleDetails (id, className) {
+    let elements = document.getElementsByClassName(className)
+
+    for (const element of elements) {
+      if (element.getAttribute('data-id') === id) {
+        if (element.style.display === '') {
+          element.style.display = 'none'
+        } else {
+          element.style.display = ''
+        }
+      } else {
+        element.style.display = 'none'
+      }
+    }
+  }
+
   render () {
     return (
       <div style={{'overflowX': 'hidden'}}>
@@ -122,15 +141,16 @@ class App extends Component {
             <Route exact path='/moderator/categories/create' component={CreateCategoryForm} />
             <Route exact path='/moderator/categories/edit/:id' component={EditCategoryForm} />
 
-            <Route exact path='/moderator/feedbacks' component={FeedbacksPage} />
-            <Route exact path='/feedbacks/create' component={FeedbacksPage} />
+            <Route exact path='/moderator/feedbacks' component={() => <FeedbacksPage toggleDetails={this.toggleDetails} />} />
+            <Route exact path='/user/feedbacks/create/:id' component={CreateFeedbackForm} />
 
             <Route exact path='/moderator/ingredients' component={IngredientsPage} />
             <Route exact path='/moderator/ingredients/create' component={CreateIngredientForm} />
             <Route exact path='/moderator/ingredients/edit/:id' component={EditIngredientForm} />
 
-            <Route exact path='/moderator/orders' component={ModeratorOrdersPage} />
-            <Route exact path='/employee/orders' component={EmployeeOrdersPage} />
+            <Route exact path='/moderator/orders' component={() => <ModeratorOrdersPage toggleDetails={this.toggleDetails} />} />
+            <Route exact path='/employee/orders' component={() => <EmployeeOrdersPage toggleIngredients={this.toggleDetails} />} />
+            <Route exact path='/user/orders' component={() => <UserOrdersPage toggleDetails={this.toggleDetails} />} />
 
             <Route component={HomePage} />
           </Switch>

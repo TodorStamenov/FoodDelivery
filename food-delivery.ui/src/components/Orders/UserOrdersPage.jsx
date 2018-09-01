@@ -1,44 +1,46 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import order from '../../api/order'
 import TableHead from '../common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
-const tableHeadNames = ['User', 'Executor', 'Price', 'Status', 'Products', 'Time Stamp', 'Actions']
+const tableHeadNames = ['Status', 'Price', 'Products', 'Time Stamp', 'Actions']
 
-class ModeratorOrdersPageBase extends Component {
+class UserOrdersPageBase extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      isQueue: true,
-      isHistory: false,
-      queueButtonClass: 'btn-secondary',
-      historyButtonClass: 'btn-outline-dark',
+      isQueue: false,
+      isHistory: true,
+      queueButtonClass: 'btn-outline-dark',
+      historyButtonClass: 'btn-secondary',
       orders: []
     }
 
-    this.queue = this.queue.bind(this)
+    this.currentOrder = this.currentOrder.bind(this)
     this.history = this.history.bind(this)
-    this.loadMoreItems = this.loadItems.bind(this)
+    this.loadMoreItems = this.loadMoreItems.bind(this)
     this.renderTable = this.renderTable.bind(this)
   }
 
   componentDidMount () {
-    this.loadItems()
+    this.loadMoreItems()
 
     window.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        this.loadItems()
+        this.loadMoreItems()
       }
     })
   }
 
-  loadItems () {
-    if (this.state.isQueue) {
-      this.queue()
-    } else if (this.state.isHistory) {
-      this.history()
-    }
+  loadMoreItems () {
+    // if (this.state.isQueue) {
+    //   this.queue()
+    // } else if (this.state.isHistory) {
+    //   this.history()
+    // }
+    this.history()
   }
 
   history (isClick) {
@@ -65,14 +67,14 @@ class ModeratorOrdersPageBase extends Component {
       ordersLength = 0
     }
 
-    order.moderatorHistory(ordersLength).then(res => {
+    order.userOrders(ordersLength).then(res => {
       this.setState(prevState => ({
         orders: [...prevState.orders, ...res]
       }))
     })
   }
 
-  queue (isClick) {
+  currentOrder (isClick) {
     this.setState({
       queueButtonClass: 'btn-secondary',
       historyButtonClass: 'btn-outline-dark'
@@ -96,7 +98,7 @@ class ModeratorOrdersPageBase extends Component {
       ordersLength = 0
     }
 
-    order.moderatorQueue(ordersLength).then(res => {
+    order.queue(ordersLength).then(res => {
       this.setState(prevState => ({
         orders: [...prevState.orders, ...res]
       }))
@@ -109,8 +111,6 @@ class ModeratorOrdersPageBase extends Component {
     for (const order of this.state.orders) {
       table.push(
         <tr key={order.Id}>
-          <td>{order.User}</td>
-          <td>{order.Executor}</td>
           <td>${order.Price.toFixed(2)}</td>
           <td>{order.Status}</td>
           <td>{order.ProductsCount}</td>
@@ -123,8 +123,10 @@ class ModeratorOrdersPageBase extends Component {
         <tr className='order-details' style={{display: 'none'}} data-id={order.Id} key={order.Id + '1'}>
           <td colSpan={tableHeadNames.length}>
             <ul className='list-group'>
-              <li className='text-light bg-secondary list-group-item'>Address: {order.Address}</li>
-              {order.Products.map(p => <li key={p.Id} className='list-group-item'>{p.Name} - ${p.Price.toFixed(2)}</li>)}
+              {order.Products.map(p =>
+                <li key={p.Id} className='list-group-item'>
+                  {p.Name} - ${p.Price.toFixed(2)} <Link to={'/user/feedbacks/create/' + p.Id} className='btn btn-sm btn-outline-dark ml-2'>Add Feedback</Link>
+                </li>)}
             </ul>
           </td>
         </tr>
@@ -141,8 +143,8 @@ class ModeratorOrdersPageBase extends Component {
           <div className='col-md-6'>
             <h2>
               Orders -
-              <button onClick={() => this.queue(true)} className={'btn btn-md ml-2 ' + this.state.queueButtonClass}>Orders Queue</button>
-              <button onClick={() => this.history(true)} className={'btn btn-md ml-2 ' + this.state.historyButtonClass}>Orders History</button>
+              <button onClick={() => this.queue(true)} className={'btn btn-md ml-2 ' + this.state.queueButtonClass}>Current Order</button>
+              <button onClick={() => this.history(true)} className={'btn btn-md ml-2 ' + this.state.historyButtonClass}>History</button>
             </h2>
           </div>
         </div>
@@ -160,6 +162,6 @@ class ModeratorOrdersPageBase extends Component {
   }
 }
 
-const ModeratorOrdersPage = protectedRoute(ModeratorOrdersPageBase, 'Moderator')
+const UserOrdersPage = protectedRoute(UserOrdersPageBase, 'authed')
 
-export default ModeratorOrdersPage
+export default UserOrdersPage

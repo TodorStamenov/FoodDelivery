@@ -4,7 +4,6 @@ using FoodDelivery.Data;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
-using FoodDelivery.Services.Models.ViewModels.Products;
 using System;
 using System.Collections.Generic;
 using System.Web;
@@ -21,14 +20,10 @@ namespace FoodDelivery.Api.Controllers
         private const string ImageSizeMessage = "Uploaded file must be of type image with size less then 1 MB";
 
         private readonly ICategoryService category;
-        private readonly IProductService product;
 
-        public CategoriesController(
-            ICategoryService category,
-            IProductService product)
+        public CategoriesController(ICategoryService category)
         {
             this.category = category;
-            this.product = product;
         }
 
         public IEnumerable<ListCategoriesViewModel> Get()
@@ -41,22 +36,6 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 CategoryViewModel model = this.category.GetCategory(id.GetValueOrDefault());
-                return Ok(model);
-            }
-            catch (BadRequestException bre)
-            {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
-                return BadRequest(ModelState);
-            }
-        }
-
-        [HttpGet]
-        [Route("{id}/Products")]
-        public IHttpActionResult Products(Guid? id)
-        {
-            try
-            {
-                IEnumerable<ListProductsViewModel> model = this.product.All(id.GetValueOrDefault());
                 return Ok(model);
             }
             catch (BadRequestException bre)

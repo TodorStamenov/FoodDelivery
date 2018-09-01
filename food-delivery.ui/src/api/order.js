@@ -2,35 +2,48 @@ import { host, getHeaders } from './common'
 
 const orderRoute = 'api/orders/'
 
-function queue (loadedElements) {
-  return fetch(host + orderRoute + 'queue/' + loadedElements, {
+function moderatorQueue (loadedElements) {
+  return fetch(host + orderRoute + 'moderator/queue/' + loadedElements, {
     method: 'GET',
     headers: getHeaders(true, true)
   }).then(res => res.json())
 }
 
-function history (loadedElements) {
-  return fetch(host + orderRoute + 'history/' + loadedElements, {
+function moderatorHistory (loadedElements) {
+  return fetch(host + orderRoute + 'moderator/history/' + loadedElements, {
     method: 'GET',
     headers: getHeaders(true, true)
   }).then(res => res.json())
 }
 
 function employeeOrders () {
-  return fetch(host + orderRoute + 'employeeQueue', {
+  return fetch(host + orderRoute + 'employee/queue', {
     method: 'GET',
     headers: getHeaders(true, true)
   }).then(res => res.json())
 }
 
 function updateQueue (orders) {
-  return fetch(host + orderRoute + 'updateQueue', {
+  return fetch(host + orderRoute + 'employee/updateQueue', {
     method: 'POST',
     headers: getHeaders(true, true),
     body: JSON.stringify(orders)
   }).then(res => res.json())
 }
 
-const feedback = { queue, history, employeeOrders, updateQueue }
+function userOrders (loadedElements) {
+  return fetch(host + orderRoute + 'user/orders/' + loadedElements, {
+    method: 'GET',
+    headers: getHeaders(true, true)
+  }).then(res => res.json())
+}
+
+const feedback = {
+  moderatorQueue,
+  moderatorHistory,
+  employeeOrders,
+  updateQueue,
+  userOrders
+}
 
 export default feedback

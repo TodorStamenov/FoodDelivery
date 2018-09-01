@@ -9,6 +9,24 @@ function all (page) {
   }).then(res => res.json())
 }
 
-const feedback = { all }
+function add (productId, content, rate) {
+  return fetch(host + feedbackRoute + productId, {
+    method: 'POST',
+    body: JSON.stringify({
+      content,
+      rate
+    }),
+    headers: getHeaders(true, true)
+  }).then(res => res.json())
+}
+
+function rates () {
+  return fetch(host + feedbackRoute + 'rates', {
+    method: 'GET',
+    headers: getHeaders(true, true)
+  }).then(res => res.json())
+}
+
+const feedback = { all, add, rates }
 
 export default feedback

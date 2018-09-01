@@ -14,7 +14,6 @@ class EmployeeOrdersPageBase extends Component {
     }
 
     this.renderTable = this.renderTable.bind(this)
-    this.toggleIngredients = this.toggleIngredients.bind(this)
     this.toggleProducts = this.toggleProducts.bind(this)
     this.updateOrders = this.updateOrders.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -64,22 +63,6 @@ class EmployeeOrdersPageBase extends Component {
     }
   }
 
-  toggleIngredients (id) {
-    let ingredients = document.getElementsByClassName('ingredient')
-
-    for (const element of ingredients) {
-      if (element.getAttribute('data-id') === id) {
-        if (element.style.display === '') {
-          element.style.display = 'none'
-        } else {
-          element.style.display = ''
-        }
-      } else {
-        element.style.display = 'none'
-      }
-    }
-  }
-
   updateOrders () {
     let orders = this.state
       .orders
@@ -90,8 +73,10 @@ class EmployeeOrdersPageBase extends Component {
         }
       })
 
-    order.updateQueue(orders)
-    this.loadOrders()
+    order.updateQueue(orders).then(res => {
+      console.log(res)
+      this.loadOrders()
+    })
   }
 
   renderTable () {
@@ -105,10 +90,11 @@ class EmployeeOrdersPageBase extends Component {
           <td>{order.TimeStamp}</td>
           <td className='input-group'>
             <select onChange={e => this.handleChange(e, order.Id)} className='form-control'>
-              {order.Statuses.sort((x, y) => x.localeCompare(y)).map(s =>
+              {order.Statuses.sort((x, y) => y.localeCompare(x)).map(s =>
                 <option key={s} value={s} selected={(order.Status === s ? 'selected' : '')}>
                   {s}
-                </option>)}
+                </option>)
+              }
             </select>
             <button className='btn btn-secondary btn-sm ml-2' onClick={() => this.toggleProducts(order.Id)}>Details</button>
           </td>
@@ -119,7 +105,7 @@ class EmployeeOrdersPageBase extends Component {
         table.push(
           <tr style={{ display: 'none' }}
             className='product table-secondary'
-            onClick={() => this.toggleIngredients(order.Id + product.Id)}
+            onClick={() => this.props.toggleIngredients(order.Id + product.Id, 'ingredient')}
             data-id={order.Id}
             key={product.Id + order.Id}>
             <td />

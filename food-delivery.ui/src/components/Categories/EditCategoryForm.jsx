@@ -19,7 +19,9 @@ class EditCategoryFormBase extends Component {
   }
 
   onChange (e) {
-    this.setState({ [e.target.name]: e.target.value })
+    this.setState({
+      [e.target.name]: e.target.value
+    })
   }
 
   onSubmit (e) {
@@ -31,7 +33,7 @@ class EditCategoryFormBase extends Component {
 
     category.edit(this.state.id, fd).then(res => {
       if (res.ModelState) {
-        console.log(Object.values(res.ModelState).join('\n'))
+        console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
         return
       }
 
@@ -57,7 +59,7 @@ class EditCategoryFormBase extends Component {
 
   render () {
     return (
-      <div className='form-group col-md-3 offset-md-2'>
+      <div className='form-group col-md-4 offset-md-2'>
         <form onSubmit={this.onSubmit}>
           <div className='form-group'>
             <label htmlFor='name'>Name</label>

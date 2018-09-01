@@ -1,6 +1,8 @@
 ﻿using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
+using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Feedbacks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,6 +15,35 @@ namespace FoodDelivery.Services.Implementations
         {
         }
 
+        public void Create(Guid productId, string userId, string content, string rate)
+        {
+            if (!Enum.TryParse(rate, out Rate rateType))
+            {
+                throw new InvalidEnumException();
+            }
+
+            Database
+                .Feedbacks
+                .Add(new Feedback
+                {
+                    Content = content,
+                    Rate = rateType,
+                    ProductId = productId,
+                    TimeStamp = DateTime.UtcNow,
+                    UserId = new Guid(userId)
+                });
+
+            Database.SaveChanges();
+        }
+
+        public IEnumerable<string> Rates()
+        {
+            return Enum
+                .GetValues(typeof(Rate))
+                .Cast<Rate>()
+                .Select(r => r.ToString());
+        }
+
         public IEnumerable<ListFeedbacksViewModel> All(int page, int pageSize)
         {
             return Database.Feedbacks
@@ -21,7 +52,7 @@ namespace FoodDelivery.Services.Implementations
                 {
                     Id = f.Id,
                     ProductName = f.Product.Name,
-                    Rate = f.Rate,
+                    Rate = f.Rate.ToString(),
                     TimeStamp = f.TimeStamp.ToString(),
                     Content = f.Content,
                     User = f.User.UserName

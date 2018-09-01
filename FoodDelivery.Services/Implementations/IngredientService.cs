@@ -23,9 +23,7 @@ namespace FoodDelivery.Services.Implementations
                 throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, name));
             }
 
-            bool hasIngredientType = Enum.TryParse(ingredientTypeString, out IngredientType ingredientType);
-
-            if (!hasIngredientType)
+            if (!Enum.TryParse(ingredientTypeString, out IngredientType ingredientType))
             {
                 throw new InvalidEnumException();
             }
