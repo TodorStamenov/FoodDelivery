@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import BoundForm from '../common/BoundForm'
+import BoundForm from '../Common/BoundForm'
 import auth from '../../api/auth'
 
 export default class ChangePasswordForm extends Component {

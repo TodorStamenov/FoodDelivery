@@ -7,6 +7,6 @@ namespace FoodDelivery.Services.Models.ViewModels.Orders
     {
         public IEnumerable<string> Statuses { get; set; }
 
-        public IEnumerable<ListProductsWithIngredientsViewModel> Products { get; set; }
+        public IEnumerable<ListProductsWithToppingsViewModel> Products { get; set; }
     }
 }

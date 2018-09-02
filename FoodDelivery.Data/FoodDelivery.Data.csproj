@@ -81,25 +81,24 @@
     <Compile Include="IdentityModels\UserClaim.cs" />
     <Compile Include="IdentityModels\UserLogin.cs" />
     <Compile Include="IdentityModels\UserStore.cs" />
-    <Compile Include="Migrations\201808261820242_InitialDatabase.cs" />
-    <Compile Include="Migrations\201808261820242_InitialDatabase.Designer.cs">
-      <DependentUpon>201808261820242_InitialDatabase.cs</DependentUpon>
+    <Compile Include="Migrations\201809020600140_InitialDatabase.cs" />
+    <Compile Include="Migrations\201809020600140_InitialDatabase.Designer.cs">
+      <DependentUpon>201809020600140_InitialDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelConfigurations\CategoryConfiguration.cs" />
-    <Compile Include="ModelConfigurations\IngredientConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ToppingConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProductConfiguration.cs" />
-    <Compile Include="ModelConfigurations\ProductsIngredientsConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProductsOrdersToppingsConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProductsOrdersConfiguration.cs" />
     <Compile Include="ModelConfigurations\UserConfiguration.cs" />
     <Compile Include="ModelConfigurations\UserRoleConfiguration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Feedback.cs" />
-    <Compile Include="Models\Ingredient.cs" />
-    <Compile Include="Models\IngredientType.cs" />
+    <Compile Include="Models\Topping.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\ProductsIngredients.cs" />
+    <Compile Include="Models\ProductsOrdersToppings.cs" />
     <Compile Include="Models\ProductsOrders.cs" />
     <Compile Include="Models\Rate.cs" />
     <Compile Include="Models\Role.cs" />
@@ -133,8 +132,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201808261820242_InitialDatabase.resx">
-      <DependentUpon>201808261820242_InitialDatabase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809020600140_InitialDatabase.resx">
+      <DependentUpon>201809020600140_InitialDatabase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

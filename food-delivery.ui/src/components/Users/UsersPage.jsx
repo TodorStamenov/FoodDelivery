@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import protectedRoute from '../../utils/protectedRoute'
 import admin from '../../api/admin'
-import TableHead from '../common/TableHead'
+import TableHead from '../Common/TableHead'
 
 const Admin = 'Admin'
 const Moderator = 'Moderator'

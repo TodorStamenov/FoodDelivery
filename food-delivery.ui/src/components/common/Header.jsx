@@ -75,7 +75,7 @@ export default class Header extends Component {
                   <DropdownItem><Link className='dropdown-item' to='/moderator/orders'>Orders</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/categories'>Categories</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/products'>Products</Link></DropdownItem>
-                  <DropdownItem><Link className='dropdown-item' to='/moderator/ingredients'>Ingredients</Link></DropdownItem>
+                  <DropdownItem><Link className='dropdown-item' to='/moderator/toppings'>Toppings</Link></DropdownItem>
                   <DropdownItem><Link className='dropdown-item' to='/moderator/feedbacks'>Feedbacks</Link></DropdownItem>
                 </DropdownMenu>
               </Dropdown>

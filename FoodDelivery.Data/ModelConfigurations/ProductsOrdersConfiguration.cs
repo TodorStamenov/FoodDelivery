@@ -7,8 +7,6 @@ namespace FoodDelivery.Data.ModelConfigurations
     {
         public ProductsOrdersConfiguration()
         {
-            this.HasKey(po => new { po.ProductId, po.OrderId });
-
             this.HasRequired(po => po.Product)
                 .WithMany(p => p.Orders)
                 .HasForeignKey(po => po.ProductId);

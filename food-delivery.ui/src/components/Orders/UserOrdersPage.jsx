@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import order from '../../api/order'
-import TableHead from '../common/TableHead'
+import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
 const tableHeadNames = ['Status', 'Price', 'Products', 'Time Stamp', 'Actions']

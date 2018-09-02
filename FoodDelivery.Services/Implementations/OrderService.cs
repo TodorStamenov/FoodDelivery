@@ -1,9 +1,9 @@
 ﻿using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Models.BindingModels.Orders;
-using FoodDelivery.Services.Models.ViewModels.Ingredients;
 using FoodDelivery.Services.Models.ViewModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Products;
+using FoodDelivery.Services.Models.ViewModels.Toppings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,6 @@ namespace FoodDelivery.Services.Implementations
             Dictionary<Guid, string> orderPairs = model.ToDictionary(k => k.Id, v => v.Status);
 
             IEnumerable<Guid> orderIds = orderPairs.Keys.AsEnumerable();
-
             IEnumerable<Order> orders = Database.Orders.Where(o => orderIds.Contains(o.Id));
 
             foreach (var order in orders)
@@ -61,27 +60,16 @@ namespace FoodDelivery.Services.Implementations
                     Statuses = statuses,
                     Products = o.Products
                         .OrderBy(p => p.Product.Name)
-                        .Select(p => new ListProductsWithIngredientsViewModel
+                        .Select(p => new ListProductsWithToppingsViewModel
                         {
                             Id = p.ProductId,
                             Name = p.Product.Name,
-                            Mains = p.Product
-                                .Ingredients
-                                .OrderBy(i => i.Ingredient.Name)
-                                .Where(i => i.Ingredient.IngredientType == IngredientType.Main)
-                                .Select(i => new IngredientViewModel
+                            Toppings = p.Toppings
+                                .OrderBy(t => t.Topping.Name)
+                                .Select(t => new ListToppingsViewModel
                                 {
-                                    Id = i.IngredientId,
-                                    Name = i.Ingredient.Name
-                                }),
-                            Toppings = p.Product
-                                .Ingredients
-                                .OrderBy(i => i.Ingredient.Name)
-                                .Where(i => i.Ingredient.IngredientType == IngredientType.Topping)
-                                .Select(i => new IngredientViewModel
-                                {
-                                    Id = i.IngredientId,
-                                    Name = i.Ingredient.Name
+                                    Id = t.ToppingId,
+                                    Name = t.Topping.Name
                                 })
                         })
                 })

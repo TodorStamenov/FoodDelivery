@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import category from '../../api/category'
-import TableHead from '../common/TableHead'
+import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
 class CategoriesPageBase extends Component {

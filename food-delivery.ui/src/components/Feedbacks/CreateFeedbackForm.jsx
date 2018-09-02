@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import protectedRoute from '../../utils/protectedRoute'
-
 import feedback from '../../api/feedback'
 
 class CreateFeedbackFormBase extends Component {

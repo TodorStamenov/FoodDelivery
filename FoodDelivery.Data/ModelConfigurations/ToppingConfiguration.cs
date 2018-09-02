@@ -3,9 +3,9 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace FoodDelivery.Data.ModelConfigurations
 {
-    public class IngredientConfiguration : EntityTypeConfiguration<Ingredient>
+    public class ToppingConfiguration : EntityTypeConfiguration<Topping>
     {
-        public IngredientConfiguration()
+        public ToppingConfiguration()
         {
             this.HasIndex(i => i.Name)
                 .IsUnique(true);

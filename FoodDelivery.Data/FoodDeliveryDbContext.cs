@@ -24,7 +24,7 @@ namespace FoodDelivery.Data
 
         public DbSet<Order> Orders { get; set; }
 
-        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Topping> Toppings { get; set; }
 
         public DbSet<UserRole> UserRoles { get; set; }
 
@@ -39,11 +39,11 @@ namespace FoodDelivery.Data
 
             builder.Configurations.Add(new CategoryConfiguration());
             builder.Configurations.Add(new ProductConfiguration());
-            builder.Configurations.Add(new IngredientConfiguration());
+            builder.Configurations.Add(new ToppingConfiguration());
             builder.Configurations.Add(new UserConfiguration());
             builder.Configurations.Add(new UserRoleConfiguration());
             builder.Configurations.Add(new ProductsOrdersConfiguration());
-            builder.Configurations.Add(new ProductsIngredientsConfiguration());
+            builder.Configurations.Add(new ProductsOrdersToppingsConfiguration());
         }
     }
 }

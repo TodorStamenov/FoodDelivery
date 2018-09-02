@@ -12,6 +12,7 @@
 
         public const string Created = "Created";
         public const string Edited = "Edited";
+        public const string Deleted = "Deleted";
 
         public const string DataImage = "data:image/jpeg;base64,";
 

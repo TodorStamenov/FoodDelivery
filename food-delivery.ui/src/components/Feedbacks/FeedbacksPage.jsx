@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import feedback from '../../api/feedback'
-import TableHead from '../common/TableHead'
+import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
 const tableHeadNames = ['Product', 'Rate', 'Timestamp', 'User', 'Actions']

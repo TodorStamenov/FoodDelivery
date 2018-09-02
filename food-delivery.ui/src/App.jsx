@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 
-import Header from './components/common/Header'
-import Footer from './components/common/Footer'
+import Header from './components/Common/Header'
+import Footer from './components/Common/Footer'
 
 import HomePage from './components/Home/HomePage'
 
@@ -19,9 +19,9 @@ import EditCategoryForm from './components/Categories/EditCategoryForm'
 import FeedbacksPage from './components/Feedbacks/FeedbacksPage'
 import CreateFeedbackForm from './components/Feedbacks/CreateFeedbackForm'
 
-import IngredientsPage from './components/Ingredients/IngredientsPage'
-import CreateIngredientForm from './components/Ingredients/CreateIngredientForm'
-import EditIngredientForm from './components/Ingredients/EditIngredientForm'
+import ToppingsPage from './components/Toppings/ToppingsPage'
+import CreateToppingForm from './components/Toppings/CreateToppingForm'
+import EditToppingForm from './components/Toppings/EditToppingForm'
 
 import ModeratorOrdersPage from './components/Orders/ModeratorOrdersPage'
 import EmployeeOrdersPage from './components/Orders/EmployeeOrdersPage'
@@ -144,12 +144,12 @@ class App extends Component {
             <Route exact path='/moderator/feedbacks' component={() => <FeedbacksPage toggleDetails={this.toggleDetails} />} />
             <Route exact path='/user/feedbacks/create/:id' component={CreateFeedbackForm} />
 
-            <Route exact path='/moderator/ingredients' component={IngredientsPage} />
-            <Route exact path='/moderator/ingredients/create' component={CreateIngredientForm} />
-            <Route exact path='/moderator/ingredients/edit/:id' component={EditIngredientForm} />
+            <Route exact path='/moderator/toppings' component={ToppingsPage} />
+            <Route exact path='/moderator/toppings/create' component={CreateToppingForm} />
+            <Route exact path='/moderator/toppings/edit/:id' component={EditToppingForm} />
 
             <Route exact path='/moderator/orders' component={() => <ModeratorOrdersPage toggleDetails={this.toggleDetails} />} />
-            <Route exact path='/employee/orders' component={() => <EmployeeOrdersPage toggleIngredients={this.toggleDetails} />} />
+            <Route exact path='/employee/orders' component={() => <EmployeeOrdersPage toggleDetails={this.toggleDetails} />} />
             <Route exact path='/user/orders' component={() => <UserOrdersPage toggleDetails={this.toggleDetails} />} />
 
             <Route component={HomePage} />

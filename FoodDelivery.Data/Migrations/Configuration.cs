@@ -23,7 +23,7 @@ namespace FoodDelivery.Data.Migrations
         private const int CategoriesCount = 3;
         private const int ProductsCount = CategoriesCount * 10;
         private const int FeedbacksCount = ProductsCount * 3;
-        private const int IngredientsCount = ProductsCount;
+        private const int ToppingsCount = ProductsCount;
         private const int OrdersCount = 100;
         private const int MinPrice = 1;
         private const int MaxPrice = 10;
@@ -63,9 +63,9 @@ namespace FoodDelivery.Data.Migrations
                 await this.SeedUsersAsync(userManager, roleManager, ModeratorsCount, CommonConstants.ModeratorRole, context);
                 await this.SeedUsersAsync(userManager, roleManager, EmployeesCount, CommonConstants.EmployeeRole, context);
                 await this.SeedCategoriesAsync(CategoriesCount, context);
-                await this.SeedIngredientsAsync(IngredientsCount, context);
                 await this.SeedProductsAsync(ProductsCount, context);
                 await this.SeedOrdersAsync(OrdersCount, context);
+                await this.SeedToppingsAsync(ToppingsCount, context);
                 await this.SeedFeedbacksAsync(FeedbacksCount, context);
             })
             .GetAwaiter()
@@ -158,27 +158,6 @@ namespace FoodDelivery.Data.Migrations
             await context.SaveChangesAsync();
         }
 
-        private async Task SeedIngredientsAsync(int ingredientsCount, FoodDeliveryDbContext context)
-        {
-            if (await context.Ingredients.AnyAsync())
-            {
-                return;
-            }
-
-            List<IngredientType> ingredientTypes = Enum.GetValues(typeof(IngredientType)).Cast<IngredientType>().ToList();
-
-            for (int i = 1; i < ingredientsCount; i++)
-            {
-                context.Ingredients.Add(new Ingredient
-                {
-                    Name = $"Ingredient{i}",
-                    IngredientType = ingredientTypes[random.Next(0, ingredientTypes.Count)]
-                });
-            }
-
-            await context.SaveChangesAsync();
-        }
-
         private async Task SeedProductsAsync(int productsCount, FoodDeliveryDbContext context)
         {
             if (await context.Products.AnyAsync())
@@ -191,38 +170,15 @@ namespace FoodDelivery.Data.Migrations
                 .Select(c => c.Id)
                 .ToList();
 
-            List<Guid> ingredientIds = context
-                .Ingredients
-                .Select(p => p.Id)
-                .ToList();
-
             for (int i = 1; i <= productsCount; i++)
             {
-                Product product = new Product
+                context.Products.Add(new Product
                 {
                     Name = $"Product{i}",
                     Mass = random.Next(50, 800),
                     Price = random.Next(MinPrice, MaxPrice),
                     CategoryId = categoryIds[random.Next(0, categoryIds.Count)]
-                };
-
-                context.Products.Add(product);
-
-                for (int j = 0; j < 7; j++)
-                {
-                    Guid ingredientId = ingredientIds[random.Next(0, ingredientIds.Count)];
-
-                    if (product.Ingredients.Any(ing => ing.IngredientId == ingredientId))
-                    {
-                        j--;
-                        continue;
-                    }
-
-                    product.Ingredients.Add(new ProductsIngredients
-                    {
-                        IngredientId = ingredientId
-                    });
-                }
+                });
             }
 
             await context.SaveChangesAsync();
@@ -269,23 +225,71 @@ namespace FoodDelivery.Data.Migrations
                 for (int j = 0; j < productsCount; j++)
                 {
                     Product product = products[random.Next(0, products.Count)];
-                    Guid productId = product.Id;
-
-                    if (order.Products.Any(p => p.ProductId == productId))
-                    {
-                        j--;
-                        continue;
-                    }
 
                     order.Products.Add(new ProductsOrders
                     {
-                        ProductId = productId,
+                        ProductId = product.Id,
                         Product = product
                     });
                 }
 
-                order.Price = order.Products.Select(p => p.Product).Sum(p => p.Price);
+                order.Price = order
+                    .Products
+                    .Select(p => p.Product)
+                    .Sum(p => p.Price);
+
                 context.Orders.Add(order);
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        private async Task SeedToppingsAsync(int toppingsCount, FoodDeliveryDbContext context)
+        {
+            if (await context.Toppings.AnyAsync())
+            {
+                return;
+            }
+
+            for (int i = 1; i <= toppingsCount; i++)
+            {
+                context.Toppings.Add(new Topping
+                {
+                    Name = $"Topping{i}"
+                });
+            }
+
+            await context.SaveChangesAsync();
+
+            List<ProductsOrders> productOrders = context
+                .Products
+                .SelectMany(p => p.Orders)
+                .ToList();
+
+            List<Guid> toppingIds = context
+                .Toppings
+                .Select(t => t.Id)
+                .ToList();
+
+            foreach (var productOrder in productOrders)
+            {
+                int toppingsForOrder = random.Next(0, 6);
+
+                for (int i = 0; i < toppingsForOrder; i++)
+                {
+                    Guid toppingId = toppingIds[random.Next(0, toppingIds.Count)];
+
+                    if (productOrder.Toppings.Any(o => o.ToppingId == toppingId))
+                    {
+                        i--;
+                        continue;
+                    }
+
+                    productOrder.Toppings.Add(new ProductsOrdersToppings
+                    {
+                        ToppingId = toppingId
+                    });
+                }
             }
 
             await context.SaveChangesAsync();

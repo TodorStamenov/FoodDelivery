@@ -33,7 +33,5 @@ namespace FoodDelivery.Data.Models
         public virtual List<ProductsOrders> Orders { get; set; } = new List<ProductsOrders>();
 
         public virtual List<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
-        public virtual List<ProductsIngredients> Ingredients { get; set; } = new List<ProductsIngredients>();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FoodDelivery.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace FoodDelivery.Services.Models.BindingModels.Feedback
+namespace FoodDelivery.Services.Models.BindingModels.Feedbacks
 {
     public class FeedbackBindingModel
     {

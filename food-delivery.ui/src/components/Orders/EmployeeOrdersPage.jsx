@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import order from '../../api/order'
-import TableHead from '../common/TableHead'
+import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
 const tableHeadNames = ['User', 'Address', 'Time Stamp', 'Actions']
@@ -14,7 +14,6 @@ class EmployeeOrdersPageBase extends Component {
     }
 
     this.renderTable = this.renderTable.bind(this)
-    this.toggleProducts = this.toggleProducts.bind(this)
     this.updateOrders = this.updateOrders.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.loadOrders = this.loadOrders.bind(this)
@@ -40,27 +39,6 @@ class EmployeeOrdersPageBase extends Component {
     this.setState({
       orders
     })
-  }
-
-  toggleProducts (id) {
-    let products = document.getElementsByClassName('product')
-    let ingredients = document.getElementsByClassName('ingredient')
-
-    for (const ingredient of ingredients) {
-      ingredient.style.display = 'none'
-    }
-
-    for (const element of products) {
-      if (element.getAttribute('data-id') === id) {
-        if (element.style.display === '') {
-          element.style.display = 'none'
-        } else {
-          element.style.display = ''
-        }
-      } else {
-        element.style.display = 'none'
-      }
-    }
   }
 
   updateOrders () {
@@ -96,7 +74,7 @@ class EmployeeOrdersPageBase extends Component {
                 </option>)
               }
             </select>
-            <button className='btn btn-secondary btn-sm ml-2' onClick={() => this.toggleProducts(order.Id)}>Details</button>
+            <button className='btn btn-secondary btn-sm ml-2' onClick={() => this.props.toggleDetails(order.Id, 'product')}>Details</button>
           </td>
         </tr>
       )
@@ -104,35 +82,13 @@ class EmployeeOrdersPageBase extends Component {
       for (const product of order.Products) {
         table.push(
           <tr style={{ display: 'none' }}
-            className='product table-secondary'
-            onClick={() => this.props.toggleIngredients(order.Id + product.Id, 'ingredient')}
+            className='product'
             data-id={order.Id}
-            key={product.Id + order.Id}>
-            <td />
+            key={product.Id + order.Id + product.Toppings.map(t => t.Id).join()}>
             <td>{product.Name}</td>
-            <td>Main Ingredients:</td>
-            <td>Toppings:</td>
+            <td colSpan={3}>Toppings: {product.Toppings.map(t => t.Name).join(', ')}</td>
           </tr>
         )
-
-        const mains = product.Mains
-        const toppings = product.Toppings
-
-        const length = Math.max(mains.length, toppings.length)
-
-        for (let i = 0; i < length; i++) {
-          table.push(
-            <tr style={{ display: 'none' }}
-              className='ingredient'
-              data-id={order.Id + product.Id}
-              key={mains[i] ? mains[i].Id + product.Id + order.Id : toppings[i].Id + product.Id + order.Id}>
-              <td />
-              <td />
-              <td>{mains[i] ? mains[i].Name : ''}</td>
-              <td>{toppings[i] ? toppings[i].Name : ''}</td>
-            </tr>
-          )
-        }
       }
     }
 

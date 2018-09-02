@@ -5,19 +5,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FoodDelivery.Data.Models
 {
-    public class Ingredient
+    public class Topping
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
-        [MinLength(DataConstants.IngredientConstants.MinNameLength)]
-        [MaxLength(DataConstants.IngredientConstants.MaxNameLength)]
+        [MinLength(DataConstants.ToppingConstants.MinNameLength)]
+        [MaxLength(DataConstants.ToppingConstants.MaxNameLength)]
         public string Name { get; set; }
 
-        public IngredientType IngredientType { get; set; }
-
-        public virtual List<ProductsIngredients> Products { get; set; } = new List<ProductsIngredients>();
+        public virtual List<ProductsOrdersToppings> Orders { get; set; } = new List<ProductsOrdersToppings>();
     }
 }

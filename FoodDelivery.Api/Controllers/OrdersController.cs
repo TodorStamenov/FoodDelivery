@@ -52,7 +52,7 @@ namespace FoodDelivery.Api.Controllers
         public IHttpActionResult UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model)
         {
             this.order.UpdateQueue(model);
-            return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Order, CommonConstants.Edited));
+            return Ok("Order queue successfully updated");
         }
 
         [HttpGet]

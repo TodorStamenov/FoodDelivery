@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import BoundForm from '../common/BoundForm'
+import BoundForm from '../Common/BoundForm'
 
 export default class RegisterForm extends Component {
   render () {

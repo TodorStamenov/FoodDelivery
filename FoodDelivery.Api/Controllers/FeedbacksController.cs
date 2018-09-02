@@ -1,7 +1,7 @@
 ﻿using FoodDelivery.Common;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
-using FoodDelivery.Services.Models.BindingModels.Feedback;
+using FoodDelivery.Services.Models.BindingModels.Feedbacks;
 using FoodDelivery.Services.Models.ViewModels.Feedbacks;
 using Microsoft.AspNet.Identity;
 using System;
@@ -45,7 +45,7 @@ namespace FoodDelivery.Api.Controllers
         [Route("rates")]
         [OverrideAuthorization]
         [Authorize]
-        public IEnumerable<string> Ratings()
+        public IEnumerable<string> Rates()
         {
             return this.feedback.Rates();
         }
@@ -54,7 +54,7 @@ namespace FoodDelivery.Api.Controllers
         [Route("{productId}")]
         [OverrideAuthorization]
         [Authorize]
-        public IHttpActionResult Post(Guid? productId, FeedbackBindingModel model)
+        public IHttpActionResult Post(Guid? productId, [FromBody]FeedbackBindingModel model)
         {
             if (!ModelState.IsValid)
             {

@@ -14,7 +14,7 @@
             public const int MaxContentLength = 5000;
         }
 
-        public static class IngredientConstants
+        public static class ToppingConstants
         {
             public const int MinNameLength = 3;
             public const int MaxNameLength = 50;

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import protectedRoute from '../../utils/protectedRoute'
-
 import category from '../../api/category'
 
 class CreateCategoryFormBase extends Component {

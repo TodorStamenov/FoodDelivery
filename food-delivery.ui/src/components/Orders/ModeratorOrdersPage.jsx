@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import order from '../../api/order'
-import TableHead from '../common/TableHead'
+import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
 const tableHeadNames = ['User', 'Executor', 'Price', 'Status', 'Products', 'Time Stamp', 'Actions']
@@ -120,11 +120,13 @@ class ModeratorOrdersPageBase extends Component {
       )
 
       table.push(
-        <tr className='order-details' style={{display: 'none'}} data-id={order.Id} key={order.Id + '1'}>
+        <tr className='order-details' style={{ display: 'none' }} data-id={order.Id} key={order.Id + '1'}>
           <td colSpan={tableHeadNames.length}>
             <ul className='list-group'>
-              <li className='text-light bg-secondary list-group-item'>Address: {order.Address}</li>
-              {order.Products.map(p => <li key={p.Id} className='list-group-item'>{p.Name} - ${p.Price.toFixed(2)}</li>)}
+              <li className='list-group-item'>Address: {order.Address}</li>
+              <li className='list-group-item'>
+                {order.Products.map(p => `${p.Name} - $${p.Price.toFixed(2)}`).join('; ')}
+              </li>
             </ul>
           </td>
         </tr>
