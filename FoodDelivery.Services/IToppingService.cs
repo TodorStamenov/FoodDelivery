@@ -1,4 +1,5 @@
-﻿using FoodDelivery.Services.Models.ViewModels.Toppings;
+﻿using FoodDelivery.Services.Models.BindingModels.Toppings;
+using FoodDelivery.Services.Models.ViewModels.Toppings;
 using System;
 using System.Collections.Generic;
 
@@ -12,8 +13,8 @@ namespace FoodDelivery.Services
 
         void Delete(Guid id);
 
-        ToppingViewModel GetTopping(Guid id);
+        ToppingBindingModel GetTopping(Guid id);
 
-        IEnumerable<ListToppingsViewModel> All(int page, int pageSize);
+        IEnumerable<ListToppingsViewModel> All();
     }
 }

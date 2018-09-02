@@ -2,6 +2,7 @@
 using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Exceptions;
+using FoodDelivery.Services.Models.BindingModels.Toppings;
 using FoodDelivery.Services.Models.ViewModels.Toppings;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace FoodDelivery.Services.Implementations
         {
             if (HasTopping(name))
             {
-                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, name));
+                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, nameof(Topping)));
             }
 
             Database
@@ -41,12 +42,12 @@ namespace FoodDelivery.Services.Implementations
 
             if (topping == null)
             {
-                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, id));
+                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, nameof(Topping)));
             }
 
             if (HasTopping(name) && name != topping.Name)
             {
-                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, name));
+                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, nameof(Topping)));
             }
 
             topping.Name = name;
@@ -62,23 +63,19 @@ namespace FoodDelivery.Services.Implementations
 
             if (topping == null)
             {
-                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, id));
+                throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, nameof(Topping)));
             }
 
             Database.Toppings.Remove(topping);
             Database.SaveChanges();
         }
 
-        public ToppingViewModel GetTopping(Guid id)
+        public ToppingBindingModel GetTopping(Guid id)
         {
-            ToppingViewModel model = Database
+            ToppingBindingModel model = Database
                 .Toppings
-                .Where(i => i.Id == id)
-                .Select(i => new ToppingViewModel
-                {
-                    Id = i.Id,
-                    Name = i.Name
-                })
+                .Where(t => t.Id == id)
+                .Select(t => new ToppingBindingModel { Name = t.Name })
                 .FirstOrDefault();
 
             if (model == null)
@@ -89,17 +86,15 @@ namespace FoodDelivery.Services.Implementations
             return model;
         }
 
-        public IEnumerable<ListToppingsViewModel> All(int page, int pageSize)
+        public IEnumerable<ListToppingsViewModel> All()
         {
             return Database
                 .Toppings
-                .OrderBy(i => i.Name)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(i => new ListToppingsViewModel
+                .OrderBy(t => t.Name)
+                .Select(t => new ListToppingsViewModel
                 {
-                    Id = i.Id,
-                    Name = i.Name
+                    Id = t.Id,
+                    Name = t.Name
                 })
                 .ToList();
         }

@@ -1,4 +1,5 @@
-﻿using FoodDelivery.Services.Models.ViewModels.Products;
+﻿using FoodDelivery.Services.Models.BindingModels.Products;
+using FoodDelivery.Services.Models.ViewModels.Products;
 using System;
 using System.Collections.Generic;
 
@@ -6,6 +7,16 @@ namespace FoodDelivery.Services
 {
     public interface IProductService : IService
     {
-        IEnumerable<ListProductsViewModel> All(Guid categoryId);
+        void Create(string name, decimal price, int mass, Guid categoryId);
+
+        void Edit(Guid id, string name, decimal price, int mass, Guid categoryId);
+
+        void Delete(Guid id);
+
+        ProductBindigModel GetProduct(Guid id);
+
+        IEnumerable<ListProductsModeratorViewModel> All(int page, int pageSize);
+
+        IEnumerable<ListProductsModeratorViewModel> All(Guid categoryId, int page, int pageSize);
     }
 }

@@ -1,6 +1,11 @@
-﻿namespace FoodDelivery.Services.Models.ViewModels.Toppings
+﻿using System;
+
+namespace FoodDelivery.Services.Models.ViewModels.Toppings
 {
-    public class ListToppingsViewModel : ToppingViewModel
+    public class ListToppingsViewModel
     {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; }
     }
 }

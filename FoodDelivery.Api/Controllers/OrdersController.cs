@@ -1,4 +1,5 @@
 ﻿using FoodDelivery.Common;
+using FoodDelivery.Data.Models;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Models.BindingModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Orders;
@@ -13,7 +14,6 @@ namespace FoodDelivery.Api.Controllers
     public class OrdersController : ApiController
     {
         private const int LoadElements = 10;
-        private const string Order = "Order";
 
         private readonly IOrderService order;
 
@@ -52,7 +52,7 @@ namespace FoodDelivery.Api.Controllers
         public IHttpActionResult UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model)
         {
             this.order.UpdateQueue(model);
-            return Ok("Order queue successfully updated");
+            return Ok($"{nameof(Order)} queue successfully updated");
         }
 
         [HttpGet]

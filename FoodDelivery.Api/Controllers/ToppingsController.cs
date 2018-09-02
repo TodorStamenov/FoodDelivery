@@ -1,9 +1,11 @@
 ﻿using FoodDelivery.Common;
+using FoodDelivery.Data.Models;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.BindingModels.Toppings;
 using FoodDelivery.Services.Models.ViewModels.Toppings;
 using System;
+using System.Collections.Generic;
 using System.Web.Http;
 
 namespace FoodDelivery.Api.Controllers
@@ -12,9 +14,6 @@ namespace FoodDelivery.Api.Controllers
     [Authorize(Roles = CommonConstants.ModeratorRole)]
     public class ToppingsController : ApiController
     {
-        private const int PageSize = 10;
-        private const string Topping = "Topping";
-
         private readonly IToppingService topping;
 
         public ToppingsController(IToppingService topping)
@@ -22,27 +21,16 @@ namespace FoodDelivery.Api.Controllers
             this.topping = topping;
         }
 
-        public IHttpActionResult Get([FromUri]int page = 1)
+        public IEnumerable<ListToppingsViewModel> Get()
         {
-            if (page <= 0)
-            {
-                page = 1;
-            }
-
-            return Ok(new ToppingsViewModel
-            {
-                CurrentPage = page,
-                EntriesPerPage = PageSize,
-                TotalEntries = this.topping.GetTotalEntries(),
-                Toppings = this.topping.All(page, PageSize)
-            });
+            return this.topping.All();
         }
 
         public IHttpActionResult Get(Guid? id)
         {
             try
             {
-                ToppingViewModel model = this.topping.GetTopping(id.GetValueOrDefault());
+                ToppingBindingModel model = this.topping.GetTopping(id.GetValueOrDefault());
                 return Ok(model);
             }
             catch (BadRequestException bre)
@@ -62,7 +50,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.topping.Edit(id.GetValueOrDefault(), model.Name);
-                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Topping, CommonConstants.Edited));
+                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Topping), CommonConstants.Edited));
             }
             catch (BadRequestException bre)
             {
@@ -81,7 +69,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.topping.Create(model.Name);
-                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Topping, CommonConstants.Created));
+                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Topping), CommonConstants.Created));
             }
             catch (BadRequestException bre)
             {
@@ -95,7 +83,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.topping.Delete(id.GetValueOrDefault());
-                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Topping, CommonConstants.Deleted));
+                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Topping), CommonConstants.Deleted));
             }
             catch (BadRequestException bre)
             {

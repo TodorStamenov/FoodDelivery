@@ -51,10 +51,23 @@ class CreateCategoryFormBase extends Component {
         <form onSubmit={this.onSubmit}>
           <div className='form-group'>
             <label htmlFor='name'>Name</label>
-            <input onChange={this.onChange} value={this.state.name} type='text' name='name' className='form-control' id='name' placeholder='Category name' />
+            <input
+              onChange={this.onChange}
+              value={this.state.name}
+              type='text'
+              name='name'
+              className='form-control'
+              id='name'
+              placeholder='Category name' />
           </div>
           <div className='form-group'>
-            <input onChange={this.fileSelectedHandler} type='file' name='image' accept='image/*' style={{ 'display': 'none' }} />
+            <input
+              onChange={this.fileSelectedHandler}
+              type='file'
+              name='image'
+              accept='image/*'
+              style={{ 'display': 'none' }} />
+
             <button type='button' className='btn btn-dark' onClick={() => document.getElementsByName('image')[0].click()}>
               Choose an Image
             </button>

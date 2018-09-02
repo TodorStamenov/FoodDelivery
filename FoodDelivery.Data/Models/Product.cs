@@ -21,10 +21,11 @@ namespace FoodDelivery.Data.Models
             DataConstants.ProductConstants.MaxPrice)]
         public decimal Price { get; set; }
 
+        // in grams
         [Range(
             DataConstants.ProductConstants.MinMass,
             DataConstants.ProductConstants.MaxMass)]
-        public double Mass { get; set; }
+        public int Mass { get; set; }
 
         public Guid CategoryId { get; set; }
 

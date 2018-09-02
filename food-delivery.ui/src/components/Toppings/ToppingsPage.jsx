@@ -9,25 +9,21 @@ class ToppingsPageBase extends Component {
     super(props)
 
     this.state = {
-      toppingPage: {
-        CurrentPage: 1,
-        Toppings: []
-      }
+      toppings: []
     }
 
     this.getToppings = this.getToppings.bind(this)
     this.deleteTopping = this.deleteTopping.bind(this)
-    this.renderPageLinks = this.renderPageLinks.bind(this)
   }
 
   componentDidMount () {
-    this.getToppings(1)
+    this.getToppings()
   }
 
-  getToppings (page) {
-    topping.all(page).then(res => {
+  getToppings () {
+    topping.all().then(res => {
       this.setState({
-        toppingPage: res
+        toppings: res
       })
     })
   }
@@ -39,24 +35,6 @@ class ToppingsPageBase extends Component {
     })
   }
 
-  renderPageLinks () {
-    let pageLinks = []
-
-    for (let i = 1; i <= this.state.toppingPage.TotalPages; i++) {
-      pageLinks.push(i)
-    }
-
-    return (
-      <nav aria-label='Page navigation example'>
-        <ul className='pagination'>
-          {pageLinks.map(p =>
-            <li key={p} className='page-item'>
-              <a onClick={() => this.getToppings(p)} className={'page-link ' + (p === this.state.toppingPage.CurrentPage ? 'text-light bg-secondary' : '')}>{p}</a>
-            </li>)}
-        </ul>
-      </nav>)
-  }
-
   render () {
     return (
       <div>
@@ -66,27 +44,23 @@ class ToppingsPageBase extends Component {
           </div>
         </div>
         <br />
-        <div className='row'>
-          {this.renderPageLinks()}
-        </div>
         <br />
         <div className='row'>
           <table className='table table-hover'>
             {<TableHead heads={['Name', 'Actions']} />}
             <tbody>
-              {this.state.toppingPage.Toppings.map(i =>
-                <tr key={i.Id}>
-                  <td>{i.Name}</td>
+              {this.state.toppings.map(t =>
+                <tr key={t.Id}>
+                  <td>{t.Name}</td>
                   <td>
-                    <Link className='btn btn-secondary btn-sm' to={'/moderator/toppings/edit/' + i.Id}>Edit</Link>
-                    <button onClick={() => this.deleteTopping(i.Id)} className='btn btn-secondary btn-sm ml-2'>Delete</button>
+                    <Link className='btn btn-secondary btn-sm' to={'/moderator/toppings/edit/' + t.Id}>Edit</Link>
+                    <button onClick={() => this.deleteTopping(t.Id)} className='btn btn-secondary btn-sm ml-2'>Delete</button>
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        {this.renderPageLinks()}
       </div>
     )
   }

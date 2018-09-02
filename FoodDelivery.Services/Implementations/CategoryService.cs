@@ -20,7 +20,7 @@ namespace FoodDelivery.Services.Implementations
         {
             if (HasCategory(name))
             {
-                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, name));
+                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, nameof(Category)));
             }
 
             Database
@@ -47,7 +47,7 @@ namespace FoodDelivery.Services.Implementations
 
             if (HasCategory(name) && name != category.Name)
             {
-                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, name));
+                throw new DuplicateEntryException(string.Format(CommonConstants.DuplicateEntry, nameof(Category)));
             }
 
             category.Name = name;
@@ -74,6 +74,18 @@ namespace FoodDelivery.Services.Implementations
             }
 
             return model;
+        }
+
+        public IEnumerable<CategoryViewModel> Categories()
+        {
+            return Database
+                .Categories
+                .Select(c => new CategoryViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
         }
 
         public IEnumerable<ListCategoriesViewModel> All()

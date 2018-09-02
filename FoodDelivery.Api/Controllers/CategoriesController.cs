@@ -1,6 +1,7 @@
 ﻿using FoodDelivery.Api.Infrastructure.Extensions;
 using FoodDelivery.Common;
 using FoodDelivery.Data;
+using FoodDelivery.Data.Models;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
@@ -16,7 +17,6 @@ namespace FoodDelivery.Api.Controllers
     public class CategoriesController : ApiController
     {
         private const string Image = "image";
-        private const string Category = "Category";
         private const string ImageSizeMessage = "Uploaded file must be of type image with size less then 1 MB";
 
         private readonly ICategoryService category;
@@ -24,6 +24,13 @@ namespace FoodDelivery.Api.Controllers
         public CategoriesController(ICategoryService category)
         {
             this.category = category;
+        }
+
+        [HttpGet]
+        [Route("all")]
+        public IEnumerable<CategoryViewModel> GetCategories()
+        {
+            return this.category.Categories();
         }
 
         public IEnumerable<ListCategoriesViewModel> Get()
@@ -70,7 +77,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.category.Edit(id.GetValueOrDefault(), name, image?.ToByteArray());
-                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Edited));
+                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Category), CommonConstants.Edited));
             }
             catch (BadRequestException bre)
             {
@@ -104,7 +111,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.category.Create(name, image.ToByteArray());
-                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Category, CommonConstants.Created));
+                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Category), CommonConstants.Created));
             }
             catch (BadRequestException bre)
             {

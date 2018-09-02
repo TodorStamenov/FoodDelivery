@@ -1,4 +1,5 @@
 ﻿using FoodDelivery.Common;
+using FoodDelivery.Data.Models;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.BindingModels.Feedbacks;
@@ -15,7 +16,6 @@ namespace FoodDelivery.Api.Controllers
     public class FeedbacksController : ApiController
     {
         private const int PageSize = 10;
-        private const string Feedback = "Feedback";
 
         private readonly IFeedbackService feedback;
 
@@ -64,7 +64,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.feedback.Create(productId.GetValueOrDefault(), User.Identity.GetUserId(), model.Content, model.Rate);
-                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, Feedback, CommonConstants.Created));
+                return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Feedback), CommonConstants.Created));
             }
             catch (BadRequestException bre)
             {

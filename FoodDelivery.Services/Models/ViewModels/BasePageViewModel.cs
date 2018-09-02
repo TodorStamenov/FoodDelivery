@@ -10,26 +10,6 @@ namespace FoodDelivery.Services.Models.ViewModels
 
         public int EntriesPerPage { get; set; }
 
-        public int NextPage
-        {
-            get
-            {
-                return this.CurrentPage + 1 >= this.TotalPages
-                    ? this.TotalPages
-                    : this.CurrentPage + 1;
-            }
-        }
-
-        public int PrevPage
-        {
-            get
-            {
-                return this.CurrentPage <= 1
-                    ? 1
-                    : this.CurrentPage - 1;
-            }
-        }
-
         public int TotalPages
         {
             get

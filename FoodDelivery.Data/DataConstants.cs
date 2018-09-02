@@ -34,8 +34,8 @@
             public const int MaxNameLength = 50;
             public const double MinPrice = double.Epsilon;
             public const double MaxPrice = double.MaxValue;
-            public const double MinMass = double.Epsilon;
-            public const double MaxMass = double.MaxValue;
+            public const int MinMass = 1;
+            public const int MaxMass = int.MaxValue;
         }
     }
 }
