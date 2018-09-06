@@ -15,5 +15,7 @@ namespace FoodDelivery.Services
         IEnumerable<CategoryViewModel> Categories();
 
         IEnumerable<ListCategoriesViewModel> All();
+
+        IEnumerable<ListCategoriesWithProductsViewModel> AllWithProducts();
     }
 }

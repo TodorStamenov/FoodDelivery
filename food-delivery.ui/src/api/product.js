@@ -49,6 +49,12 @@ function remove (id) {
   }).then(res => res.json())
 }
 
-const ingredient = { all, get, add, edit, remove }
+const ingredient = {
+  all,
+  get,
+  add,
+  edit,
+  remove
+}
 
 export default ingredient

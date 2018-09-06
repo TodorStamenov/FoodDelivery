@@ -157,6 +157,7 @@ namespace FoodDelivery.Services.Implementations
                         {
                             Id = p.Product.Id,
                             Name = p.Product.Name,
+                            Mass = p.Product.Mass,
                             Price = p.Product.Price
                         })
                 })

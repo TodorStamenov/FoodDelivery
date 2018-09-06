@@ -3,6 +3,7 @@ using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
+using FoodDelivery.Services.Models.ViewModels.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,6 +105,29 @@ namespace FoodDelivery.Services.Implementations
         private bool HasCategory(string name)
         {
             return Database.Categories.Any(c => c.Name == name);
+        }
+
+        public IEnumerable<ListCategoriesWithProductsViewModel> AllWithProducts()
+        {
+            return Database
+                .Categories
+                .OrderBy(c => c.Name)
+                .Where(c => c.Products.Any())
+                .ToList()
+                .Select(c => new ListCategoriesWithProductsViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Image = "data:image/jpeg;base64, " + Convert.ToBase64String(c.Image),
+                    Products = c.Products
+                        .Select(p => new ListProductsViewModel
+                        {
+                            Id = p.Id,
+                            Name = p.Name,
+                            Mass = p.Mass,
+                            Price = p.Price
+                        })
+                });
         }
     }
 }

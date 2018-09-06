@@ -109,7 +109,7 @@ class EditProductFormBase extends Component {
                 </option>)}
             </select>
           </div>
-          <input className='btn btn-dark' type='submit' value='Add Product' />
+          <input className='btn btn-dark' type='submit' value='Edit Product' />
         </form>
       </div>
     )

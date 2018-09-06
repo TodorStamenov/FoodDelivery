@@ -125,7 +125,7 @@ class UserOrdersPageBase extends Component {
             <ul className='list-group'>
               {order.Products.map(p =>
                 <li key={p.Id} className='list-group-item'>
-                  {p.Name} - ${p.Price.toFixed(2)} <Link to={'/user/feedbacks/create/' + p.Id} className='btn btn-sm btn-outline-dark ml-2'>Add Feedback</Link>
+                  {p.Name} - ${p.Price.toFixed(2)} - {p.Mass}g <Link to={'/user/feedbacks/create/' + p.Id} className='btn btn-sm btn-outline-dark ml-2'>Add Feedback</Link>
                 </li>)}
             </ul>
           </td>

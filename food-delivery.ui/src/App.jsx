@@ -134,7 +134,7 @@ class App extends Component {
         <hr />
         <div className='container body-content'>
           <Switch>
-            <Route exact path='/' component={HomePage} />
+            <Route exact path='/' component={() => <HomePage isAuthed={this.state.isAuthed} toggleProducts={this.toggleDetails} />} />
             <Route exact path='/account/user' component={ChangePasswordForm} />
             <Route exact path='/account/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
             <Route exact path='/account/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
@@ -160,7 +160,7 @@ class App extends Component {
             <Route exact path='/employee/orders' component={() => <EmployeeOrdersPage toggleDetails={this.toggleDetails} />} />
             <Route exact path='/user/orders' component={() => <UserOrdersPage toggleDetails={this.toggleDetails} />} />
 
-            <Route component={HomePage} />
+            <Route component={() => <HomePage isAuthed={this.state.isAuthed} toggleProducts={this.toggleDetails} />} />
           </Switch>
         </div>
         <hr />

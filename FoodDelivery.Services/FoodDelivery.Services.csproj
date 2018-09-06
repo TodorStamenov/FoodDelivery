@@ -80,6 +80,7 @@
     <Compile Include="Models\ViewModels\BasePageViewModel.cs" />
     <Compile Include="Models\ViewModels\Categories\CategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\Categories\ListCategoriesViewModel.cs" />
+    <Compile Include="Models\ViewModels\Categories\ListCategoriesWithProductsViewModel.cs" />
     <Compile Include="Models\ViewModels\Feedbacks\FeedbacksViewModel.cs" />
     <Compile Include="Models\ViewModels\Feedbacks\ListFeedbacksViewModel.cs" />
     <Compile Include="Models\ViewModels\Products\ListProductsModeratorViewModel.cs" />
