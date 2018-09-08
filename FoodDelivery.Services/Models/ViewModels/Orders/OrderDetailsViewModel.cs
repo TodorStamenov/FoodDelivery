@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace FoodDelivery.Services.Models.ViewModels.Orders
 {
-    public class ListOrdersEmployeeViewModel : ListOrdersViewModel
+    public class OrderDetailsViewModel : ListOrdersModeratorViewModel
     {
         public string Address { get; set; }
 
-        public IEnumerable<string> Statuses { get; set; }
+        public string Executor { get; set; }
 
-        public IEnumerable<ListProductsWithToppingsViewModel> Products { get; set; }
+        public IEnumerable<ListProductsWithToppingsModeratorViewModel> Products { get; set; }
     }
 }

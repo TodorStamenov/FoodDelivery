@@ -42,6 +42,7 @@ namespace FoodDelivery.Data
             builder.Configurations.Add(new ToppingConfiguration());
             builder.Configurations.Add(new UserConfiguration());
             builder.Configurations.Add(new UserRoleConfiguration());
+            builder.Configurations.Add(new ProductsToppingsConfiguration());
             builder.Configurations.Add(new ProductsOrdersConfiguration());
             builder.Configurations.Add(new ProductsOrdersToppingsConfiguration());
         }

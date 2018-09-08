@@ -1,9 +1,11 @@
 ﻿using FoodDelivery.Common;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services;
+using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.BindingModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Orders;
 using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -45,6 +47,15 @@ namespace FoodDelivery.Api.Controllers
             return this.order.EmployeeQueue(User.Identity.GetUserId());
         }
 
+        [HttpGet]
+        [Route("user/orders/{loadedElements?}")]
+        [OverrideAuthorization]
+        [Authorize]
+        public IEnumerable<ListOrdersUserViewModel> UserOrders(int loadedElements = 0)
+        {
+            return this.order.UserOrder(User.Identity.GetUserId(), LoadElements, loadedElements);
+        }
+
         [HttpPost]
         [Route("employee/updateQueue")]
         [OverrideAuthorization]
@@ -56,12 +67,19 @@ namespace FoodDelivery.Api.Controllers
         }
 
         [HttpGet]
-        [Route("user/orders/{loadedElements?}")]
-        [OverrideAuthorization]
-        [Authorize]
-        public IEnumerable<ListOrdersUserViewModel> UserOrders(int loadedElements = 0)
+        [Route("details/{id}")]
+        public IHttpActionResult Details(Guid id)
         {
-            return this.order.UserOrder(User.Identity.GetUserId(), LoadElements, loadedElements);
+            try
+            {
+                OrderDetailsViewModel model = this.order.Details(id);
+                return Ok(model);
+            }
+            catch (BadRequestException bre)
+            {
+                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                return BadRequest(ModelState);
+            }
         }
     }
 }

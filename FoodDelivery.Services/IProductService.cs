@@ -7,9 +7,9 @@ namespace FoodDelivery.Services
 {
     public interface IProductService : IService
     {
-        void Create(string name, decimal price, int mass, Guid categoryId);
+        void Create(string name, decimal price, int mass, Guid categoryId, IEnumerable<Guid> toppingIds);
 
-        void Edit(Guid id, string name, decimal price, int mass, Guid categoryId);
+        void Edit(Guid id, string name, decimal price, int mass, Guid categoryId, IEnumerable<Guid> toppingIds);
 
         void Delete(Guid id);
 

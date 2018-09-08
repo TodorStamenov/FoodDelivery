@@ -38,12 +38,20 @@ function userOrders (loadedElements) {
   }).then(res => res.json())
 }
 
+function details (id) {
+  return fetch(host + orderRoute + 'details/' + id, {
+    method: 'GET',
+    headers: getHeaders(true, true)
+  }).then(res => res.json())
+}
+
 const feedback = {
   moderatorQueue,
   moderatorHistory,
   employeeOrders,
   updateQueue,
-  userOrders
+  userOrders,
+  details
 }
 
 export default feedback

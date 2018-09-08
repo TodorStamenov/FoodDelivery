@@ -13,7 +13,6 @@ class EmployeeOrdersPageBase extends Component {
       orders: []
     }
 
-    this.renderTable = this.renderTable.bind(this)
     this.updateOrders = this.updateOrders.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.loadOrders = this.loadOrders.bind(this)
@@ -42,57 +41,17 @@ class EmployeeOrdersPageBase extends Component {
   }
 
   updateOrders () {
-    let orders = this.state
-      .orders
-      .map(o => {
-        return {
-          Id: o.Id,
-          Status: o.Status
-        }
-      })
+    let orders = this.state.orders.map(o => {
+      return {
+        Id: o.Id,
+        Status: o.Status
+      }
+    })
 
     order.updateQueue(orders).then(res => {
       console.log(res)
       this.loadOrders()
     })
-  }
-
-  renderTable () {
-    let table = []
-
-    for (const order of this.state.orders) {
-      table.push(
-        <tr key={order.Id}>
-          <td>{order.User}</td>
-          <td>{order.Address}</td>
-          <td>{order.TimeStamp}</td>
-          <td className='input-group'>
-            <select onChange={e => this.handleChange(e, order.Id)} className='form-control'>
-              {order.Statuses.sort((x, y) => y.localeCompare(x)).map(s =>
-                <option key={s} value={s} selected={(order.Status === s ? 'selected' : '')}>
-                  {s}
-                </option>)
-              }
-            </select>
-            <button className='btn btn-secondary btn-sm ml-2' onClick={() => this.props.toggleDetails(order.Id, 'product')}>Details</button>
-          </td>
-        </tr>
-      )
-
-      for (const product of order.Products) {
-        table.push(
-          <tr style={{ display: 'none' }}
-            className='product'
-            data-id={order.Id}
-            key={product.Id + order.Id + product.Toppings.map(t => t.Id).join()}>
-            <td>{product.Name}</td>
-            <td colSpan={3}>Toppings: {product.Toppings.map(t => t.Name).join(', ')}</td>
-          </tr>
-        )
-      }
-    }
-
-    return table
   }
 
   render () {
@@ -108,7 +67,31 @@ class EmployeeOrdersPageBase extends Component {
           <table className='table table-hover'>
             {<TableHead heads={tableHeadNames} />}
             <tbody>
-              {this.renderTable()}
+              {this.state.orders.map(o =>
+                <React.Fragment key={o.Id}>
+                  <tr>
+                    <td>{o.User}</td>
+                    <td>{o.Address}</td>
+                    <td>{o.TimeStamp}</td>
+                    <td className='input-group'>
+                      <select onChange={e => this.handleChange(e, o.Id)} className='form-control'>
+                        {o.Statuses.sort((x, y) => y.localeCompare(x)).map(s =>
+                          <option key={s} value={s} selected={(o.Status === s ? 'selected' : '')}>
+                            {s}
+                          </option>)
+                        }
+                      </select>
+                      <button className='btn btn-secondary btn-sm ml-2' onClick={() => this.props.toggleDetails(o.Id, 'product')}>Details</button>
+                    </td>
+                  </tr>
+                  {o.Products.map((p, i) =>
+                    <tr key={i} style={{ display: 'none' }} className='product' data-id={o.Id}>
+                      <td>{p.Name}</td>
+                      <td colSpan={3}>Toppings: {p.Toppings.map(t => t.Name).join(', ')}</td>
+                    </tr>)
+                  }
+                </React.Fragment>)
+              }
             </tbody>
           </table>
         </div>

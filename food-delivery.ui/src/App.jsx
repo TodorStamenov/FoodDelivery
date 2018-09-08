@@ -26,6 +26,7 @@ import EditToppingForm from './components/Toppings/EditToppingForm'
 import ModeratorOrdersPage from './components/Orders/ModeratorOrdersPage'
 import EmployeeOrdersPage from './components/Orders/EmployeeOrdersPage'
 import UserOrdersPage from './components/Orders/UserOrdersPage'
+import OrderDetailsPage from './components/Orders/OrderDetailsPage'
 
 import ProductsPage from './components/Products/ProductsPage'
 import CreateProductForm from './components/Products/CreateProductForm'
@@ -156,7 +157,9 @@ class App extends Component {
             <Route exact path='/moderator/products/create' component={CreateProductForm} />
             <Route exact path='/moderator/products/edit/:id' component={EditProductForm} />
 
-            <Route exact path='/moderator/orders' component={() => <ModeratorOrdersPage toggleDetails={this.toggleDetails} />} />
+            <Route exact path='/moderator/orders' component={ModeratorOrdersPage} />
+            <Route exact path='/moderator/orders/details/:id' component={OrderDetailsPage} />
+
             <Route exact path='/employee/orders' component={() => <EmployeeOrdersPage toggleDetails={this.toggleDetails} />} />
             <Route exact path='/user/orders' component={() => <UserOrdersPage toggleDetails={this.toggleDetails} />} />
 

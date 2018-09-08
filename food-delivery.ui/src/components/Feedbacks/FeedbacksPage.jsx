@@ -17,7 +17,6 @@ class FeedbacksPageBase extends Component {
     }
 
     this.renderPageLinks = this.renderPageLinks.bind(this)
-    this.renderTable = this.renderTable.bind(this)
     this.getFeedbacks = this.getFeedbacks.bind(this)
   }
 
@@ -51,28 +50,6 @@ class FeedbacksPageBase extends Component {
       </nav>)
   }
 
-  renderTable () {
-    let table = []
-
-    for (const feedback of this.state.feedbackPage.Feedbacks) {
-      table.push(
-        <tr key={feedback.Id}>
-          <td>{feedback.ProductName}</td>
-          <td>{feedback.Rate}</td>
-          <td>{feedback.TimeStamp}</td>
-          <td>{feedback.User}</td>
-          <td><button onClick={() => this.props.toggleDetails(feedback.Id.toString(), 'feedback-content')} className='btn btn-secondary btn-sm'>Details</button></td>
-        </tr>)
-
-      table.push(
-        <tr className='feedback-content' style={{display: 'none'}} data-id={feedback.Id} key={feedback.Id + '1'}>
-          <td colSpan={tableHeadNames.length}>{feedback.Content}</td>
-        </tr>)
-    }
-
-    return table
-  }
-
   render () {
     return (
       <div>
@@ -90,7 +67,20 @@ class FeedbacksPageBase extends Component {
           <table className='table table-hover'>
             {<TableHead heads={tableHeadNames} />}
             <tbody>
-              {this.renderTable()}
+              {this.state.feedbackPage.Feedbacks.map(f =>
+                <React.Fragment key={f.Id}>
+                  <tr>
+                    <td>{f.ProductName}</td>
+                    <td>{f.Rate}</td>
+                    <td>{f.TimeStamp}</td>
+                    <td>{f.User}</td>
+                    <td><button onClick={() => this.props.toggleDetails(f.Id.toString(), 'feedback-content')} className='btn btn-secondary btn-sm'>Details</button></td>
+                  </tr>
+                  <tr className='feedback-content' style={{display: 'none'}} data-id={f.Id}>
+                    <td colSpan={tableHeadNames.length}>{f.Content}</td>
+                  </tr>
+                </React.Fragment>)
+              }
             </tbody>
           </table>
         </div>

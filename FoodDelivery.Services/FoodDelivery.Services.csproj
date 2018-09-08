@@ -83,7 +83,9 @@
     <Compile Include="Models\ViewModels\Categories\ListCategoriesWithProductsViewModel.cs" />
     <Compile Include="Models\ViewModels\Feedbacks\FeedbacksViewModel.cs" />
     <Compile Include="Models\ViewModels\Feedbacks\ListFeedbacksViewModel.cs" />
+    <Compile Include="Models\ViewModels\Orders\OrderDetailsViewModel.cs" />
     <Compile Include="Models\ViewModels\Products\ListProductsModeratorViewModel.cs" />
+    <Compile Include="Models\ViewModels\Products\ListProductsWithToppingsModeratorViewModel.cs" />
     <Compile Include="Models\ViewModels\Products\ProductsViewModel.cs" />
     <Compile Include="Models\ViewModels\Toppings\ListToppingsViewModel.cs" />
     <Compile Include="Models\ViewModels\Orders\ListOrdersEmployeeViewModel.cs" />

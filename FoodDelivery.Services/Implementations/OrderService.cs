@@ -17,6 +17,40 @@ namespace FoodDelivery.Services.Implementations
         {
         }
 
+        public OrderDetailsViewModel Details(Guid id)
+        {
+            return Database
+                .Orders
+                .Where(o => o.Id == id)
+                .Select(o => new OrderDetailsViewModel
+                {
+                    Id = o.Id,
+                    Address = o.Address,
+                    User = o.User.UserName,
+                    Executor = o.Executor.UserName,
+                    Price = o.Price,
+                    Status = o.Status.ToString(),
+                    TimeStamp = o.TimeStamp.ToString(),
+                    ProductsCount = o.Products.Count,
+                    Products = o.Products
+                        .OrderBy(p => p.Product.Name)
+                        .Select(p => new ListProductsWithToppingsModeratorViewModel
+                        {
+                            Id = p.Product.Id,
+                            Name = p.Product.Name,
+                            Price = p.Product.Price,
+                            Mass = p.Product.Mass,
+                            Toppings = p.Toppings
+                                .Select(t => new ListToppingsViewModel
+                                {
+                                    Id = t.ToppingId,
+                                    Name = t.Topping.Name
+                                })
+                        })
+                })
+                .FirstOrDefault();
+        }
+
         public void UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model)
         {
             Dictionary<Guid, string> orderPairs = model.ToDictionary(k => k.Id, v => v.Status);
@@ -87,21 +121,11 @@ namespace FoodDelivery.Services.Implementations
                 .Select(o => new ListOrdersModeratorViewModel
                 {
                     Id = o.Id,
-                    Address = o.Address,
                     Price = o.Price,
                     TimeStamp = o.TimeStamp.ToString(),
                     Status = o.Status.ToString(),
                     ProductsCount = o.Products.Count,
-                    Executor = o.Executor.UserName,
-                    User = o.User.UserName,
-                    Products = o.Products
-                        .OrderBy(p => p.Product.Name)
-                        .Select(p => new ListProductsViewModel
-                        {
-                            Id = p.Product.Id,
-                            Name = p.Product.Name,
-                            Price = p.Product.Price
-                        })
+                    User = o.User.UserName
                 })
                 .ToList();
         }
@@ -117,21 +141,11 @@ namespace FoodDelivery.Services.Implementations
                 .Select(o => new ListOrdersModeratorViewModel
                 {
                     Id = o.Id,
-                    Address = o.Address,
                     Price = o.Price,
                     TimeStamp = o.TimeStamp.ToString(),
                     Status = o.Status.ToString(),
                     ProductsCount = o.Products.Count,
-                    Executor = o.Executor.UserName,
-                    User = o.User.UserName,
-                    Products = o.Products
-                        .OrderBy(p => p.Product.Name)
-                        .Select(p => new ListProductsViewModel
-                        {
-                            Id = p.Product.Id,
-                            Name = p.Product.Name,
-                            Price = p.Product.Price
-                        })
+                    User = o.User.UserName
                 })
                 .ToList();
         }

@@ -21,7 +21,6 @@ class UserOrdersPageBase extends Component {
     this.currentOrder = this.currentOrder.bind(this)
     this.history = this.history.bind(this)
     this.loadMoreItems = this.loadMoreItems.bind(this)
-    this.renderTable = this.renderTable.bind(this)
   }
 
   componentDidMount () {
@@ -105,37 +104,6 @@ class UserOrdersPageBase extends Component {
     })
   }
 
-  renderTable () {
-    let table = []
-
-    for (const order of this.state.orders) {
-      table.push(
-        <tr key={order.Id}>
-          <td>${order.Price.toFixed(2)}</td>
-          <td>{order.Status}</td>
-          <td>{order.ProductsCount}</td>
-          <td>{order.TimeStamp}</td>
-          <td><button onClick={() => this.props.toggleDetails(order.Id, 'order-details')} className='btn btn-secondary btn-sm'>Details</button></td>
-        </tr>
-      )
-
-      table.push(
-        <tr className='order-details' style={{display: 'none'}} data-id={order.Id} key={order.Id + '1'}>
-          <td colSpan={tableHeadNames.length}>
-            <ul className='list-group'>
-              {order.Products.map(p =>
-                <li key={p.Id} className='list-group-item'>
-                  {p.Name} - ${p.Price.toFixed(2)} - {p.Mass}g <Link to={'/user/feedbacks/create/' + p.Id} className='btn btn-sm btn-outline-dark ml-2'>Add Feedback</Link>
-                </li>)}
-            </ul>
-          </td>
-        </tr>
-      )
-    }
-
-    return table
-  }
-
   render () {
     return (
       <div>
@@ -153,7 +121,30 @@ class UserOrdersPageBase extends Component {
           <table className='table table-hover'>
             {<TableHead heads={tableHeadNames} />}
             <tbody>
-              {this.renderTable()}
+              {this.state.orders.map(o =>
+                <React.Fragment key={o.Id}>
+                  <tr>
+                    <td>{o.Status}</td>
+                    <td>${o.Price.toFixed(2)}</td>
+                    <td>{o.ProductsCount}</td>
+                    <td>{o.TimeStamp}</td>
+                    <td>
+                      <button onClick={() => this.props.toggleDetails(o.Id, 'order-details')} className='btn btn-secondary btn-sm'>Details</button>
+                    </td>
+                  </tr>
+                  {o.Products.map((p, i) =>
+                    <tr key={i} className='order-details' style={{display: 'none'}} data-id={o.Id}>
+                      <td />
+                      <td>{p.Name}</td>
+                      <td>${p.Price.toFixed(2)}</td>
+                      <td>{p.Mass}g</td>
+                      <td>
+                        <Link to={'/user/feedbacks/create/' + p.Id} className='btn btn-sm btn-outline-dark'>Feedback</Link>
+                      </td>
+                    </tr>)
+                  }
+                </React.Fragment>)
+              }
             </tbody>
           </table>
         </div>

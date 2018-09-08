@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import order from '../../api/order'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
-const tableHeadNames = ['User', 'Executor', 'Price', 'Status', 'Products', 'Time Stamp', 'Actions']
+const tableHeadNames = ['User', 'Total Price', 'Status', 'Products', 'Time Stamp', 'Actions']
 
 class ModeratorOrdersPageBase extends Component {
   constructor (props) {
@@ -20,7 +21,6 @@ class ModeratorOrdersPageBase extends Component {
     this.queue = this.queue.bind(this)
     this.history = this.history.bind(this)
     this.loadMoreItems = this.loadItems.bind(this)
-    this.renderTable = this.renderTable.bind(this)
   }
 
   componentDidMount () {
@@ -103,39 +103,6 @@ class ModeratorOrdersPageBase extends Component {
     })
   }
 
-  renderTable () {
-    let table = []
-
-    for (const order of this.state.orders) {
-      table.push(
-        <tr key={order.Id}>
-          <td>{order.User}</td>
-          <td>{order.Executor}</td>
-          <td>${order.Price.toFixed(2)}</td>
-          <td>{order.Status}</td>
-          <td>{order.ProductsCount}</td>
-          <td>{order.TimeStamp}</td>
-          <td><button onClick={() => this.props.toggleDetails(order.Id, 'order-details')} className='btn btn-secondary btn-sm'>Details</button></td>
-        </tr>
-      )
-
-      table.push(
-        <tr className='order-details' style={{ display: 'none' }} data-id={order.Id} key={order.Id + '1'}>
-          <td colSpan={tableHeadNames.length}>
-            <ul className='list-group'>
-              <li className='list-group-item'>Address: {order.Address}</li>
-              <li className='list-group-item'>
-                {order.Products.map(p => `${p.Name} - $${p.Price.toFixed(2)}`).join('; ')}
-              </li>
-            </ul>
-          </td>
-        </tr>
-      )
-    }
-
-    return table
-  }
-
   render () {
     return (
       <div>
@@ -153,7 +120,16 @@ class ModeratorOrdersPageBase extends Component {
           <table className='table table-hover'>
             {<TableHead heads={tableHeadNames} />}
             <tbody>
-              {this.renderTable()}
+              {this.state.orders.map(o =>
+                <tr key={o.Id}>
+                  <td>{o.User}</td>
+                  <td>${o.Price.toFixed(2)}</td>
+                  <td>{o.Status}</td>
+                  <td>{o.ProductsCount}</td>
+                  <td>{o.TimeStamp}</td>
+                  <td><Link to={'/moderator/orders/details/' + o.Id} className='btn btn-secondary btn-sm'>Details</Link></td>
+                </tr>)
+              }
             </tbody>
           </table>
         </div>

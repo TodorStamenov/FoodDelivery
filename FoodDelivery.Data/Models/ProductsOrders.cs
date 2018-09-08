@@ -19,6 +19,6 @@ namespace FoodDelivery.Data.Models
 
         public virtual Order Order { get; set; }
 
-        public List<ProductsOrdersToppings> Toppings { get; set; } = new List<ProductsOrdersToppings>();
+        public virtual List<ProductsOrdersToppings> Toppings { get; set; } = new List<ProductsOrdersToppings>();
     }
 }

@@ -149,6 +149,19 @@ namespace FoodDelivery.Data.Migrations
                 .Index(t => t.Name, unique: true);
 
             CreateTable(
+                "dbo.ProductsToppings",
+                c => new
+                {
+                    ProductId = c.Guid(nullable: false),
+                    ToppingId = c.Guid(nullable: false),
+                })
+                .PrimaryKey(t => new { t.ProductId, t.ToppingId })
+                .ForeignKey("dbo.Products", t => t.ProductId, cascadeDelete: true)
+                .ForeignKey("dbo.Toppings", t => t.ToppingId, cascadeDelete: true)
+                .Index(t => t.ProductId)
+                .Index(t => t.ToppingId);
+
+            CreateTable(
                 "dbo.UserRoles",
                 c => new
                 {
@@ -181,6 +194,8 @@ namespace FoodDelivery.Data.Migrations
             DropForeignKey("dbo.Orders", "ExecutorId", "dbo.Users");
             DropForeignKey("dbo.Orders", "UserId", "dbo.Users");
             DropForeignKey("dbo.ProductsOrdersToppings", "ToppingId", "dbo.Toppings");
+            DropForeignKey("dbo.ProductsToppings", "ToppingId", "dbo.Toppings");
+            DropForeignKey("dbo.ProductsToppings", "ProductId", "dbo.Products");
             DropForeignKey("dbo.ProductsOrdersToppings", "ProductOrderId", "dbo.ProductsOrders");
             DropForeignKey("dbo.ProductsOrders", "ProductId", "dbo.Products");
             DropForeignKey("dbo.ProductsOrders", "OrderId", "dbo.Orders");
@@ -190,6 +205,8 @@ namespace FoodDelivery.Data.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.UserRoles", new[] { "RoleId" });
             DropIndex("dbo.UserRoles", new[] { "UserId" });
+            DropIndex("dbo.ProductsToppings", new[] { "ToppingId" });
+            DropIndex("dbo.ProductsToppings", new[] { "ProductId" });
             DropIndex("dbo.Toppings", new[] { "Name" });
             DropIndex("dbo.ProductsOrdersToppings", new[] { "ToppingId" });
             DropIndex("dbo.ProductsOrdersToppings", new[] { "ProductOrderId" });
@@ -206,6 +223,7 @@ namespace FoodDelivery.Data.Migrations
             DropIndex("dbo.Categories", new[] { "Name" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.UserRoles");
+            DropTable("dbo.ProductsToppings");
             DropTable("dbo.Toppings");
             DropTable("dbo.ProductsOrdersToppings");
             DropTable("dbo.ProductsOrders");

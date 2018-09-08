@@ -6,6 +6,7 @@ using FoodDelivery.Services.Models.BindingModels.Products;
 using FoodDelivery.Services.Models.ViewModels.Products;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
@@ -17,7 +18,7 @@ namespace FoodDelivery.Services.Implementations
         {
         }
 
-        public void Create(string name, decimal price, int mass, Guid categoryId)
+        public void Create(string name, decimal price, int mass, Guid categoryId, IEnumerable<Guid> toppingIds)
         {
             if (HasProduct(name))
             {
@@ -29,20 +30,21 @@ namespace FoodDelivery.Services.Implementations
                 throw new NotExistingEntryException(string.Format(CommonConstants.NotExistingEntry, nameof(Category)));
             }
 
-            Database
-               .Products
-               .Add(new Product
-               {
-                   Name = name,
-                   Price = price,
-                   Mass = mass,
-                   CategoryId = categoryId
-               });
+            Product product = new Product
+            {
+                Name = name,
+                Price = price,
+                Mass = mass,
+                CategoryId = categoryId
+            };
 
+            product.Toppings = GetToppings(toppingIds);
+
+            Database.Products.Add(product);
             Database.SaveChanges();
         }
 
-        public void Edit(Guid id, string name, decimal price, int mass, Guid categoryId)
+        public void Edit(Guid id, string name, decimal price, int mass, Guid categoryId, IEnumerable<Guid> toppingIds)
         {
             Product product = Database
                 .Products
@@ -67,6 +69,15 @@ namespace FoodDelivery.Services.Implementations
             product.Price = price;
             product.Mass = mass;
             product.CategoryId = categoryId;
+
+            for (int i = 0; i < product.Toppings.Count; i++)
+            {
+                Database.Entry(product.Toppings[i]).State = EntityState.Deleted;
+            }
+
+            Database.SaveChanges();
+
+            product.Toppings = GetToppings(toppingIds);
 
             Database.SaveChanges();
         }
@@ -96,7 +107,8 @@ namespace FoodDelivery.Services.Implementations
                     Name = p.Name,
                     Price = p.Price,
                     Mass = p.Mass,
-                    CategoryId = p.CategoryId
+                    CategoryId = p.CategoryId,
+                    ToppingIds = p.Toppings.Select(t => t.ToppingId)
                 })
                 .FirstOrDefault();
 
@@ -155,6 +167,20 @@ namespace FoodDelivery.Services.Implementations
                             .Cast<int>()
                             .Average(), 1) + 1)
                             .ToString() + "/5"
+                })
+                .ToList();
+        }
+
+        private List<ProductsToppings> GetToppings(IEnumerable<Guid> toppingIds)
+        {
+            return Database
+                .Toppings
+                .Where(t => toppingIds.Contains(t.Id))
+                .Select(t => t.Id)
+                .ToList()
+                .Select(t => new ProductsToppings
+                {
+                    ToppingId = t
                 })
                 .ToList();
         }

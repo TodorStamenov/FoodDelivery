@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.Data;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FoodDelivery.Services.Models.BindingModels.Products
@@ -23,5 +24,7 @@ namespace FoodDelivery.Services.Models.BindingModels.Products
         public int Mass { get; set; }
 
         public Guid CategoryId { get; set; }
+
+        public IEnumerable<Guid> ToppingIds { get; set; }
     }
 }

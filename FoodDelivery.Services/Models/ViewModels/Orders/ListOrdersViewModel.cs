@@ -6,8 +6,6 @@ namespace FoodDelivery.Services.Models.ViewModels.Orders
     {
         public Guid Id { get; set; }
 
-        public string Address { get; set; }
-
         public string Status { get; set; }
 
         public string User { get; set; }

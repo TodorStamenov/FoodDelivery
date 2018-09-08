@@ -81,12 +81,13 @@
     <Compile Include="IdentityModels\UserClaim.cs" />
     <Compile Include="IdentityModels\UserLogin.cs" />
     <Compile Include="IdentityModels\UserStore.cs" />
-    <Compile Include="Migrations\201809021818212_InitialDatabase.cs" />
-    <Compile Include="Migrations\201809021818212_InitialDatabase.Designer.cs">
-      <DependentUpon>201809021818212_InitialDatabase.cs</DependentUpon>
+    <Compile Include="Migrations\201809062137080_InitialDatabase.cs" />
+    <Compile Include="Migrations\201809062137080_InitialDatabase.Designer.cs">
+      <DependentUpon>201809062137080_InitialDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelConfigurations\CategoryConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProductsToppingsConfiguration.cs" />
     <Compile Include="ModelConfigurations\ToppingConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProductConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProductsOrdersToppingsConfiguration.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="ModelConfigurations\UserRoleConfiguration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Feedback.cs" />
+    <Compile Include="Models\ProductsToppings.cs" />
     <Compile Include="Models\Topping.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
@@ -132,8 +134,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809021818212_InitialDatabase.resx">
-      <DependentUpon>201809021818212_InitialDatabase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809062137080_InitialDatabase.resx">
+      <DependentUpon>201809062137080_InitialDatabase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

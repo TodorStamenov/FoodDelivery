@@ -16,6 +16,8 @@ namespace FoodDelivery.Data.Models
         [MaxLength(DataConstants.ToppingConstants.MaxNameLength)]
         public string Name { get; set; }
 
+        public virtual List<ProductsToppings> Products { get; set; } = new List<ProductsToppings>();
+
         public virtual List<ProductsOrdersToppings> Orders { get; set; } = new List<ProductsOrdersToppings>();
     }
 }

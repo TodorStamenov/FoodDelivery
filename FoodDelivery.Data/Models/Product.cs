@@ -31,8 +31,10 @@ namespace FoodDelivery.Data.Models
 
         public virtual Category Category { get; set; }
 
+        public virtual List<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
         public virtual List<ProductsOrders> Orders { get; set; } = new List<ProductsOrders>();
 
-        public virtual List<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+        public virtual List<ProductsToppings> Toppings { get; set; } = new List<ProductsToppings>();
     }
 }

@@ -79,7 +79,7 @@ namespace FoodDelivery.Api.Controllers
 
             try
             {
-                this.product.Edit(id.GetValueOrDefault(), model.Name, model.Price, model.Mass, model.CategoryId);
+                this.product.Edit(id.GetValueOrDefault(), model.Name, model.Price, model.Mass, model.CategoryId, model.ToppingIds);
                 return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Product), CommonConstants.Edited));
             }
             catch (BadRequestException bre)
@@ -98,7 +98,7 @@ namespace FoodDelivery.Api.Controllers
 
             try
             {
-                this.product.Create(model.Name, model.Price, model.Mass, model.CategoryId);
+                this.product.Create(model.Name, model.Price, model.Mass, model.CategoryId, model.ToppingIds);
                 return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Product), CommonConstants.Created));
             }
             catch (BadRequestException bre)

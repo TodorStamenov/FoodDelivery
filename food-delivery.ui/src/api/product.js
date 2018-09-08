@@ -16,27 +16,29 @@ function get (id) {
   }).then(res => res.json())
 }
 
-function add (name, price, mass, categoryId) {
+function add (name, price, mass, categoryId, toppingIds) {
   return fetch(host + productRoute, {
     method: 'POST',
     body: JSON.stringify({
       name,
       price,
       mass,
-      categoryId
+      categoryId,
+      toppingIds
     }),
     headers: getHeaders(true, true)
   }).then(res => res.json())
 }
 
-function edit (id, name, price, mass, categoryId) {
+function edit (id, name, price, mass, categoryId, toppingIds) {
   return fetch(host + productRoute + id, {
     method: 'PUT',
     body: JSON.stringify({
       name,
       price,
       mass,
-      categoryId
+      categoryId,
+      toppingIds
     }),
     headers: getHeaders(true, true)
   }).then(res => res.json())

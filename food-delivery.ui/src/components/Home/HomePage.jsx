@@ -36,8 +36,9 @@ export default class HomePage extends Component {
                   <li className='list-group-item' onClick={() => this.props.toggleProducts(c.Id, 'product')}>Toggle Products</li>
                   {c.Products.map(p =>
                     <li key={p.Id} style={{display: 'none'}} data-id={c.Id} className='list-group-item product'>
-                      {p.Name} - ${p.Price.toFixed(2)} - {p.Mass}g {!this.props.isAuthed || <button className='btn btn-sm ml-2 btn-outline-dark'>Order</button>}
-                    </li>)}
+                      {p.Name} - ${p.Price.toFixed(2)} - {p.Mass}g {!this.props.isAuthed || <button className='btn btn-sm ml-2 btn-outline-dark float-right'>Order</button>}
+                    </li>)
+                  }
                 </ul>
               </div>
             </div>
