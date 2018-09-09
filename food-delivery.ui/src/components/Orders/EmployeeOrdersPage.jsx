@@ -9,6 +9,7 @@ class EmployeeOrdersPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       orders: []
     }
@@ -19,14 +20,21 @@ class EmployeeOrdersPageBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     this.loadOrders()
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   loadOrders () {
     order.employeeOrders().then(res => {
-      this.setState({
-        orders: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          orders: res
+        })
+      }
     })
   }
 

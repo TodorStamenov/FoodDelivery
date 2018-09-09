@@ -10,6 +10,7 @@ class UserOrdersPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       isQueue: false,
       isHistory: true,
@@ -18,12 +19,11 @@ class UserOrdersPageBase extends Component {
       orders: []
     }
 
-    this.currentOrder = this.currentOrder.bind(this)
-    this.history = this.history.bind(this)
     this.loadMoreItems = this.loadMoreItems.bind(this)
   }
 
   componentDidMount () {
+    this._isMounted = true
     this.loadMoreItems()
 
     window.addEventListener('scroll', () => {
@@ -33,74 +33,17 @@ class UserOrdersPageBase extends Component {
     })
   }
 
+  componentWillUnmount () {
+    this._isMounted = false
+  }
+
   loadMoreItems () {
-    // if (this.state.isQueue) {
-    //   this.queue()
-    // } else if (this.state.isHistory) {
-    //   this.history()
-    // }
-    this.history()
-  }
-
-  history (isClick) {
-    this.setState({
-      queueButtonClass: 'btn-outline-dark',
-      historyButtonClass: 'btn-secondary'
-    })
-
-    let ordersLength = this.state.orders.length
-
-    if (isClick &&
-      ordersLength >= 10 &&
-      this.state.isHistory) {
-      return
-    }
-
-    if (this.state.isQueue) {
-      this.setState({
-        isQueue: false,
-        isHistory: true,
-        orders: []
-      })
-
-      ordersLength = 0
-    }
-
-    order.userOrders(ordersLength).then(res => {
-      this.setState(prevState => ({
-        orders: [...prevState.orders, ...res]
-      }))
-    })
-  }
-
-  currentOrder (isClick) {
-    this.setState({
-      queueButtonClass: 'btn-secondary',
-      historyButtonClass: 'btn-outline-dark'
-    })
-
-    let ordersLength = this.state.orders.length
-
-    if (isClick &&
-      ordersLength >= 10 &&
-      this.state.isQueue) {
-      return
-    }
-
-    if (this.state.isHistory) {
-      this.setState({
-        isQueue: true,
-        isHistory: false,
-        orders: []
-      })
-
-      ordersLength = 0
-    }
-
-    order.queue(ordersLength).then(res => {
-      this.setState(prevState => ({
-        orders: [...prevState.orders, ...res]
-      }))
+    order.userOrders(this.state.orders.length).then(res => {
+      if (this._isMounted) {
+        this.setState(prevState => ({
+          orders: [...prevState.orders, ...res]
+        }))
+      }
     })
   }
 
@@ -109,11 +52,7 @@ class UserOrdersPageBase extends Component {
       <div>
         <div className='row'>
           <div className='col-md-6'>
-            <h2>
-              Orders -
-              <button onClick={() => this.queue(true)} className={'btn btn-md ml-2 ' + this.state.queueButtonClass}>Current Order</button>
-              <button onClick={() => this.history(true)} className={'btn btn-md ml-2 ' + this.state.historyButtonClass}>History</button>
-            </h2>
+            <h2>Your previous orders</h2>
           </div>
         </div>
         <br />
@@ -134,8 +73,7 @@ class UserOrdersPageBase extends Component {
                   </tr>
                   {o.Products.map((p, i) =>
                     <tr key={i} className='order-details' style={{display: 'none'}} data-id={o.Id}>
-                      <td />
-                      <td>{p.Name}</td>
+                      <td colSpan={2}>{p.Name}</td>
                       <td>${p.Price.toFixed(2)}</td>
                       <td>{p.Mass}g</td>
                       <td>

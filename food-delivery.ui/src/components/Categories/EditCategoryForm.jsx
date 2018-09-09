@@ -6,6 +6,7 @@ class EditCategoryFormBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       id: 0,
       name: '',
@@ -15,6 +16,22 @@ class EditCategoryFormBase extends Component {
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
+  }
+
+  componentDidMount () {
+    this._isMounted = true
+    category.get(this.props.match.params.id).then(res => {
+      if (this._isMounted) {
+        this.setState({
+          id: res.Id,
+          name: res.Name
+        })
+      }
+    })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   onChange (e) {
@@ -44,16 +61,6 @@ class EditCategoryFormBase extends Component {
     this.setState({
       image: e.target.files[0]
     })
-  }
-
-  componentDidMount () {
-    category.get(this.props.match.params.id)
-      .then(res => {
-        this.setState({
-          id: res.Id,
-          name: res.Name
-        })
-      })
   }
 
   render () {

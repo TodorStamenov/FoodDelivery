@@ -8,6 +8,7 @@ class ProductsPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = true
     this.state = {
       productsPage: {
         CurrentPage: 1,
@@ -21,14 +22,21 @@ class ProductsPageBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     this.getProducts(1)
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   getProducts (page) {
     product.all(page).then(res => {
-      this.setState({
-        productsPage: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          productsPage: res
+        })
+      }
     })
   }
 

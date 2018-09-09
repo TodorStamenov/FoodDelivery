@@ -9,6 +9,7 @@ class FeedbacksPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       feedbackPage: {
         CurrentPage: 1,
@@ -21,14 +22,21 @@ class FeedbacksPageBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     this.getFeedbacks(1)
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   getFeedbacks (page) {
     feedback.all(page).then(res => {
-      this.setState({
-        feedbackPage: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          feedbackPage: res
+        })
+      }
     })
   }
 

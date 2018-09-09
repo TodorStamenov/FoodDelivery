@@ -6,6 +6,7 @@ class CreateFeedbackFormBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       productId: '',
       content: '',
@@ -18,11 +19,18 @@ class CreateFeedbackFormBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     feedback.rates().then(res => {
-      this.setState({
-        rates: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          rates: res
+        })
+      }
     })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   onChange (e) {

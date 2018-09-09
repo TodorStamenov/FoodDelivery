@@ -8,6 +8,7 @@ class ToppingsPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       toppings: []
     }
@@ -17,15 +18,22 @@ class ToppingsPageBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     this.getToppings()
   }
 
   getToppings () {
     topping.all().then(res => {
-      this.setState({
-        toppings: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          toppings: res
+        })
+      }
     })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   deleteTopping (id) {

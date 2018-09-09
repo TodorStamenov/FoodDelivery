@@ -5,6 +5,7 @@ export default class HomePage extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       categories: []
     }
@@ -13,11 +14,18 @@ export default class HomePage extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     home.index().then(res => {
-      this.setState({
-        categories: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          categories: res
+        })
+      }
     })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   renderCards () {

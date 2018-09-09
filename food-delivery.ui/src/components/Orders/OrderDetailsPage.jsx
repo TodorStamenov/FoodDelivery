@@ -8,6 +8,7 @@ class OrderDetailsPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       id: '',
       timeStamp: '',
@@ -22,19 +23,26 @@ class OrderDetailsPageBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     order.details(this.props.match.params.id).then(res => {
-      this.setState({
-        id: res.Id,
-        timeStamp: res.TimeStamp,
-        address: res.Address,
-        user: res.User,
-        executor: res.Executor,
-        price: res.Price,
-        productsCount: res.ProductsCount,
-        status: res.Status,
-        products: res.Products
-      })
+      if (this._isMounted) {
+        this.setState({
+          id: res.Id,
+          timeStamp: res.TimeStamp,
+          address: res.Address,
+          user: res.User,
+          executor: res.Executor,
+          price: res.Price,
+          productsCount: res.ProductsCount,
+          status: res.Status,
+          products: res.Products
+        })
+      }
     })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   render () {

@@ -11,6 +11,7 @@ class UsersPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       username: '',
       users: []
@@ -25,7 +26,12 @@ class UsersPageBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     this.getUsers()
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   onChange (e) {
@@ -35,9 +41,11 @@ class UsersPageBase extends Component {
 
   getUsers (username) {
     admin.all(username).then(users => {
-      this.setState({
-        users
-      })
+      if (this._isMounted) {
+        this.setState({
+          users
+        })
+      }
     })
   }
 

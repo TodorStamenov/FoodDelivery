@@ -8,6 +8,7 @@ class EditProductFormBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       name: '',
       price: '',
@@ -24,27 +25,39 @@ class EditProductFormBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
+
     product.get(this.props.match.params.id).then(res => {
-      this.setState({
-        name: res.Name,
-        price: res.Price,
-        mass: res.Mass,
-        categoryId: res.CategoryId,
-        toppingIds: res.ToppingIds
-      })
+      if (this._isMounted) {
+        this.setState({
+          name: res.Name,
+          price: res.Price,
+          mass: res.Mass,
+          categoryId: res.CategoryId,
+          toppingIds: res.ToppingIds
+        })
+      }
     })
 
     category.getAll().then(res => {
-      this.setState({
-        categories: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          categories: res
+        })
+      }
     })
 
     topping.all().then(res => {
-      this.setState({
-        toppings: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          toppings: res
+        })
+      }
     })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   onChange (e) {

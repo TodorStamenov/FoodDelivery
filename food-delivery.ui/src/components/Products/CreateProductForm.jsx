@@ -8,6 +8,7 @@ class CreateProductFormBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       name: '',
       price: '',
@@ -24,17 +25,27 @@ class CreateProductFormBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
+
     category.getAll().then(res => {
-      this.setState({
-        categories: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          categories: res
+        })
+      }
     })
 
     topping.all().then(res => {
-      this.setState({
-        toppings: res
-      })
+      if (this._isMounted) {
+        this.setState({
+          toppings: res
+        })
+      }
     })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   onChange (e) {

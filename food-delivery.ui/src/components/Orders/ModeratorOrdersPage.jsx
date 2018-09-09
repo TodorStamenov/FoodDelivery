@@ -10,6 +10,7 @@ class ModeratorOrdersPageBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       isQueue: true,
       isHistory: false,
@@ -24,6 +25,7 @@ class ModeratorOrdersPageBase extends Component {
   }
 
   componentDidMount () {
+    this._isMounted = true
     this.loadItems()
 
     window.addEventListener('scroll', () => {
@@ -31,6 +33,10 @@ class ModeratorOrdersPageBase extends Component {
         this.loadItems()
       }
     })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   loadItems () {
@@ -66,9 +72,11 @@ class ModeratorOrdersPageBase extends Component {
     }
 
     order.moderatorHistory(ordersLength).then(res => {
-      this.setState(prevState => ({
-        orders: [...prevState.orders, ...res]
-      }))
+      if (this._isMounted) {
+        this.setState(prevState => ({
+          orders: [...prevState.orders, ...res]
+        }))
+      }
     })
   }
 
@@ -97,9 +105,11 @@ class ModeratorOrdersPageBase extends Component {
     }
 
     order.moderatorQueue(ordersLength).then(res => {
-      this.setState(prevState => ({
-        orders: [...prevState.orders, ...res]
-      }))
+      if (this._isMounted) {
+        this.setState(prevState => ({
+          orders: [...prevState.orders, ...res]
+        }))
+      }
     })
   }
 

@@ -6,6 +6,7 @@ class EditToppingFormBase extends Component {
   constructor (props) {
     super(props)
 
+    this._isMounted = false
     this.state = {
       id: 0,
       name: ''
@@ -13,6 +14,22 @@ class EditToppingFormBase extends Component {
 
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
+  }
+
+  componentDidMount () {
+    this._isMounted = true
+    topping.get(this.props.match.params.id).then(res => {
+      if (this._isMounted) {
+        this.setState({
+          id: res.Id,
+          name: res.Name
+        })
+      }
+    })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
   }
 
   onChange (e) {
@@ -31,16 +48,6 @@ class EditToppingFormBase extends Component {
         }
 
         this.props.history.push('/moderator/toppings')
-      })
-  }
-
-  componentDidMount () {
-    topping.get(this.props.match.params.id)
-      .then(res => {
-        this.setState({
-          id: res.Id,
-          name: res.Name
-        })
       })
   }
 
