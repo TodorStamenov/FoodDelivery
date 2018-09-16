@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { matchPath } from 'react-router'
 import product from '../../api/product'
+import category from '../../api/category'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
@@ -10,6 +12,7 @@ class ProductsPageBase extends Component {
 
     this._isMounted = true
     this.state = {
+      categoryId: '',
       productsPage: {
         CurrentPage: 1,
         Products: []
@@ -21,8 +24,20 @@ class ProductsPageBase extends Component {
     this.renderPageLinks = this.renderPageLinks.bind(this)
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     this._isMounted = true
+    const match = matchPath(this.props.location.pathname, {
+      path: '/moderator/categories/:id/products',
+      exact: true,
+      strict: false
+    })
+
+    if (match) {
+      await this.setState({
+        categoryId: match.params.id
+      })
+    }
+
     this.getProducts(1)
   }
 
@@ -31,19 +46,29 @@ class ProductsPageBase extends Component {
   }
 
   getProducts (page) {
-    product.all(page).then(res => {
-      if (this._isMounted) {
-        this.setState({
-          productsPage: res
-        })
-      }
-    })
+    if (this.state.categoryId) {
+      category.getProducts(this.state.categoryId, page).then(res => {
+        if (this._isMounted) {
+          this.setState({
+            productsPage: res
+          })
+        }
+      })
+    } else {
+      product.all(page).then(res => {
+        if (this._isMounted) {
+          this.setState({
+            productsPage: res
+          })
+        }
+      })
+    }
   }
 
   deleteProduct (id) {
     product.remove(id).then(res => {
       console.log(res)
-      this.getProducts()
+      this.getProducts(this.state.productsPage.CurrentPage)
     })
   }
 
@@ -60,7 +85,8 @@ class ProductsPageBase extends Component {
           {pageLinks.map(p =>
             <li key={p} className='page-item'>
               <a onClick={() => this.getProducts(p)} className={'page-link ' + (p === this.state.productsPage.CurrentPage ? 'text-light bg-secondary' : '')}>{p}</a>
-            </li>)}
+            </li>)
+          }
         </ul>
       </nav>)
   }

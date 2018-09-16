@@ -9,6 +9,6 @@ namespace FoodDelivery.Services.Models.ViewModels.Orders
 
         public string Executor { get; set; }
 
-        public IEnumerable<ListProductsWithToppingsModeratorViewModel> Products { get; set; }
+        public IEnumerable<ListExtendedProductsWithToppingsViewModel> Products { get; set; }
     }
 }

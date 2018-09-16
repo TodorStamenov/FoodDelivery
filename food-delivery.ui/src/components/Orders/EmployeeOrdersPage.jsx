@@ -63,6 +63,10 @@ class EmployeeOrdersPageBase extends Component {
   }
 
   render () {
+    if (this.state.orders.length === 0) {
+      return <h4>You do not have any orders in your queue</h4>
+    }
+
     return (
       <div>
         <div className='row'>
@@ -95,7 +99,7 @@ class EmployeeOrdersPageBase extends Component {
                   {o.Products.map((p, i) =>
                     <tr key={i} style={{ display: 'none' }} className='product' data-id={o.Id}>
                       <td>{p.Name}</td>
-                      <td colSpan={3}>Toppings: {p.Toppings.map(t => t.Name).join(', ')}</td>
+                      <td colSpan={3}>Toppings: {p.Toppings.map(t => t.Name).join(' | ')}</td>
                     </tr>)
                   }
                 </React.Fragment>)

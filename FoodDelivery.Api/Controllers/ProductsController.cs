@@ -38,24 +38,6 @@ namespace FoodDelivery.Api.Controllers
             });
         }
 
-        [HttpGet]
-        [Route("{categoryId}/Products")]
-        public IHttpActionResult Get(Guid? categoryId, [FromUri]int page = 1)
-        {
-            if (page <= 0)
-            {
-                page = 1;
-            }
-
-            return Ok(new ProductsViewModel
-            {
-                CurrentPage = page,
-                EntriesPerPage = PageSize,
-                TotalEntries = this.product.GetTotalEntries(),
-                Products = this.product.All(categoryId.GetValueOrDefault(), page, PageSize)
-            });
-        }
-
         public IHttpActionResult Get(Guid? id)
         {
             try

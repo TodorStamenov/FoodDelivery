@@ -13,10 +13,12 @@ namespace FoodDelivery.Services
 
         void Delete(Guid id);
 
+        int GetTotalEntries(Guid categoryId);
+
         ProductBindigModel GetProduct(Guid id);
 
         IEnumerable<ListProductsModeratorViewModel> All(int page, int pageSize);
 
-        IEnumerable<ListProductsModeratorViewModel> All(Guid categoryId, int page, int pageSize);
+        IEnumerable<ListExtendedProductsWithToppingsViewModel> All(IEnumerable<Guid> productIds);
     }
 }

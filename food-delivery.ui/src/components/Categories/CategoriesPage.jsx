@@ -16,6 +16,7 @@ class CategoriesPageBase extends Component {
 
   componentDidMount () {
     this._isMounted = true
+
     category.all().then(res => {
       if (this._isMounted) {
         this.setState({

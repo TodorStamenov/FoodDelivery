@@ -11,7 +11,7 @@ export default class LoginForm extends Component {
           <label htmlFor='password'>Password</label>
           <input type='password' name='password' className='form-control' id='password' placeholder='Password' />
           <br />
-          <input className='btn btn-dark' type='submit' value='Login' />
+          <input className='btn btn-secondary' type='submit' value='Login' />
         </BoundForm>
       </div>
     )

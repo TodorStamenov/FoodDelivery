@@ -27,8 +27,8 @@ namespace FoodDelivery.Data.Migrations
         private const int OrdersCount = 100;
         private const int MinPrice = 1;
         private const int MaxPrice = 10;
-        private const int MinMass = 50;
-        private const int MaxMass = 1000;
+        private const int MinMass = 5;
+        private const int MaxMass = 100;
         private const int MinProductsPerOrder = 1;
         private const int MaxProductsPerOrder = 6;
 
@@ -202,7 +202,7 @@ namespace FoodDelivery.Data.Migrations
                 Product product = new Product
                 {
                     Name = $"Product{i}",
-                    Mass = random.Next(MinMass, MaxMass),
+                    Mass = random.Next(MinMass, MaxMass) * 10,
                     Price = random.Next(MinPrice, MaxPrice),
                     CategoryId = categoryIds[random.Next(0, categoryIds.Count)]
                 };

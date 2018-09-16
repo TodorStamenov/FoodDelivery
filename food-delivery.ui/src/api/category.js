@@ -16,6 +16,13 @@ function getAll () {
   }).then(res => res.json())
 }
 
+function getProducts (id, page) {
+  return fetch(host + categoryRoute + id + '/products?page=' + page, {
+    method: 'GET',
+    headers: getHeaders(true, true)
+  }).then(res => res.json())
+}
+
 function add (formData) {
   return fetch(host + categoryRoute, {
     method: 'POST',
@@ -39,6 +46,13 @@ function get (id) {
   }).then(res => res.json())
 }
 
-const moderator = { all, getAll, get, add, edit }
+const moderator = {
+  all,
+  getAll,
+  getProducts,
+  get,
+  add,
+  edit
+}
 
 export default moderator

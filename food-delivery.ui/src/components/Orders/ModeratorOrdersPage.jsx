@@ -15,7 +15,7 @@ class ModeratorOrdersPageBase extends Component {
       isQueue: true,
       isHistory: false,
       queueButtonClass: 'btn-secondary',
-      historyButtonClass: 'btn-outline-dark',
+      historyButtonClass: 'btn-outline-secondary',
       orders: []
     }
 
@@ -40,26 +40,29 @@ class ModeratorOrdersPageBase extends Component {
   }
 
   loadItems () {
-    if (this.state.isQueue) {
-      this.queue()
-    } else if (this.state.isHistory) {
-      this.history()
+    if (this._isMounted) {
+      if (this.state.isQueue) {
+        this.queue()
+      } else if (this.state.isHistory) {
+        this.history()
+      }
     }
   }
 
   history (isClick) {
-    this.setState({
-      queueButtonClass: 'btn-outline-dark',
-      historyButtonClass: 'btn-secondary'
-    })
-
     let ordersLength = this.state.orders.length
 
-    if (isClick &&
+    if ((isClick &&
       ordersLength >= 10 &&
-      this.state.isHistory) {
+      this.state.isHistory) ||
+      !this._isMounted) {
       return
     }
+
+    this.setState({
+      queueButtonClass: 'btn-outline-secondary',
+      historyButtonClass: 'btn-secondary'
+    })
 
     if (this.state.isQueue) {
       this.setState({
@@ -71,28 +74,30 @@ class ModeratorOrdersPageBase extends Component {
       ordersLength = 0
     }
 
+    this._isMounted = false
     order.moderatorHistory(ordersLength).then(res => {
-      if (this._isMounted) {
-        this.setState(prevState => ({
-          orders: [...prevState.orders, ...res]
-        }))
-      }
+      this.setState(prevState => ({
+        orders: [...prevState.orders, ...res]
+      }))
+
+      this._isMounted = true
     })
   }
 
   queue (isClick) {
-    this.setState({
-      queueButtonClass: 'btn-secondary',
-      historyButtonClass: 'btn-outline-dark'
-    })
-
     let ordersLength = this.state.orders.length
 
-    if (isClick &&
+    if ((isClick &&
       ordersLength >= 10 &&
-      this.state.isQueue) {
+      this.state.isQueue) ||
+      !this._isMounted) {
       return
     }
+
+    this.setState({
+      queueButtonClass: 'btn-secondary',
+      historyButtonClass: 'btn-outline-secondary'
+    })
 
     if (this.state.isHistory) {
       this.setState({
@@ -104,12 +109,13 @@ class ModeratorOrdersPageBase extends Component {
       ordersLength = 0
     }
 
+    this._isMounted = false
     order.moderatorQueue(ordersLength).then(res => {
-      if (this._isMounted) {
-        this.setState(prevState => ({
-          orders: [...prevState.orders, ...res]
-        }))
-      }
+      this.setState(prevState => ({
+        orders: [...prevState.orders, ...res]
+      }))
+
+      this._isMounted = true
     })
   }
 

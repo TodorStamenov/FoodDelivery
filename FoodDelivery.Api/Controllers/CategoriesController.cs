@@ -5,6 +5,7 @@ using FoodDelivery.Data.Models;
 using FoodDelivery.Services;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.ViewModels.Categories;
+using FoodDelivery.Services.Models.ViewModels.Products;
 using System;
 using System.Collections.Generic;
 using System.Web;
@@ -16,14 +17,20 @@ namespace FoodDelivery.Api.Controllers
     [Authorize(Roles = CommonConstants.ModeratorRole)]
     public class CategoriesController : ApiController
     {
+        private const int PageSize = 10;
+
         private const string Image = "image";
         private const string ImageSizeMessage = "Uploaded file must be of type image with size less then 1 MB";
 
         private readonly ICategoryService category;
+        private readonly IProductService product;
 
-        public CategoriesController(ICategoryService category)
+        public CategoriesController(
+            ICategoryService category,
+            IProductService product)
         {
             this.category = category;
+            this.product = product;
         }
 
         [HttpGet]
@@ -36,6 +43,24 @@ namespace FoodDelivery.Api.Controllers
         public IEnumerable<ListCategoriesViewModel> Get()
         {
             return this.category.All();
+        }
+
+        [HttpGet]
+        [Route("{id}/Products")]
+        public IHttpActionResult Get(Guid id, [FromUri]int page = 1)
+        {
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            return Ok(new ProductsViewModel
+            {
+                CurrentPage = page,
+                EntriesPerPage = PageSize,
+                TotalEntries = this.product.GetTotalEntries(id),
+                Products = this.category.Products(id, page, PageSize)
+            });
         }
 
         public IHttpActionResult Get(Guid? id)

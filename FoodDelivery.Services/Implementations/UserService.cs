@@ -8,13 +8,18 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class UserService : Service<User>, IUserService
+    public class UserService : Service, IUserService
     {
         private const int UsersInPage = 20;
 
         public UserService(FoodDeliveryDbContext database)
             : base(database)
         {
+        }
+
+        public int GetTotalEntries()
+        {
+            return Database.Users.Count();
         }
 
         public void AddRole(string username, string roleName)

@@ -24,6 +24,7 @@ class OrderDetailsPageBase extends Component {
 
   componentDidMount () {
     this._isMounted = true
+
     order.details(this.props.match.params.id).then(res => {
       if (this._isMounted) {
         this.setState({
@@ -100,7 +101,7 @@ class OrderDetailsPageBase extends Component {
               <TableHead heads={['Name', 'Price', 'Mass']} />
               <tbody>
                 {this.state.products.map((p, i) =>
-                  <React.Fragment key={p.Id}>
+                  <React.Fragment key={p.Id + i}>
                     <tr>
                       <td>{p.Name}</td>
                       <td>${p.Price.toFixed(2)}</td>

@@ -25,6 +25,7 @@ import EditToppingForm from './components/Toppings/EditToppingForm'
 
 import ModeratorOrdersPage from './components/Orders/ModeratorOrdersPage'
 import EmployeeOrdersPage from './components/Orders/EmployeeOrdersPage'
+import UserOrderPage from './components/Orders/UserOrderPage'
 import UserOrdersPage from './components/Orders/UserOrdersPage'
 import OrderDetailsPage from './components/Orders/OrderDetailsPage'
 
@@ -143,6 +144,7 @@ class App extends Component {
             <Route exact path='/admin/users/all' component={UsersPage} />
 
             <Route exact path='/moderator/categories' component={CategoriesPage} />
+            <Route exact path='/moderator/categories/:id/products' component={() => <ProductsPage key={1} {...this.props} />} />
             <Route exact path='/moderator/categories/create' component={CreateCategoryForm} />
             <Route exact path='/moderator/categories/edit/:id' component={EditCategoryForm} />
 
@@ -153,7 +155,7 @@ class App extends Component {
             <Route exact path='/moderator/toppings/create' component={CreateToppingForm} />
             <Route exact path='/moderator/toppings/edit/:id' component={EditToppingForm} />
 
-            <Route exact path='/moderator/products' component={ProductsPage} />
+            <Route exact path='/moderator/products' component={() => <ProductsPage key={2} {...this.props} />} />
             <Route exact path='/moderator/products/create' component={CreateProductForm} />
             <Route exact path='/moderator/products/edit/:id' component={EditProductForm} />
 
@@ -161,6 +163,8 @@ class App extends Component {
             <Route exact path='/moderator/orders/details/:id' component={OrderDetailsPage} />
 
             <Route exact path='/employee/orders' component={() => <EmployeeOrdersPage toggleDetails={this.toggleDetails} />} />
+
+            <Route exact path='/user/order' component={() => <UserOrderPage toggleDetails={this.toggleDetails} />} />
             <Route exact path='/user/orders' component={() => <UserOrdersPage toggleDetails={this.toggleDetails} />} />
 
             <Route component={() => <HomePage isAuthed={this.state.isAuthed} toggleProducts={this.toggleDetails} />} />

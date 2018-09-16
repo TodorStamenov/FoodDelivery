@@ -13,7 +13,7 @@ export default class RegisterForm extends Component {
           <label htmlFor='confirmPassword'>Repeat Password</label>
           <input type='password' className='form-control' name='confirmPassword' id='confirmPassword' placeholder='Confirm Password' />
           <br />
-          <input className='btn btn-dark' type='submit' value='Register' />
+          <input className='btn btn-secondary' type='submit' value='Register' />
         </BoundForm>
       </div>
     )

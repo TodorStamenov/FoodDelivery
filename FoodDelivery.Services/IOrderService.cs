@@ -11,12 +11,14 @@ namespace FoodDelivery.Services
 
         void UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model);
 
-        IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string executorId);
+        IEnumerable<ListOrdersUserViewModel> UserQueue(string userId);
 
-        IEnumerable<ListOrdersModeratorViewModel> ModeratorHistory(int loadElements, int loadedElements);
+        IEnumerable<ListOrdersUserViewModel> UserHistory(string userId, int loadElements, int loadedElements);
+
+        IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string executorId);
 
         IEnumerable<ListOrdersModeratorViewModel> ModeratorQueue(int loadElements, int loadedElements);
 
-        IEnumerable<ListOrdersUserViewModel> UserOrder(string userId, int loadElements, int loadedElements);
+        IEnumerable<ListOrdersModeratorViewModel> ModeratorHistory(int loadElements, int loadedElements);
     }
 }

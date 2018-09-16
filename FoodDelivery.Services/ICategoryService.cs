@@ -1,4 +1,5 @@
 ﻿using FoodDelivery.Services.Models.ViewModels.Categories;
+using FoodDelivery.Services.Models.ViewModels.Products;
 using System;
 using System.Collections.Generic;
 
@@ -15,6 +16,8 @@ namespace FoodDelivery.Services
         IEnumerable<CategoryViewModel> Categories();
 
         IEnumerable<ListCategoriesViewModel> All();
+
+        IEnumerable<ListProductsModeratorViewModel> Products(Guid categoryId, int page, int pageSize);
 
         IEnumerable<ListCategoriesWithProductsViewModel> AllWithProducts();
     }

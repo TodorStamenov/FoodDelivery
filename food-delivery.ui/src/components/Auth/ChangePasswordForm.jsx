@@ -32,7 +32,7 @@ export default class ChangePasswordForm extends Component {
           <label htmlFor='confirmPassword'>Confirm Password</label>
           <input type='password' name='confirmPassword' className='form-control' id='confirmPassword' placeholder='Confirm Password' />
           <br />
-          <input className='btn btn-dark' type='submit' value='Change Password' />
+          <input className='btn btn-secondary' type='submit' value='Change Password' />
         </BoundForm>
       </div>
     )

@@ -4,7 +4,7 @@ import order from '../../api/order'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 
-const tableHeadNames = ['Status', 'Price', 'Products', 'Time Stamp', 'Actions']
+const tableHeadNames = ['Status', 'Products', 'Price', 'Time Stamp', 'Actions']
 
 class UserOrdersPageBase extends Component {
   constructor (props) {
@@ -12,33 +12,33 @@ class UserOrdersPageBase extends Component {
 
     this._isMounted = false
     this.state = {
-      isQueue: false,
-      isHistory: true,
-      queueButtonClass: 'btn-outline-dark',
-      historyButtonClass: 'btn-secondary',
       orders: []
     }
 
     this.loadMoreItems = this.loadMoreItems.bind(this)
+    this.onScrollEvent = this.onScrollEvent.bind(this)
   }
 
   componentDidMount () {
     this._isMounted = true
     this.loadMoreItems()
 
-    window.addEventListener('scroll', () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        this.loadMoreItems()
-      }
-    })
+    window.addEventListener('scroll', this.onScrollEvent)
+  }
+
+  onScrollEvent () {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      this.loadMoreItems()
+    }
   }
 
   componentWillUnmount () {
     this._isMounted = false
+    window.removeEventListener('scroll', this.onScrollEvent, true)
   }
 
   loadMoreItems () {
-    order.userOrders(this.state.orders.length).then(res => {
+    order.userHistory(this.state.orders.length).then(res => {
       if (this._isMounted) {
         this.setState(prevState => ({
           orders: [...prevState.orders, ...res]
@@ -48,14 +48,12 @@ class UserOrdersPageBase extends Component {
   }
 
   render () {
+    if (this.state.orders.length === 0) {
+      return <h4>You do not have any orders in your order history</h4>
+    }
+
     return (
       <div>
-        <div className='row'>
-          <div className='col-md-6'>
-            <h2>Your previous orders</h2>
-          </div>
-        </div>
-        <br />
         <div className='row'>
           <table className='table table-hover'>
             {<TableHead heads={tableHeadNames} />}
@@ -64,8 +62,8 @@ class UserOrdersPageBase extends Component {
                 <React.Fragment key={o.Id}>
                   <tr>
                     <td>{o.Status}</td>
-                    <td>${o.Price.toFixed(2)}</td>
                     <td>{o.ProductsCount}</td>
+                    <td>${o.Price.toFixed(2)}</td>
                     <td>{o.TimeStamp}</td>
                     <td>
                       <button onClick={() => this.props.toggleDetails(o.Id, 'order-details')} className='btn btn-secondary btn-sm'>Details</button>

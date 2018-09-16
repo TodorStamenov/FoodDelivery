@@ -10,11 +10,16 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class ToppingService : Service<Topping>, IToppingService
+    public class ToppingService : Service, IToppingService
     {
         public ToppingService(FoodDeliveryDbContext database)
             : base(database)
         {
+        }
+
+        public int GetTotalEntries()
+        {
+            return Database.Toppings.Count();
         }
 
         public void Create(string name)

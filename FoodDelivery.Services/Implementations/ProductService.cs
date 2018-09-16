@@ -4,6 +4,7 @@ using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Exceptions;
 using FoodDelivery.Services.Models.BindingModels.Products;
 using FoodDelivery.Services.Models.ViewModels.Products;
+using FoodDelivery.Services.Models.ViewModels.Toppings;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,11 +12,24 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class ProductService : Service<Product>, IProductService
+    public class ProductService : Service, IProductService
     {
         public ProductService(FoodDeliveryDbContext database)
             : base(database)
         {
+        }
+
+        public int GetTotalEntries()
+        {
+            return Database.Products.Count();
+        }
+
+        public int GetTotalEntries(Guid categoryId)
+        {
+            return Database
+                .Products
+                .Where(p => p.CategoryId == categoryId)
+                .Count();
         }
 
         public void Create(string name, decimal price, int mass, Guid categoryId, IEnumerable<Guid> toppingIds)
@@ -145,30 +159,40 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
-        public IEnumerable<ListProductsModeratorViewModel> All(Guid categoryId, int page, int pageSize)
+        public IEnumerable<ListExtendedProductsWithToppingsViewModel> All(IEnumerable<Guid> productIds)
         {
-            return Database
+            var productInfo = productIds
+                .GroupBy(p => p)
+                .ToDictionary(k => k.Key, v => v.Count());
+
+            var products = Database
                 .Products
-                .Where(p => p.CategoryId == categoryId)
-                .OrderBy(p => p.Name)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(p => new ListProductsModeratorViewModel
+                .Where(p => productIds.Contains(p.Id))
+                .Select(p => new ListExtendedProductsWithToppingsViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Mass = p.Mass,
                     Price = p.Price,
-                    Category = p.Category.Name,
-                    Rating = !p.Feedbacks.Any()
-                        ? "Not Evaluated"
-                        : (Math.Round(p.Feedbacks
-                            .Select(f => f.Rate)
-                            .Cast<int>()
-                            .Average(), 1) + 1)
-                            .ToString() + "/5"
+                    Mass = p.Mass,
+                    Toppings = p.Toppings
+                        .Select(t => new ListToppingsViewModel
+                        {
+                            Id = t.ToppingId,
+                            Name = t.Topping.Name
+                        })
                 })
                 .ToList();
+
+            foreach (var product in productInfo)
+            {
+                var productToAdd = products
+                    .Where(p => p.Id == product.Key)
+                    .FirstOrDefault();
+
+                products.AddRange(Enumerable.Repeat(productToAdd, productInfo[product.Key] - 1));
+            }
+
+            return products.OrderBy(p => p.Name);
         }
 
         private List<ProductsToppings> GetToppings(IEnumerable<Guid> toppingIds)

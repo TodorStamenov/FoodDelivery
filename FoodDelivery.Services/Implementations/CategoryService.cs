@@ -10,11 +10,16 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class CategoryService : Service<Category>, ICategoryService
+    public class CategoryService : Service, ICategoryService
     {
         public CategoryService(FoodDeliveryDbContext database)
             : base(database)
         {
+        }
+
+        public int GetTotalEntries()
+        {
+            return Database.Categories.Count();
         }
 
         public void Create(string name, byte[] image)
@@ -89,6 +94,32 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
+        public IEnumerable<ListProductsModeratorViewModel> Products(Guid categoryId, int page, int pageSize)
+        {
+            return Database
+                .Products
+                .Where(p => p.CategoryId == categoryId)
+                .OrderBy(p => p.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new ListProductsModeratorViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Mass = p.Mass,
+                    Price = p.Price,
+                    Category = p.Category.Name,
+                    Rating = !p.Feedbacks.Any()
+                        ? "Not Evaluated"
+                        : (Math.Round(p.Feedbacks
+                            .Select(f => f.Rate)
+                            .Cast<int>()
+                            .Average(), 1) + 1)
+                            .ToString() + "/5"
+                })
+                .ToList();
+        }
+
         public IEnumerable<ListCategoriesViewModel> All()
         {
             return Database
@@ -100,11 +131,6 @@ namespace FoodDelivery.Services.Implementations
                     Products = c.Products.Count
                 })
                 .ToList();
-        }
-
-        private bool HasCategory(string name)
-        {
-            return Database.Categories.Any(c => c.Name == name);
         }
 
         public IEnumerable<ListCategoriesWithProductsViewModel> AllWithProducts()
@@ -128,6 +154,11 @@ namespace FoodDelivery.Services.Implementations
                             Price = p.Price
                         })
                 });
+        }
+
+        private bool HasCategory(string name)
+        {
+            return Database.Categories.Any(c => c.Name == name);
         }
     }
 }

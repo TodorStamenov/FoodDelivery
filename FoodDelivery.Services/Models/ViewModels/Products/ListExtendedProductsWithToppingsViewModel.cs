@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FoodDelivery.Services.Models.ViewModels.Products
 {
-    public class ListProductsWithToppingsModeratorViewModel : ListProductsViewModel
+    public class ListExtendedProductsWithToppingsViewModel : ListProductsViewModel
     {
         public IEnumerable<ListToppingsViewModel> Toppings { get; set; }
     }

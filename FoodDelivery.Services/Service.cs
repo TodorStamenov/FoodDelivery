@@ -1,9 +1,8 @@
 ﻿using FoodDelivery.Data;
-using System.Linq;
 
 namespace FoodDelivery.Services
 {
-    public abstract class Service<T> : IService where T : class
+    public abstract class Service
     {
         protected Service(FoodDeliveryDbContext database)
         {
@@ -11,10 +10,5 @@ namespace FoodDelivery.Services
         }
 
         protected FoodDeliveryDbContext Database { get; }
-
-        public int GetTotalEntries()
-        {
-            return this.Database.Set<T>().Count();
-        }
     }
 }

@@ -10,11 +10,16 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class OrderService : Service<Order>, IOrderService
+    public class OrderService : Service, IOrderService
     {
         public OrderService(FoodDeliveryDbContext database)
             : base(database)
         {
+        }
+
+        public int GetTotalEntries()
+        {
+            return Database.Orders.Count();
         }
 
         public OrderDetailsViewModel Details(Guid id)
@@ -34,7 +39,7 @@ namespace FoodDelivery.Services.Implementations
                     ProductsCount = o.Products.Count,
                     Products = o.Products
                         .OrderBy(p => p.Product.Name)
-                        .Select(p => new ListProductsWithToppingsModeratorViewModel
+                        .Select(p => new ListExtendedProductsWithToppingsViewModel
                         {
                             Id = p.Product.Id,
                             Name = p.Product.Name,
@@ -70,6 +75,62 @@ namespace FoodDelivery.Services.Implementations
             }
 
             Database.SaveChanges();
+        }
+
+        public IEnumerable<ListOrdersUserViewModel> UserQueue(string userId)
+        {
+            return Database
+                .Orders
+                .Where(o => o.UserId.ToString() == userId)
+                .Where(o => o.Status != Status.Delivered)
+                .OrderByDescending(o => o.TimeStamp)
+                .Select(o => new ListOrdersUserViewModel
+                {
+                    Id = o.Id,
+                    Price = o.Price,
+                    TimeStamp = o.TimeStamp.ToString(),
+                    ProductsCount = o.Products.Count,
+                    Status = o.Status.ToString(),
+                    Products = o.Products
+                        .OrderBy(p => p.Product.Name)
+                        .Select(p => new ListProductsViewModel
+                        {
+                            Id = p.Product.Id,
+                            Name = p.Product.Name,
+                            Mass = p.Product.Mass,
+                            Price = p.Product.Price
+                        })
+                })
+                .ToList();
+        }
+
+        public IEnumerable<ListOrdersUserViewModel> UserHistory(string userId, int loadElements, int loadedElements)
+        {
+            return Database
+                .Orders
+                .Where(o => o.UserId.ToString() == userId)
+                .Where(o => o.Status == Status.Delivered)
+                .OrderByDescending(o => o.TimeStamp)
+                .Skip(loadedElements)
+                .Take(loadElements)
+                .Select(o => new ListOrdersUserViewModel
+                {
+                    Id = o.Id,
+                    Price = o.Price,
+                    TimeStamp = o.TimeStamp.ToString(),
+                    ProductsCount = o.Products.Count,
+                    Status = o.Status.ToString(),
+                    Products = o.Products
+                        .OrderBy(p => p.Product.Name)
+                        .Select(p => new ListProductsViewModel
+                        {
+                            Id = p.Product.Id,
+                            Name = p.Product.Name,
+                            Mass = p.Product.Mass,
+                            Price = p.Product.Price
+                        })
+                })
+                .ToList();
         }
 
         public IEnumerable<ListOrdersEmployeeViewModel> EmployeeQueue(string executorId)
@@ -110,26 +171,6 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
-        public IEnumerable<ListOrdersModeratorViewModel> ModeratorHistory(int loadElements, int loadedElements)
-        {
-            return Database
-                .Orders
-                .OrderByDescending(o => o.TimeStamp)
-                .Where(o => o.Status == Status.Delivered)
-                .Skip(loadedElements)
-                .Take(loadElements)
-                .Select(o => new ListOrdersModeratorViewModel
-                {
-                    Id = o.Id,
-                    Price = o.Price,
-                    TimeStamp = o.TimeStamp.ToString(),
-                    Status = o.Status.ToString(),
-                    ProductsCount = o.Products.Count,
-                    User = o.User.UserName
-                })
-                .ToList();
-        }
-
         public IEnumerable<ListOrdersModeratorViewModel> ModeratorQueue(int loadElements, int loadedElements)
         {
             return Database
@@ -150,30 +191,22 @@ namespace FoodDelivery.Services.Implementations
                 .ToList();
         }
 
-        public IEnumerable<ListOrdersUserViewModel> UserOrder(string userId, int loadElements, int loadedElements)
+        public IEnumerable<ListOrdersModeratorViewModel> ModeratorHistory(int loadElements, int loadedElements)
         {
             return Database
                 .Orders
-                .Where(o => o.UserId.ToString() == userId)
                 .OrderByDescending(o => o.TimeStamp)
+                .Where(o => o.Status == Status.Delivered)
                 .Skip(loadedElements)
                 .Take(loadElements)
-                .Select(o => new ListOrdersUserViewModel
+                .Select(o => new ListOrdersModeratorViewModel
                 {
                     Id = o.Id,
                     Price = o.Price,
                     TimeStamp = o.TimeStamp.ToString(),
-                    ProductsCount = o.Products.Count,
                     Status = o.Status.ToString(),
-                    Products = o.Products
-                        .OrderBy(p => p.Product.Name)
-                        .Select(p => new ListProductsViewModel
-                        {
-                            Id = p.Product.Id,
-                            Name = p.Product.Name,
-                            Mass = p.Product.Mass,
-                            Price = p.Product.Price
-                        })
+                    ProductsCount = o.Products.Count,
+                    User = o.User.UserName
                 })
                 .ToList();
         }

@@ -8,11 +8,16 @@ using System.Linq;
 
 namespace FoodDelivery.Services.Implementations
 {
-    public class FeedbackService : Service<Feedback>, IFeedbackService
+    public class FeedbackService : Service, IFeedbackService
     {
         public FeedbackService(FoodDeliveryDbContext database)
             : base(database)
         {
+        }
+
+        public int GetTotalEntries()
+        {
+            return Database.Feedbacks.Count();
         }
 
         public void Create(Guid productId, string userId, string content, string rate)

@@ -51,24 +51,28 @@ class UsersPageBase extends Component {
 
   lock (username) {
     admin.lock(username).then(res => {
+      console.log(res)
       this.getUsers(this.state.username)
     })
   }
 
   unlock (username) {
     admin.unlock(username).then(res => {
+      console.log(res)
       this.getUsers(this.state.username)
     })
   }
 
   addRole (username, roleName) {
     admin.addRole(username, roleName).then(res => {
+      console.log(res)
       this.getUsers(this.state.username)
     })
   }
 
   removeRole (username, roleName) {
     admin.removeRole(username, roleName).then(res => {
+      console.log(res)
       this.getUsers(this.state.username)
     })
   }
@@ -98,25 +102,25 @@ class UsersPageBase extends Component {
                   <td>{u.Username}</td>
                   <td>
                     {u.IsLocked
-                      ? <button className='btn btn-outline-dark btn-sm' onClick={() => this.unlock(u.Username)}>Unlock</button>
+                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.unlock(u.Username)}>Unlock</button>
                       : <button className='btn btn-secondary btn-sm' onClick={() => this.lock(u.Username)}>Lock</button>
                     }
                   </td>
                   <td>
                     {u.Roles.includes(Admin)
-                      ? <button className='btn btn-outline-dark btn-sm' onClick={() => this.removeRole(u.Username, Admin)}>Remove Role</button>
+                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Admin)}>Remove Role</button>
                       : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Admin)}>Add Role</button>
                     }
                   </td>
                   <td>
                     {u.Roles.includes(Moderator)
-                      ? <button className='btn btn-outline-dark btn-sm' onClick={() => this.removeRole(u.Username, Moderator)}>Remove Role</button>
+                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Moderator)}>Remove Role</button>
                       : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Moderator)}>Add Role</button>
                     }
                   </td>
                   <td>
                     {u.Roles.includes(Employee)
-                      ? <button className='btn btn-outline-dark btn-sm' onClick={() => this.removeRole(u.Username, Employee)}>Remove Role</button>
+                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Employee)}>Remove Role</button>
                       : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Employee)}>Add Role</button>
                     }
                   </td>

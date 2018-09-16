@@ -5,6 +5,8 @@ namespace FoodDelivery.Api.App_Start
 {
     using FoodDelivery.Api.Infrastructure.Extensions;
     using FoodDelivery.Data;
+    using FoodDelivery.Services;
+    using FoodDelivery.Services.Implementations;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Ninject;
     using Ninject.Web.Common;
@@ -68,8 +70,9 @@ namespace FoodDelivery.Api.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<FoodDeliveryDbContext>().ToSelf().InRequestScope();
             kernel.AddDomainServices();
+            kernel.Bind<FoodDeliveryDbContext>().ToSelf().InRequestScope();
+            kernel.Bind<IOrderManager>().To<OrderManager>().InSingletonScope();
         }
     }
 }
