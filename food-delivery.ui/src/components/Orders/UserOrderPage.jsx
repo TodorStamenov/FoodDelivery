@@ -11,6 +11,7 @@ class UserOrderPageBase extends Component {
 
     this._isMounted = false
     this.state = {
+      address: '',
       products: [],
       orders: []
     }
@@ -22,6 +23,14 @@ class UserOrderPageBase extends Component {
     this.pendingOrder = this.pendingOrder.bind(this)
     this.renderCards = this.renderCards.bind(this)
     this.renderTable = this.renderTable.bind(this)
+    this.handleToppingCheck = this.handleToppingCheck.bind(this)
+    this.onChange = this.onChange.bind(this)
+  }
+
+  onChange (e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
   }
 
   componentDidMount () {
@@ -35,7 +44,20 @@ class UserOrderPageBase extends Component {
   }
 
   submitOrder () {
-    console.log('test')
+    let products = this.state
+      .products
+      .map(p => {
+        return {
+          id: p.Id,
+          toppingIds: p.Toppings.filter(t => t.checked).map(t => t.Id)
+        }
+      })
+
+    order.submitOrder(this.state.address, products).then(res => {
+      console.log(res)
+      this.orderQueue()
+      this.pendingOrder()
+    })
   }
 
   clearOrder () {
@@ -81,8 +103,22 @@ class UserOrderPageBase extends Component {
 
     result.push(
       <div key={-1} className='row'>
-        <button onClick={this.clearOrder} className='btn btn-outline-secondary'>Clear Order</button>
-        <button onClick={this.submitOrder} className='btn btn-outline-secondary ml-2'>Submit Order</button>
+        <div className='col-md-1' style={{ 'paddingTop': '5px' }}>
+          <label htmlFor='address'>Address:</label>
+        </div>
+        <div className='col-md-3'>
+          <input
+            className='form-control'
+            type='text'
+            id='address'
+            name='address'
+            value={this.state.address}
+            onChange={this.onChange} />
+        </div>
+        <div className='col-md-8'>
+          <button onClick={() => this.clearOrder(false)} className='btn btn-outline-secondary'>Clear Order</button>
+          <button onClick={this.submitOrder} className='btn btn-outline-secondary ml-2'>Submit Order</button>
+        </div>
       </div>
     )
 
@@ -98,10 +134,15 @@ class UserOrderPageBase extends Component {
                     {p.Name} | ${p.Price.toFixed(2)} | {p.Mass}g
                   </div>
                   <div className='card-body' style={{ 'paddingTop': '15px' }}>
-                    {p.Toppings.map(t =>
+                    {p.Toppings.map((t, k) =>
                       <div key={t.Id} className='form-check'>
                         <label className='form-check-label'>
-                          <input className='form-check-input' type='checkbox' value={t.Id} />{t.Name}
+                          <input
+                            className='form-check-input'
+                            type='checkbox'
+                            value={t.Id}
+                            onChange={e => this.handleToppingCheck(e, i + j, k)} />
+                          {t.Name}
                         </label>
                       </div>)
                     }
@@ -120,6 +161,17 @@ class UserOrderPageBase extends Component {
     return result
   }
 
+  handleToppingCheck (e, i, j) {
+    let products = this.state.products
+    products[i].Toppings[j].checked = e.target.checked
+
+    if (this._isMounted) {
+      this.setState({
+        products
+      })
+    }
+  }
+
   renderTable () {
     if (this.state.orders.length === 0) {
       return <h4>You do not have any orders in progress</h4>
@@ -127,32 +179,34 @@ class UserOrderPageBase extends Component {
 
     return (
       <div className='row'>
-        <table className='table table-hover'>
-          {<TableHead heads={tableHeadNames} />}
-          <tbody>
-            {this.state.orders.map(o =>
-              <React.Fragment key={o.Id}>
-                <tr>
-                  <td>{o.Status}</td>
-                  <td>{o.ProductsCount}</td>
-                  <td>${o.Price.toFixed(2)}</td>
-                  <td>{o.TimeStamp}</td>
-                  <td>
-                    <button onClick={() => this.props.toggleDetails(o.Id, 'order-details')} className='btn btn-secondary btn-sm'>Details</button>
-                  </td>
-                </tr>
-                {o.Products.map((p, i) =>
-                  <tr key={i} className='order-details' style={{ display: 'none' }} data-id={o.Id}>
-                    <td colSpan={2}>{p.Name}</td>
-                    <td>${p.Price.toFixed(2)}</td>
-                    <td>{p.Mass}g</td>
-                    <td />
-                  </tr>)
-                }
-              </React.Fragment>)
-            }
-          </tbody>
-        </table>
+        <div className='col-md-12'>
+          <table className='table table-hover'>
+            {<TableHead heads={tableHeadNames} />}
+            <tbody>
+              {this.state.orders.map(o =>
+                <React.Fragment key={o.Id}>
+                  <tr>
+                    <td>{o.Status}</td>
+                    <td>{o.ProductsCount}</td>
+                    <td>${o.Price.toFixed(2)}</td>
+                    <td>{o.TimeStamp}</td>
+                    <td>
+                      <button onClick={() => this.props.toggleDetails(o.Id, 'order-details')} className='btn btn-secondary btn-sm'>Details</button>
+                    </td>
+                  </tr>
+                  {o.Products.map((p, i) =>
+                    <tr key={i} className='order-details' style={{ display: 'none' }} data-id={o.Id}>
+                      <td colSpan={2}>{p.Name}</td>
+                      <td>${p.Price.toFixed(2)}</td>
+                      <td>{p.Mass}g</td>
+                      <td />
+                    </tr>)
+                  }
+                </React.Fragment>)
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }

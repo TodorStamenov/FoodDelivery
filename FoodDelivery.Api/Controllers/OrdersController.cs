@@ -90,8 +90,10 @@ namespace FoodDelivery.Api.Controllers
 
         [HttpPost]
         [Route("submitOrder")]
-        public IHttpActionResult SubmitOrder()
+        public IHttpActionResult SubmitOrder([FromUri]string address, [FromBody]IEnumerable<CreateOrderBindingModel> model)
         {
+            this.order.Create(address, User.Identity.GetUserId(), model);
+            this.orderManager.ClearProducts(User.Identity.GetUserId());
             return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, nameof(Order), CommonConstants.Created));
         }
 

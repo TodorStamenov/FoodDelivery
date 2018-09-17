@@ -73,6 +73,7 @@
     <Compile Include="IProductService.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="Models\BindingModels\Feedbacks\FeedbackBindingModel.cs" />
+    <Compile Include="Models\BindingModels\Orders\CreateOrderBindingModel.cs" />
     <Compile Include="Models\BindingModels\Products\ProductBindigModel.cs" />
     <Compile Include="Models\BindingModels\Toppings\ToppingBindingModel.cs" />
     <Compile Include="Models\BindingModels\Orders\UpdateOrdersBindingModel.cs" />

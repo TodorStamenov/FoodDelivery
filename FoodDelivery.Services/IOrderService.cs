@@ -7,9 +7,11 @@ namespace FoodDelivery.Services
 {
     public interface IOrderService : IService
     {
-        OrderDetailsViewModel Details(Guid id);
+        void Create(string address, string userId, IEnumerable<CreateOrderBindingModel> model);
 
         void UpdateQueue(IEnumerable<UpdateOrdersBindingModel> model);
+
+        OrderDetailsViewModel Details(Guid id);
 
         IEnumerable<ListOrdersUserViewModel> UserQueue(string userId);
 

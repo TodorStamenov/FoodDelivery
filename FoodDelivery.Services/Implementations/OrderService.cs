@@ -1,4 +1,5 @@
-﻿using FoodDelivery.Data;
+﻿using FoodDelivery.Common;
+using FoodDelivery.Data;
 using FoodDelivery.Data.Models;
 using FoodDelivery.Services.Models.BindingModels.Orders;
 using FoodDelivery.Services.Models.ViewModels.Orders;
@@ -20,6 +21,52 @@ namespace FoodDelivery.Services.Implementations
         public int GetTotalEntries()
         {
             return Database.Orders.Count();
+        }
+
+        public void Create(string address, string userId, IEnumerable<CreateOrderBindingModel> model)
+        {
+            Guid executorId = Database
+                .Users
+                .Where(u => u.Roles.Any(r => r.Role.Name == CommonConstants.ModeratorRole))
+                .OrderBy(u => u.Orders.Count)
+                .Select(u => u.Id)
+                .FirstOrDefault();
+
+            Order order = new Order
+            {
+                Address = address,
+                Status = Status.Pending,
+                UserId = new Guid(userId),
+                ExecutorId = executorId,
+                TimeStamp = DateTime.UtcNow
+            };
+
+            foreach (var product in model)
+            {
+                var productOrder = new ProductsOrders
+                {
+                    Order = order,
+                    Product = Database.Products.Find(product.Id)
+                };
+
+                foreach (var topping in product.ToppingIds)
+                {
+                    productOrder.Toppings.Add(new ProductsOrdersToppings
+                    {
+                        ToppingId = topping
+                    });
+                }
+
+                order.Products.Add(productOrder);
+            }
+
+            order.Price = order
+                .Products
+                .Select(p => p.Product.Price)
+                .Sum();
+
+            Database.Orders.Add(order);
+            Database.SaveChanges();
         }
 
         public OrderDetailsViewModel Details(Guid id)

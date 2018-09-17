@@ -82,9 +82,10 @@ function clearProducts () {
   }).then(res => res.json())
 }
 
-function submitOrder () {
-  return fetch(host + orderRoute + 'submitOrder', {
+function submitOrder (address, products) {
+  return fetch(host + orderRoute + 'submitOrder?address=' + address, {
     method: 'POST',
+    body: JSON.stringify(products),
     headers: getHeaders(true, true)
   }).then(res => res.json())
 }
