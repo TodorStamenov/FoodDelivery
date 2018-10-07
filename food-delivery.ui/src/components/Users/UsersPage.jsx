@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import protectedRoute from '../../utils/protectedRoute'
 import admin from '../../api/admin'
 import TableHead from '../Common/TableHead'
+import actions from '../../utils/actions'
 
 const Admin = 'Admin'
 const Moderator = 'Moderator'
@@ -51,28 +53,48 @@ class UsersPageBase extends Component {
 
   lock (username) {
     admin.lock(username).then(res => {
-      console.log(res)
+      if (res.ModelState) {
+        this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+        return
+      }
+
+      this.props.showSuccess(res)
       this.getUsers(this.state.username)
     })
   }
 
   unlock (username) {
     admin.unlock(username).then(res => {
-      console.log(res)
+      if (res.ModelState) {
+        this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+        return
+      }
+
+      this.props.showSuccess(res)
       this.getUsers(this.state.username)
     })
   }
 
   addRole (username, roleName) {
     admin.addRole(username, roleName).then(res => {
-      console.log(res)
+      if (res.ModelState) {
+        this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+        return
+      }
+
+      this.props.showSuccess(res)
       this.getUsers(this.state.username)
     })
   }
 
   removeRole (username, roleName) {
     admin.removeRole(username, roleName).then(res => {
-      console.log(res)
+      if (res.ModelState) {
+        this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+        return
+      }
+
+      this.props.showSuccess(res)
       this.getUsers(this.state.username)
     })
   }
@@ -134,6 +156,19 @@ class UsersPageBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const UsersPage = protectedRoute(UsersPageBase, 'Admin')
 
-export default UsersPage
+export default connect(mapState, mapDispatch)(UsersPage)

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import home from '../../api/home'
 import order from '../../api/order'
+import actions from '../../utils/actions'
 
-export default class HomePage extends Component {
+class HomePage extends Component {
   constructor (props) {
     super(props)
 
@@ -32,7 +34,7 @@ export default class HomePage extends Component {
 
   addProduct (id) {
     order.addProduct(id).then(res => {
-      console.log(res)
+      this.props.showSuccess(res)
     })
   }
 
@@ -83,3 +85,18 @@ export default class HomePage extends Component {
     )
   }
 }
+
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
+export default connect(mapState, mapDispatch)(HomePage)

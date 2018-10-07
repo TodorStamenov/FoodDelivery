@@ -17,11 +17,6 @@ namespace FoodDelivery.Services.Implementations
         {
         }
 
-        public int GetTotalEntries()
-        {
-            return Database.Users.Count();
-        }
-
         public void AddRole(string username, string roleName)
         {
             var userRoleInfo = Database
@@ -37,7 +32,7 @@ namespace FoodDelivery.Services.Implementations
 
             if (userRoleInfo != null)
             {
-                throw new DuplicateEntryException($"User {username} is already in {roleName} role");
+                throw new DuplicateEntryException($"User {username} is already in {roleName} role.");
             }
 
             Guid? userId = Database
@@ -56,7 +51,7 @@ namespace FoodDelivery.Services.Implementations
 
             if (userId == null || roleId == null)
             {
-                throw new NotExistingEntryException($"{username} username or ${roleName} role not existing in database");
+                throw new NotExistingEntryException($"{username} username or ${roleName} role not existing in database!");
             }
 
             UserRole userRole = new UserRole
@@ -79,7 +74,7 @@ namespace FoodDelivery.Services.Implementations
 
             if (userRole == null)
             {
-                throw new DuplicateEntryException($"User {username} is not in {roleName} role");
+                throw new DuplicateEntryException($"User {username} is not in {roleName} role.");
             }
 
             Database.UserRoles.Remove(userRole);

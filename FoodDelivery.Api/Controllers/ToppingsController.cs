@@ -35,7 +35,7 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorKey, bre.Message);
                 return BadRequest(ModelState);
             }
         }
@@ -54,7 +54,7 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorKey, bre.Message);
                 return BadRequest(ModelState);
             }
         }
@@ -73,7 +73,7 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorKey, bre.Message);
                 return BadRequest(ModelState);
             }
         }
@@ -87,7 +87,7 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorKey, bre.Message);
                 return BadRequest(ModelState);
             }
         }

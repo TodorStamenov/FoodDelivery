@@ -72,7 +72,7 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorKey, bre.Message);
                 return BadRequest(ModelState);
             }
         }
@@ -84,7 +84,7 @@ namespace FoodDelivery.Api.Controllers
 
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, "Category name is required");
+                ModelState.AddModelError(CommonConstants.ErrorKey, "Category name is required");
                 return BadRequest(ModelState);
             }
 
@@ -95,7 +95,7 @@ namespace FoodDelivery.Api.Controllers
             if (image != null
                 && (!image.ContentType.Contains(Image) || image.ContentLength > DataConstants.CategoryConstants.MaxImageSize))
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, ImageSizeMessage);
+                ModelState.AddModelError(CommonConstants.ErrorKey, ImageSizeMessage);
                 return BadRequest(ModelState);
             }
 
@@ -106,7 +106,7 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorKey, bre.Message);
                 return BadRequest(ModelState);
             }
         }
@@ -120,7 +120,7 @@ namespace FoodDelivery.Api.Controllers
                 string.IsNullOrWhiteSpace(name) ||
                 images.Count == 0)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, "Category name and image are required");
+                ModelState.AddModelError(CommonConstants.ErrorKey, "Category name and image are required");
                 return BadRequest(ModelState);
             }
 
@@ -129,7 +129,7 @@ namespace FoodDelivery.Api.Controllers
             if (!image.ContentType.Contains(Image)
                 || image.ContentLength > DataConstants.CategoryConstants.MaxImageSize)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, ImageSizeMessage);
+                ModelState.AddModelError(CommonConstants.ErrorKey, ImageSizeMessage);
                 return BadRequest(ModelState);
             }
 
@@ -140,7 +140,7 @@ namespace FoodDelivery.Api.Controllers
             }
             catch (BadRequestException bre)
             {
-                ModelState.AddModelError(CommonConstants.ErrorMessage, bre.Message);
+                ModelState.AddModelError(CommonConstants.ErrorKey, bre.Message);
                 return BadRequest(ModelState);
             }
         }

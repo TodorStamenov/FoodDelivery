@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import BoundForm from '../Common/BoundForm'
 import auth from '../../api/auth'
+import actions from '../../utils/actions'
 
-export default class ChangePasswordForm extends Component {
+class ChangePasswordForm extends Component {
   constructor (props) {
     super(props)
 
@@ -13,10 +15,11 @@ export default class ChangePasswordForm extends Component {
     auth.changePassword(data.oldPassword, data.newPassword, data.confirmPassword)
       .then(res => {
         if (res.ModelState) {
-          console.log(Object.values(res.ModelState).join('\n'))
+          this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
           return
         }
 
+        this.props.showSuccess(res)
         this.props.history.push('/')
       })
   }
@@ -38,3 +41,18 @@ export default class ChangePasswordForm extends Component {
     )
   }
 }
+
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
+export default connect(mapState, mapDispatch)(ChangePasswordForm)

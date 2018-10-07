@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import protectedRoute from '../../utils/protectedRoute'
 import topping from '../../api/topping'
+import actions from '../../utils/actions'
 
 class EditToppingFormBase extends Component {
   constructor (props) {
@@ -8,7 +10,6 @@ class EditToppingFormBase extends Component {
 
     this._isMounted = false
     this.state = {
-      id: 0,
       name: ''
     }
 
@@ -21,7 +22,6 @@ class EditToppingFormBase extends Component {
     topping.get(this.props.match.params.id).then(res => {
       if (this._isMounted) {
         this.setState({
-          id: res.Id,
           name: res.Name
         })
       }
@@ -40,13 +40,14 @@ class EditToppingFormBase extends Component {
 
   onSubmit (e) {
     e.preventDefault()
-    topping.edit(this.state.id, this.state.name)
+    topping.edit(this.props.match.params.id, this.state.name)
       .then(res => {
         if (res.ModelState) {
-          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+          this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
           return
         }
 
+        this.props.showSuccess(res)
         this.props.history.push('/moderator/toppings')
       })
   }
@@ -73,6 +74,19 @@ class EditToppingFormBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const EditToppingForm = protectedRoute(EditToppingFormBase, 'Moderator')
 
-export default EditToppingForm
+export default connect(mapState, mapDispatch)(EditToppingForm)

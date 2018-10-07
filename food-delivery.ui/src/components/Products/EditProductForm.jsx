@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import protectedRoute from '../../utils/protectedRoute'
 import product from '../../api/product'
 import category from '../../api/category'
 import topping from '../../api/topping'
+import actions from '../../utils/actions'
 
 class EditProductFormBase extends Component {
   constructor (props) {
@@ -77,11 +79,11 @@ class EditProductFormBase extends Component {
       this.state.toppingIds)
         .then(res => {
           if (res.ModelState) {
-            console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+            this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
             return
           }
 
-          console.log(res)
+          this.props.showSuccess(res)
           this.props.history.push('/moderator/products')
         })
   }
@@ -169,6 +171,19 @@ class EditProductFormBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const EditProductForm = protectedRoute(EditProductFormBase, 'Moderator')
 
-export default EditProductForm
+export default connect(mapState, mapDispatch)(EditProductForm)

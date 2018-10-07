@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import topping from '../../api/topping'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
+import actions from '../../utils/actions'
 
 class ToppingsPageBase extends Component {
   constructor (props) {
@@ -38,7 +40,12 @@ class ToppingsPageBase extends Component {
 
   deleteTopping (id) {
     topping.remove(id).then(res => {
-      console.log(res)
+      if (res.ModelState) {
+        this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+        return
+      }
+
+      this.props.showSuccess(res)
       this.getToppings()
     })
   }
@@ -74,6 +81,19 @@ class ToppingsPageBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const ToppingsPage = protectedRoute(ToppingsPageBase, 'Moderator')
 
-export default ToppingsPage
+export default connect(mapState, mapDispatch)(ToppingsPage)

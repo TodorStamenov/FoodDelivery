@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import order from '../../api/order'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
+import actions from '../../utils/actions'
 
 const tableHeadNames = ['User', 'Address', 'Time Stamp', 'Actions']
 
@@ -57,7 +59,7 @@ class EmployeeOrdersPageBase extends Component {
     })
 
     order.updateQueue(orders).then(res => {
-      console.log(res)
+      this.props.showSuccess(res)
       this.loadOrders()
     })
   }
@@ -112,6 +114,19 @@ class EmployeeOrdersPageBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const EmployeeOrdersPage = protectedRoute(EmployeeOrdersPageBase, 'Employee')
 
-export default EmployeeOrdersPage
+export default connect(mapState, mapDispatch)(EmployeeOrdersPage)

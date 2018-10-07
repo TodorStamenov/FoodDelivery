@@ -33,7 +33,7 @@ import ProductsPage from './components/Products/ProductsPage'
 import CreateProductForm from './components/Products/CreateProductForm'
 import EditProductForm from './components/Products/EditProductForm'
 
-import auth from './api/auth'
+import Notification from './components/Common/Notification'
 
 class App extends Component {
   constructor (props) {
@@ -41,12 +41,10 @@ class App extends Component {
 
     this.state = {
       username: sessionStorage.getItem('username'),
-      isAuthed: sessionStorage.getItem('username') !== null
+      isAuthed: sessionStorage.getItem('authtoken') !== null
     }
 
-    this.onRegister = this.onRegister.bind(this)
-    this.onLogin = this.onLogin.bind(this)
-    this.onLogout = this.onLogout.bind(this)
+    this.clearUserData = this.clearUserData.bind(this)
     this.saveUserData = this.saveUserData.bind(this)
     this.toggleDetails = this.toggleDetails.bind(this)
   }
@@ -58,51 +56,17 @@ class App extends Component {
 
     this.setState({
       username: sessionStorage.getItem('username'),
-      isAuthed: sessionStorage.getItem('username') !== null
+      isAuthed: sessionStorage.getItem('authtoken') !== null
     })
   }
 
-  onRegister (data) {
-    auth.register(data.email, data.password, data.confirmPassword)
-      .then(res => {
-        if (res.ModelState) {
-          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
-          return
-        }
+  clearUserData () {
+    sessionStorage.clear()
 
-        this.saveUserData(res)
-        this.props.history.push('/')
-      })
-  }
-
-  onLogin (data) {
-    auth.login(data.email, data.password)
-      .then(res => {
-        if (res.error) {
-          console.log(res.error_description)
-          return
-        }
-
-        if (res.ModelState) {
-          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
-          return
-        }
-
-        this.saveUserData(res)
-        this.props.history.push('/')
-      })
-  }
-
-  onLogout () {
-    auth.logout().then(() => {
-      this.props.history.push('/')
-      sessionStorage.clear()
-
-      this.setState({
-        username: '',
-        authtoken: '',
-        isAuthed: false
-      })
+    this.setState({
+      username: '',
+      authtoken: '',
+      isAuthed: false
     })
   }
 
@@ -126,20 +90,22 @@ class App extends Component {
     return (
       <div style={{'overflowX': 'hidden'}}>
         <Header
-          isAdmin={this.state.isAuthed && sessionStorage.getItem('roles').includes('Admin')}
-          isModerator={this.state.isAuthed && sessionStorage.getItem('roles').includes('Moderator')}
-          isEmployee={this.state.isAuthed && sessionStorage.getItem('roles').includes('Employee')}
-          isAuthed={this.state.isAuthed}
+          {...this.props}
+          isAdmin={this.state.isAuthed && sessionStorage.getItem('roles') && sessionStorage.getItem('roles').includes('Admin')}
+          isModerator={this.state.isAuthed && sessionStorage.getItem('roles') && sessionStorage.getItem('roles').includes('Moderator')}
+          isEmployee={this.state.isAuthed && sessionStorage.getItem('roles') && sessionStorage.getItem('roles').includes('Employee')}
+          isAuthed={this.state.isAuthed && sessionStorage.getItem('authtoken') !== null}
           username={this.state.username}
-          onLogout={this.onLogout}
+          clearUserData={this.clearUserData}
         />
         <hr />
+        <Notification />
         <div className='container body-content'>
           <Switch>
             <Route exact path='/' component={() => <HomePage isAuthed={this.state.isAuthed} toggleProducts={this.toggleDetails} />} />
             <Route exact path='/account/user' component={ChangePasswordForm} />
-            <Route exact path='/account/login' component={() => <LoginForm onSubmit={this.onLogin} />} />
-            <Route exact path='/account/register' component={() => <RegisterForm onSubmit={this.onRegister} />} />
+            <Route exact path='/account/login' component={() => <LoginForm {...this.props} saveUserData={this.saveUserData} />} />
+            <Route exact path='/account/register' component={() => <RegisterForm {...this.props} saveUserData={this.saveUserData} />} />
 
             <Route exact path='/admin/users/all' component={UsersPage} />
 

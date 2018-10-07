@@ -28,7 +28,7 @@ function logout () {
   return fetch(host + accountRoute + 'logout', {
     method: 'POST',
     headers: getHeaders(true, false)
-  })
+  }).then(res => res.json())
 }
 
 function changePassword (oldPassword, newPassword, confirmPassword) {

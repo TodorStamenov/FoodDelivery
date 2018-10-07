@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import protectedRoute from '../../utils/protectedRoute'
 import product from '../../api/product'
 import category from '../../api/category'
 import topping from '../../api/topping'
+import actions from '../../utils/actions'
 
 class CreateProductFormBase extends Component {
   constructor (props) {
@@ -70,11 +72,11 @@ class CreateProductFormBase extends Component {
       this.state.toppingIds)
         .then(res => {
           if (res.ModelState) {
-            console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+            this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
             return
           }
 
-          console.log(res)
+          this.props.showSuccess(res)
           this.props.history.push('/moderator/products')
         })
   }
@@ -124,6 +126,7 @@ class CreateProductFormBase extends Component {
               name='categoryId'
               className='form-control'
               id='categoryId'>
+              <option value='none'>--Select Category--</option>
               {this.state.categories.map(c => <option key={c.Id} value={c.Id}>{c.Name}</option>)}
             </select>
           </div>
@@ -145,6 +148,19 @@ class CreateProductFormBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const CreateProductForm = protectedRoute(CreateProductFormBase, 'Moderator')
 
-export default CreateProductForm
+export default connect(mapState, mapDispatch)(CreateProductForm)

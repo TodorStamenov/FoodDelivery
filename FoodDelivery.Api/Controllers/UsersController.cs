@@ -15,6 +15,8 @@ namespace FoodDelivery.Api.Controllers
     public class UsersController : BaseApiController
     {
         private const string UsernameNotNull = "Username cannot be null";
+        private const string UserAndRolesNotNull = "User and Role names cannot be null!";
+        private const string UserLockedState = "User {0} is currently {1}";
 
         private readonly IUserService user;
 
@@ -43,18 +45,20 @@ namespace FoodDelivery.Api.Controllers
 
             if (user == null)
             {
-                return BadRequest($"User with {username} is not existing in database");
+                ModelState.AddModelError(CommonConstants.ErrorKey, string.Format(CommonConstants.NotExistingEntry, username));
+                return BadRequest(ModelState);
             }
 
             if (user.LockoutEnabled)
             {
-                return BadRequest($"User {username} is already locked");
+                ModelState.AddModelError(CommonConstants.ErrorKey, string.Format(UserLockedState, username, CommonConstants.Locked));
+                return BadRequest(ModelState);
             }
 
             await UserManager.SetLockoutEnabledAsync(user.Id, true);
             await UserManager.SetLockoutEndDateAsync(user.Id, DateTime.UtcNow.AddYears(10));
 
-            return Ok($"User {username} successfully locked");
+            return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, username, CommonConstants.Locked));
         }
 
         [HttpGet]
@@ -70,17 +74,19 @@ namespace FoodDelivery.Api.Controllers
 
             if (user == null)
             {
-                return BadRequest($"User with {username} is not existing in database");
+                ModelState.AddModelError(CommonConstants.ErrorKey, string.Format(CommonConstants.NotExistingEntry, username));
+                return BadRequest(ModelState);
             }
 
             if (!user.LockoutEnabled)
             {
-                return BadRequest($"User {username} is unlocked");
+                ModelState.AddModelError(CommonConstants.ErrorKey, string.Format(UserLockedState, username, CommonConstants.Unlocked));
+                return BadRequest(ModelState);
             }
 
             await UserManager.SetLockoutEnabledAsync(user.Id, false);
 
-            return Ok($"User {username} successfully unlocked");
+            return Ok(string.Format(CommonConstants.SuccessfullEntityOperation, username, CommonConstants.Unlocked));
         }
 
         [HttpGet]
@@ -89,19 +95,18 @@ namespace FoodDelivery.Api.Controllers
         {
             if (username == null || roleName == null)
             {
-                return BadRequest("User and Role names cannot be null!");
+                return BadRequest(UserAndRolesNotNull);
             }
 
             try
             {
                 this.user.AddRole(username, roleName);
+                return Ok($"User {username} successfully added to {roleName} role.");
             }
             catch (BadRequestException bre)
             {
                 return BadRequest(bre.Message);
             }
-
-            return Ok($"User {username} successfully added to {roleName} role.");
         }
 
         [HttpGet]
@@ -110,19 +115,18 @@ namespace FoodDelivery.Api.Controllers
         {
             if (username == null || roleName == null)
             {
-                return BadRequest("User and Role names cannot be null!");
+                return BadRequest(UserAndRolesNotNull);
             }
 
             try
             {
                 this.user.RemoveRole(username, roleName);
+                return Ok($"User {username} successfully removed from {roleName} role.");
             }
             catch (BadRequestException bre)
             {
                 return BadRequest(bre.Message);
             }
-
-            return Ok($"User {username} successfully removed from {roleName} role.");
         }
     }
 }

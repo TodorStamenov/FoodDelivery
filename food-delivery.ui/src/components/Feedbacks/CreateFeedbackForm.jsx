@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import protectedRoute from '../../utils/protectedRoute'
 import feedback from '../../api/feedback'
+import actions from '../../utils/actions'
 
 class CreateFeedbackFormBase extends Component {
   constructor (props) {
@@ -45,10 +47,11 @@ class CreateFeedbackFormBase extends Component {
     feedback.add(this.props.match.params.id, this.state.content, this.state.rate)
       .then(res => {
         if (res.ModelState) {
-          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+          this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
           return
         }
 
+        this.props.showSuccess(res)
         this.props.history.push('/')
       })
   }
@@ -89,6 +92,19 @@ class CreateFeedbackFormBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const CreateFeedbackForm = protectedRoute(CreateFeedbackFormBase, 'authed')
 
-export default CreateFeedbackForm
+export default connect(mapState, mapDispatch)(CreateFeedbackForm)

@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import protectedRoute from '../../utils/protectedRoute'
 import topping from '../../api/topping'
 import BoundForm from '../Common/BoundForm'
+import actions from '../../utils/actions'
 
 class CreateToppingFormBase extends Component {
   constructor (props) {
@@ -18,10 +20,11 @@ class CreateToppingFormBase extends Component {
     topping.add(data.name)
       .then(res => {
         if (res.ModelState) {
-          console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+          this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
           return
         }
 
+        this.props.showSuccess(res)
         this.props.history.push('/moderator/toppings')
       })
   }
@@ -45,6 +48,19 @@ class CreateToppingFormBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const CreateToppingForm = protectedRoute(CreateToppingFormBase, 'Moderator')
 
-export default CreateToppingForm
+export default connect(mapState, mapDispatch)(CreateToppingForm)

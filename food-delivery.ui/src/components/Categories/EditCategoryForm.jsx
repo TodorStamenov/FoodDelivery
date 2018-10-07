@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import protectedRoute from '../../utils/protectedRoute'
 import category from '../../api/category'
+import actions from '../../utils/actions'
 
 class EditCategoryFormBase extends Component {
   constructor (props) {
@@ -49,10 +51,11 @@ class EditCategoryFormBase extends Component {
 
     category.edit(this.state.id, fd).then(res => {
       if (res.ModelState) {
-        console.log([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+        this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
         return
       }
 
+      this.props.showSuccess(res)
       this.props.history.push('/moderator/categories')
     })
   }
@@ -84,6 +87,18 @@ class EditCategoryFormBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
 const EditCategoryForm = protectedRoute(EditCategoryFormBase, 'Moderator')
 
-export default EditCategoryForm
+export default connect(mapState, mapDispatch)(EditCategoryForm)

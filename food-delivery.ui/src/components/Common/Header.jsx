@@ -1,31 +1,24 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import auth from '../../api/auth'
+import actions from '../../utils/actions'
 
-export default class Header extends Component {
+class Header extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
       adminDropdownOpen: false,
-      moderatorDropdownOpen: false
+      moderatorDropdownOpen: false,
+      employeeDropdownOpen: false
     }
 
     this.toggleAdmin = this.toggleAdmin.bind(this)
     this.toggleModerator = this.toggleModerator.bind(this)
     this.toggleEmployee = this.toggleEmployee.bind(this)
-  }
-
-  componentDidMount () {
-    this.setState({
-      isAuthed: sessionStorage.getItem('username') !== null,
-      username: sessionStorage.getItem('username'),
-      isAdmin: sessionStorage.getItem('roles') !== null && sessionStorage.getItem('roles').includes('Admin'),
-      isModerator: sessionStorage.getItem('roles') !== null && sessionStorage.getItem('roles').includes('Moderator'),
-      adminDropdownOpen: false,
-      moderatorDropdownOpen: false,
-      employeeDropdownOpen: false
-    })
+    this.onLogout = this.onLogout.bind(this)
   }
 
   toggleAdmin () {
@@ -44,6 +37,14 @@ export default class Header extends Component {
     this.setState(prevState => ({
       employeeDropdownOpen: !prevState.employeeDropdownOpen
     }))
+  }
+
+  onLogout () {
+    auth.logout().then(res => {
+      this.props.clearUserData()
+      this.props.showSuccess(res.Message || res)
+      this.props.history.push('/')
+    })
   }
 
   render () {
@@ -100,10 +101,25 @@ export default class Header extends Component {
             {!this.props.isAuthed && <li><Link className='nav-link' to='/account/register'>Register</Link></li>}
             {!this.props.isAuthed && <li><Link className='nav-link' to='/account/login'>Login</Link></li>}
             {this.props.isAuthed && <li><Link className='nav-link' to='/account/user'>Hello {this.props.username}!</Link></li>}
-            {this.props.isAuthed && <li><a className='nav-link' href='javascript:void(0)' onClick={this.props.onLogout}>Logout</a></li>}
+            {this.props.isAuthed && <li><a className='nav-link' href='javascript:void(0)' onClick={this.onLogout}>Logout</a></li>}
           </ul>
         </div>
       </nav>
     )
   }
 }
+
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
+export default connect(mapState, mapDispatch)(Header)

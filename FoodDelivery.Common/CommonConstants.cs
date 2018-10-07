@@ -18,8 +18,11 @@
         public const string Edited = "Edited";
         public const string Deleted = "Deleted";
 
+        public const string Locked = "Locked";
+        public const string Unlocked = "Unlocked";
+
         public const string DataImage = "data:image/jpeg;base64,";
 
-        public const string ErrorMessage = "errorMessage";
+        public const string ErrorKey = "error";
     }
 }

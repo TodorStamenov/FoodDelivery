@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import order from '../../api/order'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
+import actions from '../../utils/actions'
 
 const tableHeadNames = ['Status', 'Products', 'Price', 'Time Stamp', 'Actions']
 
@@ -54,7 +56,7 @@ class UserOrderPageBase extends Component {
       })
 
     order.submitOrder(this.state.address, products).then(res => {
-      console.log(res)
+      this.props.showSuccess(res)
       this.orderQueue()
       this.pendingOrder()
     })
@@ -62,14 +64,14 @@ class UserOrderPageBase extends Component {
 
   clearOrder () {
     order.clearProducts().then(res => {
-      console.log(res)
+      this.props.showSuccess(res)
       this.pendingOrder()
     })
   }
 
   removeProduct (id) {
     order.removeProduct(id).then(res => {
-      console.log(res)
+      this.props.showSuccess(res)
       this.pendingOrder()
     })
   }
@@ -222,6 +224,19 @@ class UserOrderPageBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const UserOrderPage = protectedRoute(UserOrderPageBase, 'authed')
 
-export default UserOrderPage
+export default connect(mapState, mapDispatch)(UserOrderPage)

@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { matchPath } from 'react-router'
 import product from '../../api/product'
 import category from '../../api/category'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
+import actions from '../../utils/actions'
 
 class ProductsPageBase extends Component {
   constructor (props) {
@@ -67,7 +69,12 @@ class ProductsPageBase extends Component {
 
   deleteProduct (id) {
     product.remove(id).then(res => {
-      console.log(res)
+      if (res.ModelState) {
+        this.props.showError([...new Set(Object.values(res.ModelState).join(',').split(','))].join('\n'))
+        return
+      }
+
+      this.props.showSuccess(res)
       this.getProducts(this.state.productsPage.CurrentPage)
     })
   }
@@ -130,6 +137,19 @@ class ProductsPageBase extends Component {
   }
 }
 
+function mapState (state) {
+  return {
+    appState: state
+  }
+}
+
+function mapDispatch (dispatch) {
+  return {
+    showError: message => dispatch(actions.showErrorNotification(message)),
+    showSuccess: message => dispatch(actions.showSuccessNotification(message))
+  }
+}
+
 const ProductsPage = protectedRoute(ProductsPageBase, 'Moderator')
 
-export default ProductsPage
+export default connect(mapState, mapDispatch)(ProductsPage)
