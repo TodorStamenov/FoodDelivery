@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import './Footer.css'
 
 const Footer = () => (
-  <div className='row'>
-    <footer style={{position: 'fixed', bottom: 0}} className='col-md-2 offset-md-10'>
-      <p>&copy; {new Date().getFullYear()} - Food Delivery</p>
+  <Fragment>
+    <div className='filler' />
+    <footer className='footer text-white bg-secondary fixed-bottom pt-3 pr-5'>
+      <p className='float-right'>&copy; {new Date().getFullYear()} - Food Delivery</p>
     </footer>
-  </div>
+  </Fragment>
 )
 
 export default Footer

@@ -84,7 +84,7 @@ class App extends Component {
         <Notification />
         <div className='container body-content'>
           <Switch>
-            <Route exact path='/' component={() => <HomePage isAuthed={this.state.isAuthed} toggleProducts={this.toggleDetails} />} />
+            <Route exact path='/' component={() => <HomePage isAuthed={this.state.isAuthed} />} />
             <Route exact path='/account/user' component={ChangePasswordForm} />
             <Route exact path='/account/login' component={() => <LoginForm {...this.props} saveUserData={this.saveUserData} />} />
             <Route exact path='/account/register' component={() => <RegisterForm {...this.props} saveUserData={this.saveUserData} />} />
@@ -115,7 +115,7 @@ class App extends Component {
             <Route exact path='/user/order' component={UserOrderPage} />
             <Route exact path='/user/orders' component={UserOrdersPage} />
 
-            <Route component={() => <HomePage isAuthed={this.state.isAuthed} toggleProducts={this.toggleDetails} />} />
+            <Route component={() => <HomePage isAuthed={this.state.isAuthed} />} />
           </Switch>
         </div>
         <Footer />

@@ -1,8 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import home from '../../api/home'
 import order from '../../api/order'
 import actions from '../../utils/actions'
+import './HomePage.css'
+
+const hiddenClassName = 'hp-product-hidden'
 
 class HomePage extends Component {
   constructor (props) {
@@ -15,12 +18,21 @@ class HomePage extends Component {
 
     this.renderCards = this.renderCards.bind(this)
     this.addProduct = this.addProduct.bind(this)
+    this.toggleProducts = this.toggleProducts.bind(this)
   }
 
   componentDidMount () {
     this._isMounted = true
     home.index().then(res => {
       if (this._isMounted) {
+        for (const category of res) {
+          for (const product of category.Products) {
+            product.toggleClass = hiddenClassName
+          }
+        }
+
+        console.log(res)
+
         this.setState({
           categories: res
         })
@@ -38,12 +50,32 @@ class HomePage extends Component {
     })
   }
 
+  toggleProducts (id) {
+    let categories = this.state.categories
+
+    for (const category of categories) {
+      if (category.Id === id) {
+        for (const product of category.Products) {
+          product.toggleClass = product.toggleClass ? '' : hiddenClassName
+        }
+      } else {
+        for (const product of category.Products) {
+          product.toggleClass = hiddenClassName
+        }
+      }
+    }
+
+    this.setState({
+      categories
+    })
+  }
+
   renderCards () {
     let result = []
 
     for (let i = 0; i < this.state.categories.length; i += 3) {
       result.push(
-        <React.Fragment key={i}>
+        <Fragment key={i}>
           <div className='row'>
             {this.state.categories.slice(i, i + 3).map(c =>
               <div key={c.Id} className='col-md-4'>
@@ -53,13 +85,15 @@ class HomePage extends Component {
                   <img className='card-img-top' height='350px' src={c.Image} alt='Category img' />
                   <div className='card-body'>
                     <ul className='list-group'>
-                      <li className='list-group-item text-center' onClick={() => this.props.toggleProducts(c.Id, 'product')}>Products</li>
+                      <li className='list-group-item text-center' onClick={() => this.toggleProducts(c.Id)}>Products</li>
                       {c.Products.map(p =>
-                        <li key={p.Id} style={{display: 'none'}} data-id={c.Id} className='list-group-item product'>
+                        <li key={p.Id} className={'list-group-item ' + p.toggleClass}>
                           {p.Name} - ${p.Price.toFixed(2)} - {p.Mass}g
                           {
                             !this.props.isAuthed ||
-                            <button onClick={() => this.addProduct(p.Id)} className='btn btn-sm ml-2 btn-outline-secondary float-right'>Order</button>
+                            <button onClick={() => this.addProduct(p.Id)} className='btn btn-sm ml-2 btn-outline-secondary float-right'>
+                              Order
+                            </button>
                           }
                         </li>)
                       }
@@ -70,7 +104,7 @@ class HomePage extends Component {
             )}
           </div>
           <br />
-        </React.Fragment>
+        </Fragment>
       )
     }
 
