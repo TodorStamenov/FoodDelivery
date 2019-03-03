@@ -30,7 +30,7 @@ class Notification extends Component {
 
   render () {
     return (
-      <div className='row'>
+      <div className='row' style={{display: this.state.message ? '' : 'none'}}>
         <div role='alert' className={'offset-3 col-md-6 text-center alert alert-' + this.state.type}>{this.state.message}</div>
       </div>
     )

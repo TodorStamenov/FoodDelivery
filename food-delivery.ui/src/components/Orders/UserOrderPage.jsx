@@ -1,11 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import order from '../../api/order'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 import actions from '../../utils/actions'
+import './UserOrderPage.css'
 
 const tableHeadNames = ['Status', 'Products', 'Price', 'Time Stamp', 'Actions']
+const hiddenClassName = 'uop-product-hidden'
 
 class UserOrderPageBase extends Component {
   constructor (props) {
@@ -27,6 +29,7 @@ class UserOrderPageBase extends Component {
     this.renderTable = this.renderTable.bind(this)
     this.handleToppingCheck = this.handleToppingCheck.bind(this)
     this.onChange = this.onChange.bind(this)
+    this.toggleDetails = this.toggleDetails.bind(this)
   }
 
   onChange (e) {
@@ -43,6 +46,26 @@ class UserOrderPageBase extends Component {
 
   componentWillUnmount () {
     this._isMounted = false
+  }
+
+  toggleDetails (id) {
+    let orders = this.state.orders
+
+    for (const order of orders) {
+      if (order.Id === id) {
+        for (const product of order.Products) {
+          product.toggleClass = product.toggleClass ? '' : hiddenClassName
+        }
+      } else {
+        for (const product of order.Products) {
+          product.toggleClass = hiddenClassName
+        }
+      }
+    }
+
+    this.setState({
+      orders
+    })
   }
 
   submitOrder () {
@@ -89,6 +112,12 @@ class UserOrderPageBase extends Component {
   orderQueue () {
     order.userQueue().then(res => {
       if (this._isMounted) {
+        for (const order of res) {
+          for (const product of order.Products) {
+            product.toggleClass = hiddenClassName
+          }
+        }
+
         this.setState({
           orders: res
         })
@@ -126,7 +155,7 @@ class UserOrderPageBase extends Component {
 
     for (let i = 0; i < this.state.products.length; i += 4) {
       result.push(
-        <React.Fragment key={i}>
+        <Fragment key={i}>
           <hr />
           <div className='row'>
             {this.state.products.slice(i, i + 4).map((p, j) =>
@@ -150,13 +179,15 @@ class UserOrderPageBase extends Component {
                     }
                   </div>
                   <div className='card-footer text-center bg-white'>
-                    <button onClick={() => this.removeProduct(p.Id)} className='btn btn-outline-secondary btn-sm'>Remove</button>
+                    <button onClick={() => this.removeProduct(p.Id)} className='btn btn-outline-secondary btn-sm'>
+                      Remove
+                    </button>
                   </div>
                 </div>
               </div>
             )}
           </div>
-        </React.Fragment>
+        </Fragment>
       )
     }
 
@@ -186,25 +217,29 @@ class UserOrderPageBase extends Component {
             {<TableHead heads={tableHeadNames} />}
             <tbody>
               {this.state.orders.map(o =>
-                <React.Fragment key={o.Id}>
+                <Fragment key={o.Id}>
                   <tr>
                     <td>{o.Status}</td>
                     <td>{o.ProductsCount}</td>
                     <td>${o.Price.toFixed(2)}</td>
                     <td>{o.TimeStamp}</td>
                     <td>
-                      <button onClick={() => this.props.toggleDetails(o.Id, 'order-details')} className='btn btn-secondary btn-sm'>Details</button>
+                      <button
+                        onClick={() => this.toggleDetails(o.Id)}
+                        className='btn btn-secondary btn-sm'>
+                        Details
+                      </button>
                     </td>
                   </tr>
                   {o.Products.map((p, i) =>
-                    <tr key={i} className='order-details' style={{ display: 'none' }} data-id={o.Id}>
+                    <tr key={i} className={p.toggleClass}>
                       <td colSpan={2}>{p.Name}</td>
                       <td>${p.Price.toFixed(2)}</td>
                       <td>{p.Mass}g</td>
                       <td />
                     </tr>)
                   }
-                </React.Fragment>)
+                </Fragment>)
               }
             </tbody>
           </table>

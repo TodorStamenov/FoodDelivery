@@ -46,7 +46,6 @@ class App extends Component {
 
     this.clearUserData = this.clearUserData.bind(this)
     this.saveUserData = this.saveUserData.bind(this)
-    this.toggleDetails = this.toggleDetails.bind(this)
   }
 
   saveUserData (res) {
@@ -70,22 +69,6 @@ class App extends Component {
     })
   }
 
-  toggleDetails (id, className) {
-    let elements = document.getElementsByClassName(className)
-
-    for (const element of elements) {
-      if (element.getAttribute('data-id') === id) {
-        if (element.style.display === '') {
-          element.style.display = 'none'
-        } else {
-          element.style.display = ''
-        }
-      } else {
-        element.style.display = 'none'
-      }
-    }
-  }
-
   render () {
     return (
       <div style={{'overflowX': 'hidden'}}>
@@ -98,7 +81,6 @@ class App extends Component {
           username={this.state.username}
           clearUserData={this.clearUserData}
         />
-        <hr />
         <Notification />
         <div className='container body-content'>
           <Switch>
@@ -114,7 +96,7 @@ class App extends Component {
             <Route exact path='/moderator/categories/create' component={CreateCategoryForm} />
             <Route exact path='/moderator/categories/edit/:id' component={EditCategoryForm} />
 
-            <Route exact path='/moderator/feedbacks' component={() => <FeedbacksPage toggleDetails={this.toggleDetails} />} />
+            <Route exact path='/moderator/feedbacks' component={FeedbacksPage} />
             <Route exact path='/user/feedbacks/create/:id' component={CreateFeedbackForm} />
 
             <Route exact path='/moderator/toppings' component={ToppingsPage} />
@@ -128,15 +110,14 @@ class App extends Component {
             <Route exact path='/moderator/orders' component={ModeratorOrdersPage} />
             <Route exact path='/moderator/orders/details/:id' component={OrderDetailsPage} />
 
-            <Route exact path='/employee/orders' component={() => <EmployeeOrdersPage toggleDetails={this.toggleDetails} />} />
+            <Route exact path='/employee/orders' component={EmployeeOrdersPage} />
 
-            <Route exact path='/user/order' component={() => <UserOrderPage toggleDetails={this.toggleDetails} />} />
-            <Route exact path='/user/orders' component={() => <UserOrdersPage toggleDetails={this.toggleDetails} />} />
+            <Route exact path='/user/order' component={UserOrderPage} />
+            <Route exact path='/user/orders' component={UserOrdersPage} />
 
             <Route component={() => <HomePage isAuthed={this.state.isAuthed} toggleProducts={this.toggleDetails} />} />
           </Switch>
         </div>
-        <hr />
         <Footer />
       </div>
     )

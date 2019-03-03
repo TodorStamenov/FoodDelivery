@@ -49,7 +49,7 @@ class Header extends Component {
 
   render () {
     return (
-      <nav className='navbar navbar-expand-lg navbar-dark text-white bg-secondary'>
+      <nav className='mb-3 navbar navbar-expand-lg navbar-dark text-white bg-secondary'>
         <Link className='navbar-brand' to='/'>Food Delivery</Link>
         <button
           className='navbar-toggler'

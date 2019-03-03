@@ -1,11 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import order from '../../api/order'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
 import actions from '../../utils/actions'
+import './EmployeeOrdersPage.css'
 
 const tableHeadNames = ['User', 'Address', 'Time Stamp', 'Actions']
+const hiddenClassName = 'eop-order-hidden'
 
 class EmployeeOrdersPageBase extends Component {
   constructor (props) {
@@ -19,6 +21,7 @@ class EmployeeOrdersPageBase extends Component {
     this.updateOrders = this.updateOrders.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.loadOrders = this.loadOrders.bind(this)
+    this.toggleDetails = this.toggleDetails.bind(this)
   }
 
   componentDidMount () {
@@ -33,10 +36,36 @@ class EmployeeOrdersPageBase extends Component {
   loadOrders () {
     order.employeeOrders().then(res => {
       if (this._isMounted) {
+        for (const order of res) {
+          for (const product of order.Products) {
+            product.toggleClass = hiddenClassName
+          }
+        }
+
         this.setState({
           orders: res
         })
       }
+    })
+  }
+
+  toggleDetails (id) {
+    let orders = this.state.orders
+
+    for (const order of orders) {
+      if (order.Id === id) {
+        for (const product of order.Products) {
+          product.toggleClass = product.toggleClass ? '' : hiddenClassName
+        }
+      } else {
+        for (const product of order.Products) {
+          product.toggleClass = hiddenClassName
+        }
+      }
+    }
+
+    this.setState({
+      orders
     })
   }
 
@@ -82,7 +111,7 @@ class EmployeeOrdersPageBase extends Component {
             {<TableHead heads={tableHeadNames} />}
             <tbody>
               {this.state.orders.map(o =>
-                <React.Fragment key={o.Id}>
+                <Fragment key={o.Id}>
                   <tr>
                     <td>{o.User}</td>
                     <td>{o.Address}</td>
@@ -95,16 +124,22 @@ class EmployeeOrdersPageBase extends Component {
                           </option>)
                         }
                       </select>
-                      <button className='btn btn-secondary btn-sm ml-2' onClick={() => this.props.toggleDetails(o.Id, 'product')}>Details</button>
+                      <button
+                        className='btn btn-secondary btn-sm ml-2'
+                        onClick={() => this.toggleDetails(o.Id)}>
+                        Details
+                      </button>
                     </td>
                   </tr>
                   {o.Products.map((p, i) =>
-                    <tr key={i} style={{ display: 'none' }} className='product' data-id={o.Id}>
+                    <tr key={i} className={p.toggleClass}>
                       <td>{p.Name}</td>
-                      <td colSpan={3}>Toppings: {p.Toppings.map(t => t.Name).join(' | ')}</td>
+                      <td colSpan={3}>
+                        {(p.Toppings.length === 0 ? 'Without Toppings' : p.Toppings.map(t => t.Name).join(' | '))}
+                      </td>
                     </tr>)
                   }
-                </React.Fragment>)
+                </Fragment>)
               }
             </tbody>
           </table>

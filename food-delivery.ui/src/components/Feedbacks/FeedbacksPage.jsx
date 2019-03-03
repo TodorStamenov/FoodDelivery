@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import feedback from '../../api/feedback'
 import TableHead from '../Common/TableHead'
 import protectedRoute from '../../utils/protectedRoute'
+import './FeedbacksPage.css'
 
 const tableHeadNames = ['Product', 'Rate', 'Timestamp', 'User', 'Actions']
+const hiddenClassName = 'fp-feedback-hidden'
 
 class FeedbacksPageBase extends Component {
   constructor (props) {
@@ -19,6 +21,7 @@ class FeedbacksPageBase extends Component {
 
     this.renderPageLinks = this.renderPageLinks.bind(this)
     this.getFeedbacks = this.getFeedbacks.bind(this)
+    this.toggleDetails = this.toggleDetails.bind(this)
   }
 
   componentDidMount () {
@@ -33,11 +36,37 @@ class FeedbacksPageBase extends Component {
   getFeedbacks (page) {
     feedback.all(page).then(res => {
       if (this._isMounted) {
+        for (const feedback of res.Feedbacks) {
+          feedback.toggleClass = hiddenClassName
+        }
+
         this.setState({
           feedbackPage: res
         })
       }
     })
+  }
+
+  toggleDetails (id) {
+    let feedbacks = this.state.feedbackPage.Feedbacks
+
+    for (const feedback of feedbacks) {
+      if (feedback.Id === id) {
+        feedback.toggleClass = feedback.toggleClass ? '' : hiddenClassName
+      } else {
+        feedback.toggleClass = hiddenClassName
+      }
+    }
+
+    this.setState(prevState => ({
+      feedbackPage: {
+        CurrentPage: prevState.feedbackPage.CurrentPage,
+        EntriesPerPage: prevState.feedbackPage.EntriesPerPage,
+        Feedbacks: feedbacks,
+        TotalEntries: prevState.feedbackPage.TotalEntries,
+        TotalPages: prevState.feedbackPage.TotalPages
+      }
+    }))
   }
 
   renderPageLinks () {
@@ -52,10 +81,16 @@ class FeedbacksPageBase extends Component {
         <ul className='pagination'>
           {pageLinks.map(p =>
             <li key={p} className='page-item'>
-              <a onClick={() => this.getFeedbacks(p)} className={'page-link ' + (p === this.state.feedbackPage.CurrentPage ? 'text-light bg-secondary' : '')}>{p}</a>
-            </li>)}
+              <a
+                onClick={() => this.getFeedbacks(p)}
+                className={'page-link ' + (p === this.state.feedbackPage.CurrentPage ? 'text-light bg-secondary' : '')}>
+                {p}
+              </a>
+            </li>)
+          }
         </ul>
-      </nav>)
+      </nav>
+    )
   }
 
   render () {
@@ -76,18 +111,24 @@ class FeedbacksPageBase extends Component {
             {<TableHead heads={tableHeadNames} />}
             <tbody>
               {this.state.feedbackPage.Feedbacks.map(f =>
-                <React.Fragment key={f.Id}>
+                <Fragment key={f.Id}>
                   <tr>
                     <td>{f.ProductName}</td>
                     <td>{f.Rate}</td>
                     <td>{f.TimeStamp}</td>
                     <td>{f.User}</td>
-                    <td><button onClick={() => this.props.toggleDetails(f.Id.toString(), 'feedback-content')} className='btn btn-secondary btn-sm'>Details</button></td>
+                    <td>
+                      <button
+                        onClick={() => this.toggleDetails(f.Id)}
+                        className='btn btn-secondary btn-sm'>
+                        Details
+                      </button>
+                    </td>
                   </tr>
-                  <tr className='feedback-content' style={{display: 'none'}} data-id={f.Id}>
+                  <tr className={f.toggleClass}>
                     <td colSpan={tableHeadNames.length}>{f.Content}</td>
                   </tr>
-                </React.Fragment>)
+                </Fragment>)
               }
             </tbody>
           </table>
