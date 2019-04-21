@@ -1,3 +1,7 @@
 .eop-order-hidden {
   display: none;
 }
+
+td.form-inline.form-group {
+  margin-bottom: 0;
+}

@@ -71,7 +71,7 @@ class App extends Component {
 
   render () {
     return (
-      <div style={{'overflowX': 'hidden'}}>
+      <div>
         <Header
           {...this.props}
           isAdmin={this.state.isAuthed && sessionStorage.getItem('roles') && sessionStorage.getItem('roles').includes('Admin')}

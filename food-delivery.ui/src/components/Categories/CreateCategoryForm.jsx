@@ -65,13 +65,15 @@ class CreateCategoryFormBase extends Component {
           </div>
           <div className='form-group'>
             <input
+              className='d-none'
               onChange={this.fileSelectedHandler}
               type='file'
               name='image'
-              accept='image/*'
-              style={{ 'display': 'none' }} />
-
-            <button type='button' className='btn btn-dark' onClick={() => document.getElementsByName('image')[0].click()}>
+              accept='image/*' />
+            <button
+              type='button'
+              className='btn btn-dark'
+              onClick={() => document.getElementsByName('image')[0].click()}>
               Choose an Image
             </button>
           </div>

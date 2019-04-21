@@ -51,7 +51,9 @@ class OrderDetailsPageBase extends Component {
       <div>
         <div className='row'>
           <div className='offset-md-2 col-md-8'>
-            <h2>Orders Details <Link className='btn btn-outline-secondary btn-ml-2' to='/moderator/orders'>Back</Link></h2>
+            <h2>
+              Orders Details <Link className='btn btn-outline-secondary btn-ml-2' to='/moderator/orders'>Back</Link>
+            </h2>
           </div>
         </div>
         <br />

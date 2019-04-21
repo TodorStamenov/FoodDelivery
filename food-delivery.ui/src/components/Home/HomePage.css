@@ -1,3 +1,11 @@
 .hp-product-hidden {
   display: none !important;
 }
+
+h4.text-center.card-title {
+  padding-top: 25px
+}
+
+li.list-group-item.text-center:hover {
+  cursor: pointer;
+}

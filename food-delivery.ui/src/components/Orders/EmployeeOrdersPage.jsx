@@ -101,8 +101,15 @@ class EmployeeOrdersPageBase extends Component {
     return (
       <div>
         <div className='row'>
-          <div className='col-md-6'>
-            <h2>Orders Queue - <button onClick={this.updateOrders} className='btn btn-md btn-secondary'>Update Orders</button></h2>
+          <div className='col-md-12'>
+            <h2>
+              Orders Queue -
+              <button
+                onClick={this.updateOrders}
+                className='btn btn-md btn-secondary ml-2'>
+                Update Orders
+              </button>
+            </h2>
           </div>
         </div>
         <br />
@@ -116,13 +123,14 @@ class EmployeeOrdersPageBase extends Component {
                     <td>{o.User}</td>
                     <td>{o.Address}</td>
                     <td>{o.TimeStamp}</td>
-                    <td className='input-group'>
-                      <select onChange={e => this.handleChange(e, o.Id)} className='form-control'>
+                    <td className='form-inline form-group'>
+                      <select
+                        value={o.Statuses.find(s => o.Status === s)}
+                        onChange={e => this.handleChange(e, o.Id)}
+                        className='form-control'>
                         {o.Statuses.sort((x, y) => y.localeCompare(x)).map(s =>
-                          <option key={s} value={s} selected={(o.Status === s ? 'selected' : '')}>
-                            {s}
-                          </option>)
-                        }
+                          <option key={s} value={s}>{s}</option>
+                        )}
                       </select>
                       <button
                         className='btn btn-secondary btn-sm ml-2'
@@ -135,12 +143,16 @@ class EmployeeOrdersPageBase extends Component {
                     <tr key={i} className={p.toggleClass}>
                       <td>{p.Name}</td>
                       <td colSpan={3}>
-                        {(p.Toppings.length === 0 ? 'Without Toppings' : p.Toppings.map(t => t.Name).join(' | '))}
+                        {(
+                          p.Toppings.length === 0
+                            ? 'Without Toppings'
+                            : p.Toppings.map(t => t.Name).join(' | ')
+                        )}
                       </td>
-                    </tr>)
-                  }
-                </Fragment>)
-              }
+                    </tr>
+                  )}
+                </Fragment>
+              )}
             </tbody>
           </table>
         </div>

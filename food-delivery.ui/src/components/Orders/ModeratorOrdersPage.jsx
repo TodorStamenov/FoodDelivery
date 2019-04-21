@@ -123,11 +123,19 @@ class ModeratorOrdersPageBase extends Component {
     return (
       <div>
         <div className='row'>
-          <div className='col-md-6'>
+          <div className='col-md-12'>
             <h2>
               Orders -
-              <button onClick={() => this.queue(true)} className={'btn btn-md ml-2 ' + this.state.queueButtonClass}>Orders Queue</button>
-              <button onClick={() => this.history(true)} className={'btn btn-md ml-2 ' + this.state.historyButtonClass}>Orders History</button>
+              <button
+                onClick={() => this.queue(true)}
+                className={'btn btn-md ml-2 ' + this.state.queueButtonClass}>
+                Orders Queue
+              </button>
+              <button
+                onClick={() => this.history(true)}
+                className={'btn btn-md ml-2 ' + this.state.historyButtonClass}>
+                Orders History
+              </button>
             </h2>
           </div>
         </div>

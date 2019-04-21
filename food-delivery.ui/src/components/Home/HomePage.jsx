@@ -31,8 +31,6 @@ class HomePage extends Component {
           }
         }
 
-        console.log(res)
-
         this.setState({
           categories: res
         })
@@ -80,7 +78,7 @@ class HomePage extends Component {
             {this.state.categories.slice(i, i + 3).map(c =>
               <div key={c.Id} className='col-md-4'>
                 <div className='card' >
-                  <h4 style={{paddingTop: '25px'}} className='text-center card-title'>{c.Name}</h4>
+                  <h4 className='text-center card-title'>{c.Name}</h4>
                   <hr />
                   <img className='card-img-top' height='350px' src={c.Image} alt='Category img' />
                   <div className='card-body'>

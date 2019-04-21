@@ -133,9 +133,9 @@ class UserOrderPageBase extends Component {
     let result = []
 
     result.push(
-      <div key={-1} className='row'>
-        <div className='col-md-1' style={{ 'paddingTop': '5px' }}>
-          <label htmlFor='address'>Address:</label>
+      <div key={-1} className='row align-items-center'>
+        <div className='col-md-1'>
+          <label className='mb-0' htmlFor='address'>Address:</label>
         </div>
         <div className='col-md-3'>
           <input
@@ -160,11 +160,11 @@ class UserOrderPageBase extends Component {
           <div className='row'>
             {this.state.products.slice(i, i + 4).map((p, j) =>
               <div key={p.Id + j} className='col-md-3'>
-                <div className='card' style={{ height: '100%' }} >
+                <div className='card h-100'>
                   <div className='card-header text-center text-light bg-secondary'>
                     {p.Name} | ${p.Price.toFixed(2)} | {p.Mass}g
                   </div>
-                  <div className='card-body' style={{ 'paddingTop': '15px' }}>
+                  <div className='card-body'>
                     {p.Toppings.map((t, k) =>
                       <div key={t.Id} className='form-check'>
                         <label className='form-check-label'>
@@ -175,8 +175,8 @@ class UserOrderPageBase extends Component {
                             onChange={e => this.handleToppingCheck(e, i + j, k)} />
                           {t.Name}
                         </label>
-                      </div>)
-                    }
+                      </div>
+                    )}
                   </div>
                   <div className='card-footer text-center bg-white'>
                     <button onClick={() => this.removeProduct(p.Id)} className='btn btn-outline-secondary btn-sm'>

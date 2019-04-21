@@ -101,7 +101,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.user.AddRole(username, roleName);
-                return Ok($"User {username} successfully added to {roleName} role.");
+                return Ok($"Role {roleName} was successfully added to user {username}.");
             }
             catch (BadRequestException bre)
             {
@@ -121,7 +121,7 @@ namespace FoodDelivery.Api.Controllers
             try
             {
                 this.user.RemoveRole(username, roleName);
-                return Ok($"User {username} successfully removed from {roleName} role.");
+                return Ok($"Role {roleName} was successfully removed from user {username}.");
             }
             catch (BadRequestException bre)
             {
