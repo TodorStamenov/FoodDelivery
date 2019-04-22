@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import order from '../../api/order'
 import TableHead from '../Common/TableHead'
+import ProductOrderCard from '../Common/ProductOrderCard'
 import protectedRoute from '../../utils/protectedRoute'
 import actions from '../../utils/actions'
 import './UserOrderPage.css'
@@ -25,8 +26,9 @@ class UserOrderPageBase extends Component {
     this.submitOrder = this.submitOrder.bind(this)
     this.orderQueue = this.orderQueue.bind(this)
     this.pendingOrder = this.pendingOrder.bind(this)
-    this.renderCards = this.renderCards.bind(this)
-    this.renderTable = this.renderTable.bind(this)
+    this.renderOrderForm = this.renderOrderForm.bind(this)
+    this.renderProductCards = this.renderProductCards.bind(this)
+    this.renderOrdersInProgressTable = this.renderOrdersInProgressTable.bind(this)
     this.handleToppingCheck = this.handleToppingCheck.bind(this)
     this.onChange = this.onChange.bind(this)
     this.toggleDetails = this.toggleDetails.bind(this)
@@ -69,6 +71,11 @@ class UserOrderPageBase extends Component {
   }
 
   submitOrder () {
+    if (!this.state.address) {
+      this.props.showError('Please fill your address!')
+      return
+    }
+
     let products = this.state
       .products
       .map(p => {
@@ -125,15 +132,13 @@ class UserOrderPageBase extends Component {
     })
   }
 
-  renderCards () {
+  renderOrderForm () {
     if (this.state.products.length === 0) {
       return <h4>You do not have any pending products</h4>
     }
 
-    let result = []
-
-    result.push(
-      <div key={-1} className='row align-items-center'>
+    return (
+      <div className='row align-items-center'>
         <div className='col-md-1'>
           <label className='mb-0' htmlFor='address'>Address:</label>
         </div>
@@ -152,40 +157,29 @@ class UserOrderPageBase extends Component {
         </div>
       </div>
     )
+  }
+
+  renderProductCards () {
+    let result = []
 
     for (let i = 0; i < this.state.products.length; i += 4) {
       result.push(
         <Fragment key={i}>
           <hr />
           <div className='row'>
-            {this.state.products.slice(i, i + 4).map((p, j) =>
-              <div key={p.Id + j} className='col-md-3'>
-                <div className='card h-100'>
-                  <div className='card-header text-center text-light bg-secondary'>
-                    {p.Name} | ${p.Price.toFixed(2)} | {p.Mass}g
-                  </div>
-                  <div className='card-body'>
-                    {p.Toppings.map((t, k) =>
-                      <div key={t.Id} className='form-check'>
-                        <label className='form-check-label'>
-                          <input
-                            className='form-check-input'
-                            type='checkbox'
-                            value={t.Id}
-                            onChange={e => this.handleToppingCheck(e, i + j, k)} />
-                          {t.Name}
-                        </label>
-                      </div>
-                    )}
-                  </div>
-                  <div className='card-footer text-center bg-white'>
-                    <button onClick={() => this.removeProduct(p.Id)} className='btn btn-outline-secondary btn-sm'>
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            {
+              this.state.products
+                .slice(i, i + 4)
+                .map((p, j) =>
+                  <ProductOrderCard
+                    i={i}
+                    j={j}
+                    key={p.Id + j}
+                    product={p}
+                    handleToppingCheck={this.handleToppingCheck}
+                    removeProduct={this.removeProduct} />
+                )
+            }
           </div>
         </Fragment>
       )
@@ -205,7 +199,7 @@ class UserOrderPageBase extends Component {
     }
   }
 
-  renderTable () {
+  renderOrdersInProgressTable () {
     if (this.state.orders.length === 0) {
       return <h4>You do not have any orders in progress</h4>
     }
@@ -216,30 +210,34 @@ class UserOrderPageBase extends Component {
           <table className='table table-hover'>
             {<TableHead heads={tableHeadNames} />}
             <tbody>
-              {this.state.orders.map(o =>
-                <Fragment key={o.Id}>
-                  <tr>
-                    <td>{o.Status}</td>
-                    <td>{o.ProductsCount}</td>
-                    <td>${o.Price.toFixed(2)}</td>
-                    <td>{o.TimeStamp}</td>
-                    <td>
-                      <button
-                        onClick={() => this.toggleDetails(o.Id)}
-                        className='btn btn-secondary btn-sm'>
-                        Details
-                      </button>
-                    </td>
-                  </tr>
-                  {o.Products.map((p, i) =>
-                    <tr key={i} className={p.toggleClass}>
-                      <td colSpan={2}>{p.Name}</td>
-                      <td>${p.Price.toFixed(2)}</td>
-                      <td>{p.Mass}g</td>
-                      <td />
-                    </tr>)
-                  }
-                </Fragment>)
+              {
+                this.state.orders.map(o =>
+                  <Fragment key={o.Id}>
+                    <tr>
+                      <td>{o.Status}</td>
+                      <td>{o.ProductsCount}</td>
+                      <td>${o.Price.toFixed(2)}</td>
+                      <td>{o.TimeStamp}</td>
+                      <td>
+                        <button
+                          onClick={() => this.toggleDetails(o.Id)}
+                          className='btn btn-secondary btn-sm'>
+                          Details
+                        </button>
+                      </td>
+                    </tr>
+                    {
+                      o.Products.map((p, i) =>
+                        <tr key={i} className={p.toggleClass}>
+                          <td colSpan={2}>{p.Name}</td>
+                          <td>${p.Price.toFixed(2)}</td>
+                          <td>{p.Mass}g</td>
+                          <td />
+                        </tr>
+                      )
+                    }
+                  </Fragment>
+                )
               }
             </tbody>
           </table>
@@ -251,9 +249,10 @@ class UserOrderPageBase extends Component {
   render () {
     return (
       <div>
-        {this.renderCards()}
+        {this.renderOrderForm()}
+        {this.renderProductCards()}
         <hr />
-        {this.renderTable()}
+        {this.renderOrdersInProgressTable()}
       </div>
     )
   }

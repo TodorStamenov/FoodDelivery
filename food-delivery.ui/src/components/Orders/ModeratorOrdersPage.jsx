@@ -122,7 +122,7 @@ class ModeratorOrdersPageBase extends Component {
   render () {
     return (
       <div>
-        <div className='row'>
+        <div className='row mb-2'>
           <div className='col-md-12'>
             <h2>
               Orders -
@@ -139,23 +139,30 @@ class ModeratorOrdersPageBase extends Component {
             </h2>
           </div>
         </div>
-        <br />
         <div className='row'>
-          <table className='table table-hover'>
-            {<TableHead heads={tableHeadNames} />}
-            <tbody>
-              {this.state.orders.map(o =>
-                <tr key={o.Id}>
-                  <td>{o.User}</td>
-                  <td>${o.Price.toFixed(2)}</td>
-                  <td>{o.Status}</td>
-                  <td>{o.ProductsCount}</td>
-                  <td>{o.TimeStamp}</td>
-                  <td><Link to={'/moderator/orders/details/' + o.Id} className='btn btn-secondary btn-sm'>Details</Link></td>
-                </tr>)
-              }
-            </tbody>
-          </table>
+          <div className='col-md-12'>
+            <table className='table table-hover'>
+              {<TableHead heads={tableHeadNames} />}
+              <tbody>
+                {
+                  this.state.orders.map(o =>
+                    <tr key={o.Id}>
+                      <td>{o.User}</td>
+                      <td>${o.Price.toFixed(2)}</td>
+                      <td>{o.Status}</td>
+                      <td>{o.ProductsCount}</td>
+                      <td>{o.TimeStamp}</td>
+                      <td>
+                        <Link to={'/moderator/orders/details/' + o.Id} className='btn btn-secondary btn-sm'>
+                          Details
+                        </Link>
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )

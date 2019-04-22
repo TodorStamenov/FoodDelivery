@@ -53,28 +53,36 @@ class ToppingsPageBase extends Component {
   render () {
     return (
       <div>
-        <div className='row'>
-          <div className='col-md-6'>
-            <h2>All Toppings - <Link className='btn btn-secondary btn-md' to='/moderator/toppings/create'>Create new Topping</Link></h2>
+        <div className='row my-4'>
+          <div className='col-md-12'>
+            <h2>
+              All Toppings - <Link className='btn btn-secondary btn-md' to='/moderator/toppings/create'>Create new Topping</Link>
+            </h2>
           </div>
         </div>
-        <br />
-        <br />
         <div className='row'>
-          <table className='table table-hover'>
-            {<TableHead heads={['Name', 'Actions']} />}
-            <tbody>
-              {this.state.toppings.map(t =>
-                <tr key={t.Id}>
-                  <td>{t.Name}</td>
-                  <td>
-                    <Link className='btn btn-secondary btn-sm' to={'/moderator/toppings/edit/' + t.Id}>Edit</Link>
-                    <button onClick={() => this.deleteTopping(t.Id)} className='btn btn-secondary btn-sm ml-2'>Delete</button>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <div className='col-md-12'>
+            <table className='table table-hover'>
+              {<TableHead heads={['Name', 'Actions']} />}
+              <tbody>
+                {
+                  this.state.toppings.map(t =>
+                    <tr key={t.Id}>
+                      <td>{t.Name}</td>
+                      <td>
+                        <Link className='btn btn-secondary btn-sm' to={'/moderator/toppings/edit/' + t.Id}>
+                          Edit
+                        </Link>
+                        <button onClick={() => this.deleteTopping(t.Id)} className='btn btn-secondary btn-sm ml-2'>
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )

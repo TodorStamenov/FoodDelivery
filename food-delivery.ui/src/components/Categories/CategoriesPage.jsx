@@ -33,26 +33,31 @@ class CategoriesPageBase extends Component {
   render () {
     return (
       <div>
-        <div className='row'>
-          <div className='col-md-6'>
-            <h2>All Categories - <Link className='btn btn-secondary btn-md' to='/moderator/categories/create'>Create new Category</Link></h2>
+        <div className='row mb-2'>
+          <div className='col-md-12'>
+            <h2>
+              All Categories - <Link className='btn btn-secondary btn-md' to='/moderator/categories/create'>Create new Category</Link>
+            </h2>
           </div>
         </div>
-        <br />
         <div className='row'>
-          <table className='table table-hover'>
-            {<TableHead heads={['Name', 'Products Count', 'Products', 'Actions']} />}
-            <tbody>
-              {this.state.categories.map(c =>
-                <tr key={c.Id}>
-                  <td>{c.Name}</td>
-                  <td>{c.Products}</td>
-                  <td><Link className='btn btn-secondary btn-sm' to={'/moderator/categories/' + c.Id + '/products'}>Products</Link></td>
-                  <td><Link className='btn btn-secondary btn-sm' to={'/moderator/categories/edit/' + c.Id}>Edit</Link></td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <div className='col-md-12'>
+            <table className='table table-hover'>
+              {<TableHead heads={['Name', 'Products Count', 'Products', 'Actions']} />}
+              <tbody>
+                {
+                  this.state.categories.map(c =>
+                    <tr key={c.Id}>
+                      <td>{c.Name}</td>
+                      <td>{c.Products}</td>
+                      <td><Link className='btn btn-secondary btn-sm' to={'/moderator/categories/' + c.Id + '/products'}>Products</Link></td>
+                      <td><Link className='btn btn-secondary btn-sm' to={'/moderator/categories/edit/' + c.Id}>Edit</Link></td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )

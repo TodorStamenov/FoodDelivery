@@ -4,6 +4,7 @@ import home from '../../api/home'
 import order from '../../api/order'
 import actions from '../../utils/actions'
 import './HomePage.css'
+import CategoryHomeCard from '../Common/CategoryHomeCard'
 
 const hiddenClassName = 'hp-product-hidden'
 
@@ -74,34 +75,20 @@ class HomePage extends Component {
     for (let i = 0; i < this.state.categories.length; i += 3) {
       result.push(
         <Fragment key={i}>
-          <div className='row'>
-            {this.state.categories.slice(i, i + 3).map(c =>
-              <div key={c.Id} className='col-md-4'>
-                <div className='card' >
-                  <h4 className='text-center card-title'>{c.Name}</h4>
-                  <hr />
-                  <img className='card-img-top' height='350px' src={c.Image} alt='Category img' />
-                  <div className='card-body'>
-                    <ul className='list-group'>
-                      <li className='list-group-item text-center' onClick={() => this.toggleProducts(c.Id)}>Products</li>
-                      {c.Products.map(p =>
-                        <li key={p.Id} className={'list-group-item ' + p.toggleClass}>
-                          {p.Name} - ${p.Price.toFixed(2)} - {p.Mass}g
-                          {
-                            !this.props.isAuthed ||
-                            <button onClick={() => this.addProduct(p.Id)} className='btn btn-sm ml-2 btn-outline-secondary float-right'>
-                              Order
-                            </button>
-                          }
-                        </li>)
-                      }
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
+          <div className='row mb-2'>
+            {
+              this.state.categories
+                .slice(i, i + 3)
+                .map(c =>
+                  <CategoryHomeCard
+                    key={c.Id}
+                    category={c}
+                    isAuthed={this.props.isAuthed}
+                    toggleProducts={this.toggleProducts}
+                    addProduct={this.addProduct} />
+                )
+            }
           </div>
-          <br />
         </Fragment>
       )
     }

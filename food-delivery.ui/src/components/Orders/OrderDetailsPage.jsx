@@ -49,14 +49,13 @@ class OrderDetailsPageBase extends Component {
   render () {
     return (
       <div>
-        <div className='row'>
+        <div className='row mb-2'>
           <div className='offset-md-2 col-md-8'>
             <h2>
               Orders Details <Link className='btn btn-outline-secondary btn-ml-2' to='/moderator/orders'>Back</Link>
             </h2>
           </div>
         </div>
-        <br />
         <div className='row'>
           <div className='offset-md-2 col-md-8'>
             <table className='table table-hover'>

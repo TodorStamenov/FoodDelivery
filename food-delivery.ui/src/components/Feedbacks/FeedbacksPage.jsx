@@ -101,37 +101,39 @@ class FeedbacksPageBase extends Component {
             <h2>All Feedbacks</h2>
           </div>
         </div>
-        <br />
-        <div className='row'>
+        <div className='row my-2'>
           {this.renderPageLinks()}
         </div>
-        <br />
         <div className='row'>
-          <table className='table table-hover'>
-            {<TableHead heads={tableHeadNames} />}
-            <tbody>
-              {this.state.feedbackPage.Feedbacks.map(f =>
-                <Fragment key={f.Id}>
-                  <tr>
-                    <td>{f.ProductName}</td>
-                    <td>{f.Rate}</td>
-                    <td>{f.TimeStamp}</td>
-                    <td>{f.User}</td>
-                    <td>
-                      <button
-                        onClick={() => this.toggleDetails(f.Id)}
-                        className='btn btn-secondary btn-sm'>
-                        Details
-                      </button>
-                    </td>
-                  </tr>
-                  <tr className={f.toggleClass}>
-                    <td colSpan={tableHeadNames.length}>{f.Content}</td>
-                  </tr>
-                </Fragment>)
-              }
-            </tbody>
-          </table>
+          <div className='col-md-12'>
+            <table className='table table-hover'>
+              {<TableHead heads={tableHeadNames} />}
+              <tbody>
+                {
+                  this.state.feedbackPage.Feedbacks.map(f =>
+                    <Fragment key={f.Id}>
+                      <tr>
+                        <td>{f.ProductName}</td>
+                        <td>{f.Rate}</td>
+                        <td>{f.TimeStamp}</td>
+                        <td>{f.User}</td>
+                        <td>
+                          <button
+                            onClick={() => this.toggleDetails(f.Id)}
+                            className='btn btn-secondary btn-sm'>
+                            Details
+                          </button>
+                        </td>
+                      </tr>
+                      <tr className={f.toggleClass}>
+                        <td colSpan={tableHeadNames.length}>{f.Content}</td>
+                      </tr>
+                    </Fragment>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className='row'>
           {this.renderPageLinks()}

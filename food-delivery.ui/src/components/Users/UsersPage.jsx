@@ -107,49 +107,52 @@ class UsersPageBase extends Component {
             <h2>Search Users</h2>
           </div>
         </div>
-        <div className='row'>
+        <div className='row mb-2'>
           <div className='col-md-4'>
             <form className='form'>
               <input name='username' value={this.state.username} onChange={this.onChange} type='text' className='form-control' placeholder='Search...' />
             </form>
           </div>
         </div>
-        <br />
         <div className='row'>
-          <table className='table table-hover'>
-            {<TableHead heads={['Username', 'Is Locked', Admin, Moderator, Employee]} />}
-            <tbody>
-              {this.state.users.map(u =>
-                <tr key={u.Id}>
-                  <td>{u.Username}</td>
-                  <td>
-                    {u.IsLocked
-                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.unlock(u.Username)}>Unlock</button>
-                      : <button className='btn btn-secondary btn-sm' onClick={() => this.lock(u.Username)}>Lock</button>
-                    }
-                  </td>
-                  <td>
-                    {u.Roles.includes(Admin)
-                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Admin)}>Remove Role</button>
-                      : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Admin)}>Add Role</button>
-                    }
-                  </td>
-                  <td>
-                    {u.Roles.includes(Moderator)
-                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Moderator)}>Remove Role</button>
-                      : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Moderator)}>Add Role</button>
-                    }
-                  </td>
-                  <td>
-                    {u.Roles.includes(Employee)
-                      ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Employee)}>Remove Role</button>
-                      : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Employee)}>Add Role</button>
-                    }
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <div className='col-md-12'>
+            <table className='table table-hover'>
+              {<TableHead heads={['Username', 'Is Locked', Admin, Moderator, Employee]} />}
+              <tbody>
+                {
+                  this.state.users.map(u =>
+                    <tr key={u.Id}>
+                      <td>{u.Username}</td>
+                      <td>
+                        {u.IsLocked
+                          ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.unlock(u.Username)}>Unlock</button>
+                          : <button className='btn btn-secondary btn-sm' onClick={() => this.lock(u.Username)}>Lock</button>
+                        }
+                      </td>
+                      <td>
+                        {u.Roles.includes(Admin)
+                          ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Admin)}>Remove Role</button>
+                          : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Admin)}>Add Role</button>
+                        }
+                      </td>
+                      <td>
+                        {u.Roles.includes(Moderator)
+                          ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Moderator)}>Remove Role</button>
+                          : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Moderator)}>Add Role</button>
+                        }
+                      </td>
+                      <td>
+                        {u.Roles.includes(Employee)
+                          ? <button className='btn btn-outline-secondary btn-sm' onClick={() => this.removeRole(u.Username, Employee)}>Remove Role</button>
+                          : <button className='btn btn-secondary btn-sm' onClick={() => this.addRole(u.Username, Employee)}>Add Role</button>
+                        }
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )

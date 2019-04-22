@@ -106,11 +106,9 @@ class ProductsPageBase extends Component {
             <h2>All Products - <Link className='btn btn-secondary btn-md' to='/moderator/products/create'>Create new Product</Link></h2>
           </div>
         </div>
-        <br />
-        <div className='row'>
+        <div className='row my-2'>
           {this.renderPageLinks()}
         </div>
-        <br />
         <div className='row'>
           <table className='table table-hover'>
             {<TableHead heads={['Name', 'Mass', 'Price', 'Category', 'Rating', 'Actions']} />}

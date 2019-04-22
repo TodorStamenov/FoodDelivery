@@ -100,7 +100,7 @@ class EmployeeOrdersPageBase extends Component {
 
     return (
       <div>
-        <div className='row'>
+        <div className='row mb-2'>
           <div className='col-md-12'>
             <h2>
               Orders Queue -
@@ -112,49 +112,56 @@ class EmployeeOrdersPageBase extends Component {
             </h2>
           </div>
         </div>
-        <br />
         <div className='row'>
-          <table className='table table-hover'>
-            {<TableHead heads={tableHeadNames} />}
-            <tbody>
-              {this.state.orders.map(o =>
-                <Fragment key={o.Id}>
-                  <tr>
-                    <td>{o.User}</td>
-                    <td>{o.Address}</td>
-                    <td>{o.TimeStamp}</td>
-                    <td className='form-inline form-group'>
-                      <select
-                        value={o.Statuses.find(s => o.Status === s)}
-                        onChange={e => this.handleChange(e, o.Id)}
-                        className='form-control'>
-                        {o.Statuses.sort((x, y) => y.localeCompare(x)).map(s =>
-                          <option key={s} value={s}>{s}</option>
-                        )}
-                      </select>
-                      <button
-                        className='btn btn-secondary btn-sm ml-2'
-                        onClick={() => this.toggleDetails(o.Id)}>
-                        Details
-                      </button>
-                    </td>
-                  </tr>
-                  {o.Products.map((p, i) =>
-                    <tr key={i} className={p.toggleClass}>
-                      <td>{p.Name}</td>
-                      <td colSpan={3}>
-                        {(
-                          p.Toppings.length === 0
-                            ? 'Without Toppings'
-                            : p.Toppings.map(t => t.Name).join(' | ')
-                        )}
-                      </td>
-                    </tr>
-                  )}
-                </Fragment>
-              )}
-            </tbody>
-          </table>
+          <div className='col-md-12'>
+            <table className='table table-hover'>
+              {<TableHead heads={tableHeadNames} />}
+              <tbody>
+                {
+                  this.state.orders.map(o =>
+                    <Fragment key={o.Id}>
+                      <tr>
+                        <td>{o.User}</td>
+                        <td>{o.Address}</td>
+                        <td>{o.TimeStamp}</td>
+                        <td className='form-inline form-group'>
+                          <select
+                            value={o.Statuses.find(s => o.Status === s)}
+                            onChange={e => this.handleChange(e, o.Id)}
+                            className='form-control'>
+                            {
+                              o.Statuses.sort((x, y) => y.localeCompare(x)).map(s =>
+                                <option key={s} value={s}>{s}</option>
+                              )
+                            }
+                          </select>
+                          <button
+                            className='btn btn-secondary btn-sm ml-2'
+                            onClick={() => this.toggleDetails(o.Id)}>
+                            Details
+                          </button>
+                        </td>
+                      </tr>
+                      {
+                        o.Products.map((p, i) =>
+                          <tr key={i} className={p.toggleClass}>
+                            <td>{p.Name}</td>
+                            <td colSpan={3}>
+                              {
+                                p.Toppings.length === 0
+                                  ? 'Without Toppings'
+                                  : p.Toppings.map(t => t.Name).join(' | ')
+                              }
+                            </td>
+                          </tr>
+                        )
+                      }
+                    </Fragment>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     )
